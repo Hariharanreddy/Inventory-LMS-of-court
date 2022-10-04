@@ -1,0 +1,72 @@
+.add_btn{
+  text-align: right;
+}
+
+.container{
+  overflow: auto;
+}
+
+.table{
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.attribute-row{
+  background: rgb(2,0,36);
+  background: linear-gradient(90deg, rgba(10,10,153,1) 0%, rgba(0,30,144,1) 30%, rgba(0,212,255,1) 98%);
+  color: aliceblue;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+
+.record-row{
+  vertical-align: middle;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  transition: transform 250ms;
+}
+
+.record-row:hover{
+  background-color: #d4f8ff;
+  transform: scale(1.01);
+
+}
+
+.btn{
+  transition: transform 250ms !important;
+}
+
+.btn:hover{
+  transform: scale(1.03);
+}
+
+
+.stock-attribute{
+  text-align: center;
+}
+
+.author-attribute{
+  margin-right: 0;
+}
+
+td:nth-child(5){
+  text-align: center;
+}
+
+.icons-section{
+  border-bottom: 0;
+}
+
+/* .add-book-button{
+  background: rgb(17, 17, 219) !important;
+}
+
+.add-book-button:hover, .add-book-button:focus{
+  background:  rgba(10,10,153,1) 0% !important;
+  border-color:  rgba(10,10,153,1) 0% !important;;
+} */
+.submit-button-div{
+  text-align: right;
+}
+
+.submit-button{
+  margin-top: 9px;
+}
