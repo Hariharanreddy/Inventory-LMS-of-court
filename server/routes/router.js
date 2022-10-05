@@ -15,19 +15,19 @@ router.get("/getBooks", async (req, res) => {
 })
 
 //To Return the individual book details
-// router.get("/getBook/:id", async (req, res) => {
-//     try {
-//         console.log(req.params);
-//         const { id } = req.params;
+router.get("/getBook/:id", async (req, res) => {
+    try {
+        console.log(req.params);
+        const { id } = req.params;
 
-//         const individualBook = await books.findById({ _id: id });
-//         console.log(individualBook);
-//         res.status(201).json(individualBook)
-//     }
-//     catch (err) {
-//         res.status(422).json(err);
-//     }
-// })
+        const individualBook = await books.findById({ _id: id });
+        console.log(individualBook);
+        res.status(201).json(individualBook)
+    }
+    catch (err) {
+        res.status(422).json(err);
+    }
+})
 
 
 //Register book
