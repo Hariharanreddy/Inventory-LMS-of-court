@@ -3,7 +3,7 @@ const router = express.Router();
 const books = require("../models/bookSchema");
 
 //To Return the Entire Book Database
-router.get("/getBooks", async (req, res) => { 
+router.get("/getBooks", async (req, res) => {
     try {
         const bookData = await books.find();
         res.status(201).json(bookData)
@@ -42,12 +42,7 @@ router.post("/registerBook", async (req, res) => {
         yearOfPublication,
         price,
         vendorName,
-        dateOfPurchase } = req.body;
-
-    if (!bookName || !category || !authorName || !vendorName) {
-        res.status(422).json("plz fill the data");
-        console.log("Please fill all the Data!");
-    }
+        dateOfPurchase } = req.body;    
 
     try {
         const book = await books.findOne({ bookName: bookName });     // it can also be written just bookName  //object destructuring
@@ -77,6 +72,38 @@ router.post("/registerBook", async (req, res) => {
     }
     catch (error) {
         res.status(422).json(error);
+    }
+})
+
+//update Book data
+router.patch("/updateBook/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        const updatedBook = await books.findByIdAndUpdate(id, req.body, {
+            new: true
+        });
+
+        console.log(updatedBook);
+        res.status(201).json(updatedBook);
+    }
+    catch (err) {
+        res.status(422).json(err);
+    }
+})
+
+//delete book
+router.delete("/deleteBook/:id", async (req, res) => {
+    try {
+        const id  = req.params.id;
+
+        const deletedBook = await books.findByIdAndDelete({ _id: id })
+
+        console.log(deletedBook);
+        res.status(201).json(deletedBook);
+    }
+    catch (err) {
+        res.status(422).json(err);
     }
 })
 

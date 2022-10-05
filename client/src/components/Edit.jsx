@@ -1,17 +1,23 @@
 import React from 'react'
-import { NavLink } from "react-router-dom"
+import { NavLink, useParams, useNavigate } from "react-router-dom"
 
 const Edit = () => {
 
+    const navigate = useNavigate("");
+
+    const { id } = useParams("");
+    // console.log(id);
 
     const [inpval, setINP] = React.useState({
-        name: "",
-        email: "",
-        age: "",
-        mobile: "",
-        work: "",
-        add: "",
-        desc: ""
+        bookName: "",
+        category: "",
+        authorName: "",
+        stock: 0,
+        publisherName: "",
+        yearOfPublication: "",
+        price: 0,
+        vendorName: "",
+        dateOfPurchase: ""
     })
 
     const setdata = (e) => {
@@ -25,43 +31,126 @@ const Edit = () => {
         })
     }
 
+    //For fetching the book details
+    const getdata = async () => {
+
+        const res = await fetch(`http://localhost:8000/getBook/${id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        const data = await res.json();
+        console.log(data);
+
+        if (res.status === 422 || !data) {
+            console.log("Error");
+        }
+        else {
+            setINP(data)
+            console.log("getData() successfully executed");
+        }
+    }
+
+    React.useEffect(() => {
+        getdata();
+    }, [])
+
+
+    const updateBook = async (e) => {
+        e.preventDefault();
+
+        const { bookName,
+            category,
+            authorName,
+            stock,
+            publisherName,
+            yearOfPublication,
+            price,
+            vendorName,
+            dateOfPurchase } = inpval;
+
+        const res2 = await fetch(`http://localhost:8000/updateBook/${id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                bookName,
+                category,
+                authorName,
+                stock,
+                publisherName,
+                yearOfPublication,
+                price,
+                vendorName,
+                dateOfPurchase
+            })
+        });
+
+        const data2 = await res2.json();
+        console.log(data2);
+
+        if (res2.status == 422 || !data2) {
+            alert("Data could not be updated!");
+        }
+        else {
+            navigate("/");
+            alert("Data Updated Successfully");
+        }
+    }
+
     return (
         <div className='container mt-3'>
-            <NavLink to="/">home</NavLink>
+            <NavLink to="/">
+                <button className="btn btn-primary">{"<<"} Go Back</button>
+            </NavLink>
             <form className="mt-4">
                 <div className="row">
-                    <div class="mb-3 col-lg-6 col-md-6 col-12">
-                        <label for="exampleInputEmail1" class="form-label">Name</label>
-                        <input type="text" value={inpval.name} onChange={setdata} name="name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
+                    <div className="mb-3 col-lg-6 col-md-6 col-12">
+                        <label className="form-label">Book Name</label>
+                        <input type="text" value={inpval.bookName} onChange={setdata} name="bookName" className="form-control" />
                     </div>
-                    <div class="mb-3 col-lg-6 col-md-6 col-12">
-                        <label for="exampleInputPassword1" class="form-label">email</label>
-                        <input type="email" value={inpval.email} onChange={setdata} name="email" class="form-control" id="exampleInputPassword1" />
+                    <div className="mb-3 col-lg-6 col-md-6 col-12">
+                        <label className="form-label">Category</label>
+                        <input type="text" value={inpval.category} onChange={setdata} name="category" className="form-control" />
                     </div>
-                    <div class="mb-3 col-lg-6 col-md-6 col-12">
-                        <label for="exampleInputPassword1" class="form-label">age</label>
-                        <input type="text" value={inpval.age} onChange={setdata} name="age" class="form-control" id="exampleInputPassword1" />
+                    <div className="mb-3 col-lg-6 col-md-6 col-12">
+                        <label className="form-label">Author Name</label>
+                        <input type="text" value={inpval.authorName} onChange={setdata} name="authorName" className="form-control" />
                     </div>
-                    <div class="mb-3 col-lg-6 col-md-6 col-12">
-                        <label for="exampleInputPassword1" class="form-label">Mobile</label>
-                        <input type="text" value={inpval.mobile} onChange={setdata} name="mobile" class="form-control" id="exampleInputPassword1" />
+                    <div className="mb-3 col-lg-6 col-md-6 col-12">
+                        <label className="form-label">Stock Available</label>
+                        <input type="number" value={inpval.stock} onChange={setdata} name="stock" className="form-control" />
                     </div>
-                    <div class="mb-3 col-lg-6 col-md-6 col-12">
-                        <label for="exampleInputPassword1" class="form-label">Work</label>
-                        <input type="text" value={inpval.work} onChange={setdata} name="work" class="form-control" id="exampleInputPassword1" />
+                    <div className="mb-3 col-lg-6 col-md-6 col-12">
+                        <label className="form-label">Publisher Name</label>
+                        <input type="text" value={inpval.publisherName} onChange={setdata} name="publisherName" className="form-control" />
                     </div>
-                    <div class="mb-3 col-lg-6 col-md-6 col-12">
-                        <label for="exampleInputPassword1" class="form-label">Address</label>
-                        <input type="text" value={inpval.add} onChange={setdata} name="add" class="form-control" id="exampleInputPassword1" />
+                    <div className="mb-3 col-lg-6 col-md-6 col-12">
+                        <label className="form-label">Publication Year</label>
+                        <input type="number" value={inpval.yearOfPublication} onChange={setdata} name="yearOfPublication" className="form-control" />
                     </div>
-                    <div class="mb-3 col-lg-12 col-md-12 col-12">
-                        <label for="exampleInputPassword1" class="form-label">Description</label>
-                        <textarea name="desc" value={inpval.desc} onChange={setdata} className="form-control" id="" cols="30" rows="5"></textarea>
+                    <div className="mb-3 col-lg-6 col-md-6 col-12">
+                        <label className="form-label">Price</label>
+                        <input type="number" value={inpval.price} onChange={setdata} name="price" className="form-control" />
                     </div>
-
-                    {/* <button type="submit" onClick={addinpdata} class="btn btn-primary">Submit</button> */}
+                    <div className="mb-3 col-lg-6 col-md-6 col-12">
+                        <label className="form-label">Vendor Name</label>
+                        <input type="text" value={inpval.vendorName} onChange={setdata} name="vendorName" className="form-control" />
+                    </div>
+                    <div className="mb-3 col-lg-6 col-md-6 col-12">
+                        <label className="form-label">Date Of Purchase</label>
+                        <input type="date" value={inpval.dateOfPurchase} onChange={setdata} name="dateOfPurchase" className="form-control" />
+                    </div>
+                    <div className="mb-3 col-lg-6 col-md-6 col-12 submit-button-div">
+                        <br />
+                        <button className="btn btn-primary w-25 h-50 submit-button" type="submit" onClick={updateBook}>Submit</button>
+                    </div>
                 </div>
-            </form></div>
+            </form>
+        </div>
     )
 }
 

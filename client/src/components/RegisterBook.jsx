@@ -1,7 +1,9 @@
 import React from 'react'
-import { NavLink } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
 
 const Register = () => {
+
+    const navigateTo = useNavigate();
 
     const [inpval, setINP] = React.useState({
         bookName: "",
@@ -65,7 +67,9 @@ const Register = () => {
         if (res.status === 422 || !data) {
             alert("Error");
         } else {
-            console.log("Data Added Successfully!");
+            alert("Book Has Been Added Successfully!");
+            console.log("Book Has Been Added Successfully!");
+            navigateTo("/");
         }
     }
 

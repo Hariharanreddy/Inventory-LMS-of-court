@@ -1,5 +1,6 @@
 .add_btn{
-  text-align: right;
+  display: flex;
+  justify-content: space-between;
 }
 
 .container{
@@ -25,7 +26,6 @@
 }
 
 .record-row:hover{
-  background-color: #d4f8ff;
   transform: scale(1.01);
 
 }
@@ -70,3 +70,20 @@ td:nth-child(5){
 .submit-button{
   margin-top: 9px;
 }
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+/* view section */
+
+.view-div{
+  max-width: 600px;
+  /* border: 1px solid black; */
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  padding: 1.5em;
+  margin-top: 3rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+
+
