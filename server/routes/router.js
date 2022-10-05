@@ -3,7 +3,7 @@ const router = express.Router();
 const books = require("../models/bookSchema");
 
 //To Return the Entire Book Database
-router.get("/getBooks", async (req, res) => {
+router.get("/getBooks", async (req, res) => { 
     try {
         const bookData = await books.find();
         res.status(201).json(bookData)
@@ -13,6 +13,22 @@ router.get("/getBooks", async (req, res) => {
         res.status(422).json(error);
     }
 })
+
+//To Return the individual book details
+// router.get("/getBook/:id", async (req, res) => {
+//     try {
+//         console.log(req.params);
+//         const { id } = req.params;
+
+//         const individualBook = await books.findById({ _id: id });
+//         console.log(individualBook);
+//         res.status(201).json(individualBook)
+//     }
+//     catch (err) {
+//         res.status(422).json(err);
+//     }
+// })
+
 
 //Register book
 router.post("/registerBook", async (req, res) => {
