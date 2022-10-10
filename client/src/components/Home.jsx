@@ -1,13 +1,12 @@
 import React from 'react'
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import CreateIcon from '@mui/icons-material/Create';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { NavLink } from 'react-router-dom';
 
 const Home = () => {
 
     const [getBookData, setBookData] = React.useState([]);
-    console.log(getBookData);
+    const [searchTerm, setSearchTerm] = React.useState("");
+
+    // console.log(getBookData);
 
     //for printing all the books from the database
     const getdata = async () => {
@@ -38,17 +37,17 @@ const Home = () => {
 
     const deleteBook = async (id) => {
 
-        const res3 = await fetch(`http://localhost:8000/deleteBook/${id}`, {
+        const res2 = await fetch(`http://localhost:8000/deleteBook/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json"
             }
         })
 
-        const deleteData = await res3.json();
+        const deleteData = await res2.json();
         console.log(deleteData);
 
-        if (res3.status === 422) {
+        if (res2.status === 422) {
             console.log("Data could not be deleted.");
         }
         else {
@@ -61,8 +60,9 @@ const Home = () => {
     return (
         <div className="mt-5">
             <div className="container">
-                <div className="add_btn mt-2 mb-2">
-                    <NavLink to="/registerBook" className="  btn btn-primary"><i className="fa-solid fa-plus"></i> Add New Book</NavLink>
+                <div className="add_btn mt-2 mb-4">
+                    <input className="search-button" type="search" placeholder="Search Book Name or Category..." aria-label="Search" onChange={(e) => { setSearchTerm(e.target.value) }} />
+                    <NavLink to="/registerBook" className="btn btn-primary"><i className="fa-solid fa-plus"></i> Add New Book</NavLink>
                 </div>
                 <table className="table table-hover">
                     <thead>
@@ -77,7 +77,14 @@ const Home = () => {
                     </thead>
                     <tbody>
                         {
-                            getBookData.map((element, id) => {
+                            getBookData.filter((element) => {
+                                if (searchTerm === "") {
+                                    return element;
+                                }
+                                else if (element.bookName.toLowerCase().includes(searchTerm.toLowerCase()) || element.category.toLowerCase().includes(searchTerm.toLowerCase())) {
+                                    return element;
+                                }
+                            }).map((element, id) => {
                                 return (
                                     <tr className="record-row">
                                         <th scope="row">{id + 1}</th>
@@ -86,9 +93,9 @@ const Home = () => {
                                         <td>{element.category}</td>
                                         <td>{element.stock}</td>
                                         <td className="d-flex justify-content-between">
-                                            <NavLink to={`view/${element._id}`}> <button className="btn btn-success"><RemoveRedEyeIcon /></button></NavLink>
-                                            <NavLink to={`edit/${element._id}`}>  <button className="btn btn-primary"><CreateIcon /></button></NavLink>
-                                            <button className="btn btn-danger" onClick={() => deleteBook(element._id)}><DeleteIcon /></button>
+                                            <NavLink to={`view/${element._id}`}> <button className="btn btn-outline-success">View</button></NavLink>
+                                            <NavLink to={`edit/${element._id}`}>  <button className="btn btn-outline-primary">Edit</button></NavLink>
+                                            <button className="btn btn-outline-danger" onClick={() => deleteBook(element._id)}>Delete</button>
                                         </td>
                                     </tr>
                                 )

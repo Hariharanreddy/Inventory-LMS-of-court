@@ -1,15 +1,11 @@
 import React from 'react'
-import CreateIcon from '@mui/icons-material/Create';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { NavLink } from 'react-router-dom';
-import { useParams } from "react-router-dom";
+import { NavLink ,useNavigate ,useParams } from 'react-router-dom';
 
 const Details = () => {
 
   const [getBookData, setBookData] = React.useState({});
 
   const { id } = useParams("");
-  console.log(id);
 
   //For fetching the book details
   const getdata = async () => {
@@ -38,15 +34,36 @@ const Details = () => {
   }, [])
 
 
+  //For Deleting the Book
+  const navigateTo = useNavigate();
+  const deleteBook = async (id) => {
+
+    const res2 = await fetch(`http://localhost:8000/deleteBook/${id}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+
+    const deleteData = await res2.json();
+    console.log(deleteData);
+
+    if (res2.status === 422) {
+        console.log("Record could not be deleted.");
+    }
+    else {
+        alert("Record has been deleted.");
+        getdata();
+        navigateTo("/");
+    }
+}
+
+
   return (
     <>
-      <div className="view-div">
+      <div className="card-div">
         <div className="add_btn mb-4">
-          <h1>Book Details</h1>
-          <div>
-            <NavLink /*</div>to={`/edit/${getuserdata._id}`}*/ > <button className="btn btn-primary mx-4"><CreateIcon /></button></NavLink>
-            <button className="btn btn-danger" onClick={() => deleteuser(getBookdata._id)}><DeleteIcon /></button>
-          </div>
+          <h2>Book Details</h2>
         </div>
         <table className="table table-hover table-condensed" >
           <thead>
@@ -86,7 +103,7 @@ const Details = () => {
             </tr>
             <tr className='record-row'>
               <th scope="row">Price</th>
-              <td >{"Rs " + getBookData.price}</td>
+              <td >{"Rs. " + getBookData.price}</td>
             </tr>
             <tr className='record-row'>
               <th scope="row">Date Of Purchase</th>
@@ -94,6 +111,10 @@ const Details = () => {
             </tr>
           </tbody>
         </table>
+        <div className='card-footer'>
+            <NavLink to={`/edit/${id}`} > <button className="btn btn-outline-primary mx-4">Edit</button></NavLink>
+            <button className="btn btn-outline-danger" onClick={() => deleteBook(id)}>Delete</button>
+        </div>
       </div>
     </>
   )
