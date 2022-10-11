@@ -72,7 +72,7 @@ const Home = () => {
                             <th className="author-attribute" scope="col">Author Name</th>
                             <th scope="col">Category</th>
                             <th className="stock-attribute" scope="col">Stock</th>
-                            <th scope="col"></th>
+                            <th className="action-attribute" scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody>

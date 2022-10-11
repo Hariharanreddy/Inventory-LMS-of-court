@@ -12,6 +12,7 @@ import Home from './components/Home';
 import RegisterBook from './components/RegisterBook';
 import Edit from './components/Edit';
 import Details from './components/Details';
+import Navbar from './components/Navbar';
 
 
 const App = () => {

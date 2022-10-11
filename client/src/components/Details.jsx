@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavLink ,useNavigate ,useParams } from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 
 const Details = () => {
 
@@ -39,24 +39,24 @@ const Details = () => {
   const deleteBook = async (id) => {
 
     const res2 = await fetch(`http://localhost:8000/deleteBook/${id}`, {
-        method: "DELETE",
-        headers: {
-            "Content-Type": "application/json"
-        }
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json"
+      }
     })
 
     const deleteData = await res2.json();
     console.log(deleteData);
 
     if (res2.status === 422) {
-        console.log("Record could not be deleted.");
+      console.log("Record could not be deleted.");
     }
     else {
-        alert("Record has been deleted.");
-        getdata();
-        navigateTo("/");
+      alert("Record has been deleted.");
+      getdata();
+      navigateTo("/");
     }
-}
+  }
 
 
   return (
@@ -64,6 +64,9 @@ const Details = () => {
       <div className="card-div">
         <div className="add_btn mb-4">
           <h2>Book Details</h2>
+          <NavLink to="/">
+            <button className="btn btn-primary home-btn">Home</button>
+          </NavLink>
         </div>
         <table className="table table-hover table-condensed" >
           <thead>
@@ -112,8 +115,8 @@ const Details = () => {
           </tbody>
         </table>
         <div className='card-footer'>
-            <NavLink to={`/edit/${id}`} > <button className="btn btn-outline-primary mx-4">Edit</button></NavLink>
-            <button className="btn btn-outline-danger" onClick={() => deleteBook(id)}>Delete</button>
+          <NavLink to={`/edit/${id}`} > <button className="btn btn-outline-primary mx-4">Edit</button></NavLink>
+          <button className="btn btn-outline-danger" onClick={() => deleteBook(id)}>Delete</button>
         </div>
       </div>
     </>

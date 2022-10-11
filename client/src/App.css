@@ -5,6 +5,10 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
+body{
+  min-height: 100vh;
+}
+
 h1, h2, h3, h4, h5{
   margin-bottom: 0 !important;
 }
@@ -15,7 +19,7 @@ h1, h2, h3, h4, h5{
   justify-content: space-between;
   align-items: center;
   padding-bottom: 1.2em;
-  border-bottom: 1px solid rgb(90, 87, 87);
+  border-bottom: 1px solid rgba(173, 163, 163, 0.5) !important;
 }
 
 .add_btn>input {
@@ -72,7 +76,7 @@ h1, h2, h3, h4, h5{
 }
 
 
-.stock-attribute {
+.stock-attribute, .action-attribute {
   text-align: center;
 }
 
@@ -113,7 +117,7 @@ td:nth-child(5) {
   display: flex;
   justify-content: space-between;
   padding-bottom: 1.2em !important;
-  border-bottom: 1px solid rgb(90, 87, 87) !important;
+  border-bottom: 1px solid rgba(173, 163, 163, 0.5) !important;
 }
 
 .card-footer{
@@ -137,8 +141,6 @@ div>label {
 
 .search-button:focus{
   outline-style: none;
-  box-shadow: rgba(10, 137, 211, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 6px 30px;
-  transform: scale(1.02);
-  /* box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px; */
+  border: 5px solid rgb(88, 176, 235, 0.5);
 }
 
