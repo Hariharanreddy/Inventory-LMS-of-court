@@ -1,7 +1,8 @@
 import React from 'react'
+import SearchIcon from "../images/search-icon.png"
 import { NavLink } from 'react-router-dom';
 
-const Home = () => {
+const BookList = () => {
 
     const [getBookData, setBookData] = React.useState([]);
     const [searchTerm, setSearchTerm] = React.useState("");
@@ -56,15 +57,17 @@ const Home = () => {
         }
     }
 
-
     return (
-        <div className="mt-5">
+        <div className="mt-2">
             <div className="container">
                 <div className="add_btn mt-2 mb-4">
-                    <input className="search-button" type="search" placeholder="Search Book Name or Category..." aria-label="Search" onChange={(e) => { setSearchTerm(e.target.value) }} />
-                    <NavLink to="/registerBook" className="btn btn-primary"><i className="fa-solid fa-plus"></i> Add New Book</NavLink>
+                    <div>
+                        <img src={SearchIcon} alt="" width="30px" height="30px"/>
+                        <input className="search-button" type="search" placeholder="Search Book Name or Category..." aria-label="Search" onChange={(e) => { setSearchTerm(e.target.value) }} />
+                    </div>
+                    <NavLink to="/BookList/registerBook" className="btn btn-primary"><i className="fa-solid fa-plus"></i> Add New Book</NavLink>
                 </div>
-                <table className="table table-hover">
+                <table className="table">
                     <thead>
                         <tr className="attribute-row">
                             <th scope="col">S.No</th>
@@ -86,7 +89,7 @@ const Home = () => {
                                 }
                             }).map((element, id) => {
                                 return (
-                                    <tr className="record-row">
+                                    <tr className="record-row" key={id}>
                                         <th scope="row">{id + 1}</th>
                                         <td>{element.bookName} </td>
                                         <td>{element.authorName}</td>
@@ -108,4 +111,4 @@ const Home = () => {
     )
 }
 
-export default Home
+export default BookList

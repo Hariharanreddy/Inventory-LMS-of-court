@@ -64,11 +64,11 @@ const Details = () => {
       <div className="card-div">
         <div className="add_btn mb-4">
           <h2>Book Details</h2>
-          <NavLink to="/">
+          <NavLink to="/BookList">
             <button className="btn btn-primary home-btn">Home</button>
           </NavLink>
         </div>
-        <table className="table table-hover table-condensed" >
+        <table className="table" >
           <thead>
             <tr className='attribute-row'>
               <th scope="col">Property</th>

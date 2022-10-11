@@ -70,7 +70,7 @@ const Register = () => {
         } else {
             alert("Book Has Been Added Successfully!");
             console.log("Book Has Been Added Successfully!");
-            navigateTo("/");
+            navigateTo("/BookList");
         }
     }
 
@@ -79,7 +79,7 @@ const Register = () => {
             <div className='container'>
                 <div className='card-header'>
                     <h2>Add New Book</h2>
-                    <NavLink to="/">
+                    <NavLink to="/BookList">
                         <button className="btn btn-primary">Home</button>
                     </NavLink>
                 </div>

@@ -1,30 +1,33 @@
 import React from 'react'
-import {Routes, Route} from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 // import all the css and bootstrap used
 import './App.css';
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css"
 import "../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
-// import Navbar from './components/Navbar';
+
 
 //import all the components individually
-import Home from './components/Home';
+import BookList from './components/BookList';
 import RegisterBook from './components/RegisterBook';
 import Edit from './components/Edit';
 import Details from './components/Details';
-import Navbar from './components/Navbar';
+import SideBar from "./components/Sidebar/SideBar";
 
+// import Navbar from './components/Navbar';
 
 const App = () => {
   return (
     <>
-      {/* <Navbar /> */}
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/registerBook" element={<RegisterBook />}/>  
-        <Route path="/edit/:id" element={<Edit />}/>
-        <Route path="/view/:id" element={<Details />}/>
-      </Routes>
+      <SideBar>
+        <Routes>
+          <Route path="/BookList" element={<BookList />} />
+          <Route path="/BookList/registerBook" element={<RegisterBook />} />
+          <Route path="/BookList/edit/:id" element={<Edit />} />
+          <Route path="/BookList/view/:id" element={<Details />} />
+          <Route path="*" element={<> not found</>} />
+        </Routes>
+      </SideBar>
     </>
   )
 }

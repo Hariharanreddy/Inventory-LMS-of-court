@@ -96,7 +96,7 @@ const Edit = () => {
             alert("Data could not be updated!");
         }
         else {
-            navigate("/");
+            navigate("/BookList");
             alert("Data Updated Successfully");
         }
     }
@@ -110,12 +110,12 @@ const Edit = () => {
                         <NavLink to={`/view/${id}`}  >
                             <button className="btn btn-outline-success">Detail</button>
                         </NavLink>
-                        <NavLink to="/">
+                        <NavLink to="/BookList">
                             <button className="btn btn-primary home-btn">Home</button>
                         </NavLink>
                     </div>
                 </div>
-                <form className="mt-4 ">
+                <form className="mt-4">
                     <div className="row">
                         <div className="mb-3 col-lg-6 col-md-6 col-12">
                             <label className="form-label">Book Name</label>
