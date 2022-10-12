@@ -14,8 +14,6 @@ import Edit from './components/Edit';
 import Details from './components/Details';
 import SideBar from "./components/Sidebar/SideBar";
 
-// import Navbar from './components/Navbar';
-
 const App = () => {
   return (
     <>

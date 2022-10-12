@@ -6,7 +6,7 @@ const books = require("../models/bookSchema");
 router.get("/getBooks", async (req, res) => {
     try {
         const bookData = await books.find();
-        res.status(201).json(bookData)
+        res.status(201).json(bookData)  
         console.log(bookData);
     }
     catch (error) {
@@ -42,11 +42,12 @@ router.post("/registerBook", async (req, res) => {
         yearOfPublication,
         price,
         vendorName,
-        dateOfPurchase } = req.body;    
+        dateOfPurchase } = req.body;
+
 
     try {
         const book = await books.findOne({ bookName: bookName });     // it can also be written just bookName  //object destructuring
-        console.log(book);
+        // console.log(book);
 
         if (book) {
             res.status(422).json("This book is already present!");
@@ -65,9 +66,9 @@ router.post("/registerBook", async (req, res) => {
                 dateOfPurchase
             });
 
-            await newBook.save();
-            res.status(201).json(newBook);
-            console.log(newBook);
+            const insertedBook = await newBook.save();
+            res.status(201).json(insertedBook);
+            console.log(insertedBook);
         }
     }
     catch (error) {

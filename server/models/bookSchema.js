@@ -4,7 +4,6 @@ const bookSchema = new mongoose.Schema({
     bookName: {
         type: String,
         required: true,
-        unique:true
     },
     category:{
         type: String,

@@ -107,7 +107,7 @@ const Edit = () => {
                 <div className='card-header'>
                     <h2>Edit Book</h2>
                     <div>
-                        <NavLink to={`/view/${id}`}  >
+                        <NavLink to={`/BookList/view/${id}`}  >
                             <button className="btn btn-outline-success">Detail</button>
                         </NavLink>
                         <NavLink to="/BookList">

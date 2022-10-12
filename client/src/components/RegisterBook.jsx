@@ -43,34 +43,41 @@ const Register = () => {
             vendorName,
             dateOfPurchase } = inpval;
 
-        const res = await fetch("http://localhost:8000/registerBook", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            //whenever we send data to database, we convert it into string first
-            body: JSON.stringify({
-                bookName,
-                category,
-                authorName,
-                stock,
-                publisherName,
-                yearOfPublication,
-                price,
-                vendorName,
-                dateOfPurchase
-            })
-        });
+        if (!bookName || !category || !price || !dateOfPurchase) {
+            // res.status(204).send("Field's are Empty!");
+            alert("Book-Name, Category, Price and Date-Of-Purchase Fields Are Mandatory!")
+        }
+        else {
+            const res = await fetch("http://localhost:8000/registerBook", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                //whenever we send data to database, we convert it into string first
+                body: JSON.stringify({
+                    bookName,
+                    category,
+                    authorName,
+                    stock,
+                    publisherName,
+                    yearOfPublication,
+                    price,
+                    vendorName,
+                    dateOfPurchase
+                })
+            });
 
-        const data = await res.json();
-        console.log(data);
+            const data = await res.json();
+            console.log(data);
 
-        if (res.status === 422 || !data) {
-            alert("Error");
-        } else {
-            alert("Book Has Been Added Successfully!");
-            console.log("Book Has Been Added Successfully!");
-            navigateTo("/BookList");
+            if (res.status === 422) {
+                alert("This Book Name Is Already Present!");
+            }
+            else {
+                alert("Book Has Been Added Successfully!");
+                console.log("Book Has Been Added Successfully!");
+                navigateTo("/BookList");
+            }
         }
     }
 

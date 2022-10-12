@@ -115,7 +115,7 @@ const Details = () => {
           </tbody>
         </table>
         <div className='card-footer'>
-          <NavLink to={`/edit/${id}`} > <button className="btn btn-outline-primary mx-4">Edit</button></NavLink>
+          <NavLink to={`/BookList/edit/${id}`} > <button className="btn btn-outline-primary mx-4">Edit</button></NavLink>
           <button className="btn btn-outline-danger" onClick={() => deleteBook(id)}>Delete</button>
         </div>
       </div>

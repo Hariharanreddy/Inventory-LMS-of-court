@@ -62,7 +62,7 @@ const BookList = () => {
             <div className="container">
                 <div className="add_btn mt-2 mb-4">
                     <div>
-                        <img src={SearchIcon} alt="" width="30px" height="30px"/>
+                        <img src={SearchIcon} alt="" width="30px" height="30px" />
                         <input className="search-button" type="search" placeholder="Search Book Name or Category..." aria-label="Search" onChange={(e) => { setSearchTerm(e.target.value) }} />
                     </div>
                     <NavLink to="/BookList/registerBook" className="btn btn-primary"><i className="fa-solid fa-plus"></i> Add New Book</NavLink>
@@ -84,7 +84,7 @@ const BookList = () => {
                                 if (searchTerm === "") {
                                     return element;
                                 }
-                                else if (element.bookName.toLowerCase().includes(searchTerm.toLowerCase()) || element.category.toLowerCase().includes(searchTerm.toLowerCase())) {
+                                else if (element.bookName.toLowerCase().includes(searchTerm.toLowerCase()) || element.category.toLowerCase().includes(searchTerm.toLowerCase()) || element.authorName.toLowerCase().includes(searchTerm.toLowerCase())){
                                     return element;
                                 }
                             }).map((element, id) => {
