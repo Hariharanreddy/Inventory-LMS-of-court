@@ -2,7 +2,8 @@ import React from 'react'
 import { NavLink, useNavigate } from "react-router-dom"
 import {useForm} from "react-hook-form"
 
-const UserForm = ( {preLoadedValues} ) => {
+const UserForm = ( {preLoadedValues , id} ) => {
+
 
     const navigate = useNavigate("");
 
@@ -60,7 +61,8 @@ const UserForm = ( {preLoadedValues} ) => {
     var year = new Date();
 
     function noOfDigits(number) {
-        if (number.toString().length == 4 || isNaN(number)) {
+
+        if (isNaN(number) || number == null || number.toString().length == 4) {
             return true;
         }
         else {
@@ -70,7 +72,7 @@ const UserForm = ( {preLoadedValues} ) => {
 
     function checkNumbers(name) {
         var letters = /^[A-Za-z ]+$/;
-        if (name.match(letters) || name == "") {
+        if (name == "" || name.match(letters) ) {
             return true;
         }
         else {
@@ -242,6 +244,6 @@ const UserForm = ( {preLoadedValues} ) => {
             </div>
         </div>
     )
-}
+};
 
 export default UserForm;

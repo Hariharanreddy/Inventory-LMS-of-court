@@ -157,7 +157,7 @@ const Register = () => {
     var year = new Date();
 
     function noOfDigits(number) {
-        if (number.toString().length == 4 || isNaN(number)) {
+        if (isNaN(number) || number == null || number.toString().length == 4) {
             return true;
         }
         else {

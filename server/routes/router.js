@@ -6,7 +6,7 @@ const books = require("../models/bookSchema");
 router.get("/getBooks", async (req, res) => {
     try {
         const bookData = await books.find();
-        res.status(201).json(bookData)  
+        res.status(201).json(bookData)
         console.log(bookData);
     }
     catch (error) {
@@ -17,7 +17,7 @@ router.get("/getBooks", async (req, res) => {
 //To Return the individual book details
 router.get("/getBook/:id", async (req, res) => {
     try {
-        console.log(req.params);
+        // console.log(req.params);
         const { id } = req.params;
 
         const individualBook = await books.findById({ _id: id });
@@ -96,7 +96,7 @@ router.patch("/updateBook/:id", async (req, res) => {
 //delete book
 router.delete("/deleteBook/:id", async (req, res) => {
     try {
-        const id  = req.params.id;
+        const id = req.params.id;
 
         const deletedBook = await books.findByIdAndDelete({ _id: id })
 

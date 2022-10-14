@@ -1,6 +1,6 @@
 import React from 'react'
-import { useParams } from "react-router-dom"
-import { UserForm } from "./UserForm"
+import {useParams} from "react-router-dom"
+import UserForm from "./UserForm"
 
 const Edit = () => {
     const { id } = useParams("");
@@ -19,7 +19,6 @@ const Edit = () => {
             });
     
             const data2 = await res.json();
-            // console.log(data);
     
             if (res.status === 422 || !data2) {
                 console.log("Error");
@@ -29,12 +28,10 @@ const Edit = () => {
                 console.log("Data has been fetched successfully.");
             }
         }
-
         getdata();
-        
     }, [])
 
-    return data ? <UserForm preloadedValues={data} /> : <div>Loading...</div>
+    return (data ? <UserForm preLoadedValues={data} id={id} /> : <div>Loading...</div>)
 }
 
 export default Edit;

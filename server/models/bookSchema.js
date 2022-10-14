@@ -15,7 +15,6 @@ const bookSchema = new mongoose.Schema({
     },
     stock:{
         type: Number,
-        required: true
     },
     publisherName: {
         type: String,
@@ -25,11 +24,9 @@ const bookSchema = new mongoose.Schema({
     },
     price: {
         type: Number,
-        required: true
     },
     vendorName: {
         type: String,
-        required: true
     }, 
     dateOfPurchase: {
         type: String,
