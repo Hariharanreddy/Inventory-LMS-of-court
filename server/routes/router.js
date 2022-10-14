@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const books = require("../models/bookSchema");
+const books = require("../models/Book List/bookSchema");
+const items = require("../models/Stationary List/itemsSchema")
+
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Book List~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 //To Return the Entire Book Database
 router.get("/getBooks", async (req, res) => {
@@ -30,7 +34,7 @@ router.get("/getBook/:id", async (req, res) => {
 })
 
 
-//Register book
+//Register New Book
 router.post("/registerBook", async (req, res) => {
     // console.log(req.body);
     const {
@@ -43,7 +47,6 @@ router.post("/registerBook", async (req, res) => {
         price,
         vendorName,
         dateOfPurchase } = req.body;
-
 
     try {
         const book = await books.findOne({ bookName: bookName });     // it can also be written just bookName  //object destructuring
@@ -76,7 +79,7 @@ router.post("/registerBook", async (req, res) => {
     }
 })
 
-//update Book data
+//Update Book data
 router.patch("/updateBook/:id", async (req, res) => {
     try {
         const id = req.params.id;
@@ -102,6 +105,113 @@ router.delete("/deleteBook/:id", async (req, res) => {
 
         console.log(deletedBook);
         res.status(201).json(deletedBook);
+    }
+    catch (err) {
+        res.status(422).json(err);
+    }
+})
+
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Stationary - General Item~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+//To Return the Entire Items Database
+router.get("/getItems", async (req, res) => {
+    try {
+        const itemData = await items.find();
+        res.status(201).json(itemData)
+        console.log(itemData);
+    }
+    catch (error) {
+        res.status(422).json(error);
+    }
+})
+
+//To Return the individual item details
+router.get("/getItem/:id", async (req, res) => {
+    try {
+        // console.log(req.params);
+        const { id } = req.params;
+
+        const individualItem = await items.findById({ _id: id });
+        console.log(individualItem);
+        res.status(201).json(individualItem)
+    }
+    catch (err) {
+        res.status(422).json(err);
+    }
+})
+
+//Register New Item
+router.post("/registerItem", async (req, res) => {
+    // console.log(req.body);
+    const {
+        itemName,
+        quantityReceived,
+        stock,
+        dateOfPurchase,
+        vendorName,
+        requisitionCourtName,
+        dateOfRequisitionReceipt,
+        dateOfItemIssuance,
+        lastRemaining } = req.body;
+
+    try {
+        const item = await items.findOne({ itemName: itemName });     // it can also be written just bookName  //object destructuring
+        console.log(item);
+
+        if (item) {
+            res.status(422).json("This item is already present!");
+            console.log("Item is already present.")
+        }
+        else {
+            let newItem = new items({
+                itemName,
+                quantityReceived,
+                stock,
+                dateOfPurchase,
+                vendorName,
+                requisitionCourtName,
+                dateOfRequisitionReceipt,
+                dateOfItemIssuance,
+                lastRemaining
+            });
+
+            const insertedItem = await newItem.save();
+            res.status(201).json(insertedItem);
+            console.log(insertedItem);
+        }
+    }
+    catch (error) {
+        res.status(422).json(error);
+    }
+})
+
+//Update Item Data
+router.patch("/updateItem/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        const updatedItem = await items.findByIdAndUpdate(id, req.body, {
+            new: true
+        }); 
+
+        console.log(updatedItem);
+        res.status(201).json(updatedItem);
+    }
+    catch (err) {
+        res.status(422).json(err);
+    }
+})
+
+//Delete Item 
+router.delete("/deleteItem/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        const deletedItem = await items.findByIdAndDelete({ _id: id })
+
+        console.log(deletedItem);
+        res.status(201).json(deletedItem);
     }
     catch (err) {
         res.status(422).json(err);

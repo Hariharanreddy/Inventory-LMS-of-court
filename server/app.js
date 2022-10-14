@@ -1,8 +1,11 @@
 
 const express = require("express");
 const mongoose = require("mongoose");
+
 require("./db/conn");
-const books = require("./models/bookSchema");
+const books = require("./models/Book List/bookSchema");
+const items = require("./models/Stationary List/itemsSchema")
+
 const cors = require("cors");
 const router = require("./routes/router");
 
