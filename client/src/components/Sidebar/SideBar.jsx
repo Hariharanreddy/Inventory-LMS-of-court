@@ -11,7 +11,6 @@ import { HiPrinter } from "react-icons/hi"
 import { FaStamp } from "react-icons/fa"
 import { IoIosColorFill } from "react-icons/io"
 
-
 import { AnimatePresence, motion } from "framer-motion";
 import SidebarMenu from "./SidebarMenu";
 
@@ -33,7 +32,7 @@ const sidebar_section = [
   },
   {
     path: "/file-manager",
-    name: "Inventory List",
+    name: "Stationary Items",
     icon: <IoFileTrayStackedSharp />,
     subRoutes: [
       {

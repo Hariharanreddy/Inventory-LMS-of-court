@@ -1,104 +1,12 @@
 import React from 'react'
 import { NavLink, useNavigate } from "react-router-dom"
-import { useForm } from "react-hook-form"
+import {useForm} from "react-hook-form"
 
-const Register = () => {
+const UserForm = ( {preLoadedValues} ) => {
 
-    const navigateTo = useNavigate();
+    const navigate = useNavigate("");
 
-    // const [inpval, setINP] = React.useState({
-    //     bookName: "",
-    //     category: "",
-    //     authorName: "",
-    //     stock: 0,
-    //     publisherName: "",
-    //     yearOfPublication: "",
-    //     price: 0,
-    //     vendorName: "",
-    //     dateOfPurchase: ""
-    // })
-
-
-    // //Sending Entered Data To Backend
-    // const addInputData = async (e) => {
-    //     e.preventDefault();
-    //     // console.log("button working");
-
-    //     const { bookName,
-    //         category,
-    //         authorName,
-    //         stock,
-    //         publisherName,
-    //         yearOfPublication,
-    //         price,
-    //         vendorName,
-    //         dateOfPurchase } = inpval;
-
-    //     if (!bookName || !category || !dateOfPurchase) {
-    //         // res.status(204).send("Field's are Empty!");
-    //         alert("Book-Name, Category, Price and Date-Of-Purchase Fields Are Mandatory!")
-    //     }
-    //     else {
-    //         const res = await fetch("http://localhost:8000/registerBook", {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json"
-    //             },
-    //             //whenever we send data to database, we convert it into string first
-    //             body: JSON.stringify({
-    //                 bookName,
-    //                 category,
-    //                 authorName,
-    //                 stock,
-    //                 publisherName,
-    //                 yearOfPublication,
-    //                 price,
-    //                 vendorName,
-    //                 dateOfPurchase
-    //             })
-    //         });
-
-    //         const data = await res.json();
-    //         console.log(data);
-
-    //         if (res.status === 422) {
-    //             alert("This Book Name Is Already Present!");
-    //         }
-    //         else {
-    //             alert("Book Has Been Added Successfully!");
-    //             console.log("Book Has Been Added Successfully!");
-    //             navigateTo("/BookList");
-    //         }
-    //     }
-    // }
-
-    // const [defaultVal, setDefaultValue] = React.useState({
-    //     stock: 0,
-    //     price: 0
-    // })
-
-    // const setdata = (e) => {
-    //     console.log(e.target.value);
-    //     const { name, value } = e.target;
-    //     setDefaultValue((preval) => {
-    //         return {
-    //             ...preval,
-    //             [name]: value
-    //         }
-    //     })
-    // }
-
-    const preLoadedValues = {
-        // bookName: "",
-        // category: "",
-        // authorName: "",
-        stock: 0,
-        // publisherName: "",
-        // yearOfPublication: "",
-        price: 0
-        // vendorName: "",
-    };
-
+    //For fetching the book details
     const {
         register,
         handleSubmit,
@@ -109,7 +17,6 @@ const Register = () => {
 
     const onFormSubmit = async (formData) => {
         // console.log(formData);
-
         const { bookName,
             category,
             authorName,
@@ -120,13 +27,11 @@ const Register = () => {
             vendorName,
             dateOfPurchase } = formData;
 
-
-        const res = await fetch("http://localhost:8000/registerBook", {
-            method: "POST",
+        const res2 = await fetch(`http://localhost:8000/updateBook/${id}`, {
+            method: "PATCH",
             headers: {
                 "Content-Type": "application/json"
             },
-            //whenever we send data to database, we convert it into string first
             body: JSON.stringify({
                 bookName,
                 category,
@@ -140,18 +45,16 @@ const Register = () => {
             })
         });
 
-        const data = await res.json();
-        console.log(data);
+        const data2 = await res2.json();
+        console.log(data2);
 
-        if (res.status === 422) {
-            alert("This Book Name Is Already Present!");
+        if (res2.status == 422 || !data2) {
+            alert("Data could not be updated!");
         }
         else {
-            alert("Book Has Been Added Successfully!");
-            console.log("Book Has Been Added Successfully!");
-            navigateTo("/BookList");
+            navigate("/BookList");
+            alert("Data Updated Successfully");
         }
-
     }
 
     var year = new Date();
@@ -177,12 +80,17 @@ const Register = () => {
 
     return (
         <div className='card-div'>
-            <div className='container'>
+            <div className='container edit-form'>
                 <div className='card-header'>
-                    <h2>Add New Book</h2>
-                    <NavLink to="/BookList">
-                        <button className="btn btn-primary">Home</button>
-                    </NavLink>
+                    <h2>Edit Book</h2>
+                    <div>
+                        <NavLink to={`/BookList/view/${id}`}  >
+                            <button className="btn btn-outline-success">Detail</button>
+                        </NavLink>
+                        <NavLink to="/BookList">
+                            <button className="btn btn-primary home-btn">Home</button>
+                        </NavLink>
+                    </div>
                 </div>
                 <form className="mt-4" onSubmit={handleSubmit(onFormSubmit)}>
                     <div className="row">
@@ -195,6 +103,7 @@ const Register = () => {
                                 type="text"
                                 className={`form-control ${errors.bookName ? "is-invalid" : ""}`}
                                 id="bookName"
+                                name = "bookName"
                                 {...register("bookName", { required: true })}
                             />
                             {errors.bookName && (
@@ -209,6 +118,7 @@ const Register = () => {
                                 type="text"
                                 className={`form-control ${errors.category ? "is-invalid" : ""}`}
                                 id="category"
+                                name="category"
                                 {...register("category", { validate: checkNumbers, required: true })}
                             />
                             {errors.category?.type === "validate" && (
@@ -226,6 +136,7 @@ const Register = () => {
                                 type="text"
                                 className={`form-control ${errors.authorName ? "is-invalid" : ""}`}
                                 id="authorName"
+                                name="authorName"
                                 {...register("authorName", { validate: checkNumbers, required: true })}
                             />
                             {errors.authorName?.type === "validate" && (
@@ -254,6 +165,7 @@ const Register = () => {
                                 type="text"
                                 className={`form-control ${errors.publisherName ? "is-invalid" : ""}`}
                                 id="publisherName"
+                                name="publisherName"
                                 {...register("publisherName", { validate: checkNumbers })}
                             />
                             {errors.publisherName?.type === "validate" && (
@@ -269,6 +181,7 @@ const Register = () => {
                                 type="text"
                                 className={`form-control ${errors.yearOfPublication ? "is-invalid" : ""}`}
                                 id="yearOfPublication"
+                                name="yearOfPublication"
                                 {...register("yearOfPublication", { validate: noOfDigits, max: year.getFullYear() + 1, valueAsNumber: true })}
                             />
                             {errors.yearOfPublication?.type === "max" && (
@@ -298,6 +211,7 @@ const Register = () => {
                                 type="text"
                                 className={`form-control ${errors.vendorName ? "is-invalid" : ""}`}
                                 id="vendorName"
+                                name="vendorName"
                                 {...register("vendorName", { validate: checkNumbers })}
                             />
                             {errors.vendorName?.type === "validate" && (
@@ -312,6 +226,7 @@ const Register = () => {
                                 type="date"
                                 className={`form-control ${errors.dateOfPurchase ? "is-invalid" : ""}`}
                                 id="dateOfPurchase"
+                                name="dateOfPurchase"
                                 {...register("dateOfPurchase", { required: true })}
                             />
                             {errors.dateOfPurchase && (
@@ -329,4 +244,4 @@ const Register = () => {
     )
 }
 
-export default Register
+export default UserForm;

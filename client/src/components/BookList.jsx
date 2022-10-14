@@ -31,10 +31,17 @@ const BookList = () => {
         }
     }
 
-    //to run the getdata function everytime the page refreshes
+
     React.useEffect(() => {
+        // let x = 100;
         getdata();
-    }, [])
+        // const interval = setInterval(() => {
+            
+        //     // console.log(++x);
+        // }, 1000);
+        // return () => clearInterval(interval);
+    }, []);
+
 
     const deleteBook = async (id) => {
 
@@ -84,7 +91,7 @@ const BookList = () => {
                                 if (searchTerm === "") {
                                     return element;
                                 }
-                                else if (element.bookName.toLowerCase().includes(searchTerm.toLowerCase()) || element.category.toLowerCase().includes(searchTerm.toLowerCase()) || element.authorName.toLowerCase().includes(searchTerm.toLowerCase())){
+                                else if (element.bookName.toLowerCase().includes(searchTerm.toLowerCase()) || element.category.toLowerCase().includes(searchTerm.toLowerCase()) || element.authorName.toLowerCase().includes(searchTerm.toLowerCase())) {
                                     return element;
                                 }
                             }).map((element, id) => {
