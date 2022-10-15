@@ -2,8 +2,9 @@ import React from 'react'
 import { NavLink, useNavigate } from "react-router-dom"
 import {useForm} from "react-hook-form"
 
-const UserForm = ( {preLoadedValues , id} ) => {
+import Swal from 'sweetalert2'
 
+const UserForm = ( {preLoadedValues , id} ) => {
 
     const navigate = useNavigate("");
 
@@ -50,11 +51,36 @@ const UserForm = ( {preLoadedValues , id} ) => {
         console.log(data2);
 
         if (res2.status == 422 || !data2) {
-            alert("Data could not be updated!");
+            Swal.fire({
+                title: '',
+                text: "Data could not updated for some reason!",
+                icon: 'error',
+                showCancelButton: false,
+                confirmButtonColor: '#0d6efd',
+                cancelButtonColor: '#dc3545',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No ',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    navigate("/ItemList");
+                }
+            })
         }
         else {
-            navigate("/BookList");
-            alert("Data Updated Successfully");
+            Swal.fire({
+                title: '',
+                text: "Data updated successfully!",
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#0d6efd',
+                cancelButtonColor: '#dc3545',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No ',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    navigate("/BookList");
+                }
+            })
         }
     }
 
@@ -84,13 +110,13 @@ const UserForm = ( {preLoadedValues , id} ) => {
         <div className='card-div'>
             <div className='container edit-form'>
                 <div className='card-header'>
-                    <h2>Edit Book</h2>
+                    <h2>Edit Details</h2>
                     <div>
                         <NavLink to={`/BookList/view/${id}`}  >
                             <button className="btn btn-outline-success">Detail</button>
                         </NavLink>
                         <NavLink to="/BookList">
-                            <button className="btn btn-primary home-btn">Home</button>
+                            <button className="btn btn-primary home-btn">List</button>
                         </NavLink>
                     </div>
                 </div>

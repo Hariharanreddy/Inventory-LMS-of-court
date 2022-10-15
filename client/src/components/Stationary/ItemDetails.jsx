@@ -3,16 +3,16 @@ import { NavLink, useNavigate, useParams } from 'react-router-dom';
 
 import Swal from 'sweetalert2'
 
-const Details = () => {
+const ItemDetails = () => {
 
-  const [getBookData, setBookData] = React.useState({});
+  const [getItemData, setItemData] = React.useState({});
 
   const { id } = useParams("");
 
-  //For fetching the book details
+  //For fetching the item details
   const getdata = async () => {
 
-    const res = await fetch(`http://localhost:8000/getBook/${id}`, {
+    const res = await fetch(`http://localhost:8000/getItem/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json"
@@ -26,7 +26,7 @@ const Details = () => {
       console.log("client side, data couldn't be fetched.");
     }
     else {
-      setBookData(data)
+      setItemData(data)
       console.log("client side, data fetched successfully.");
     }
   }
@@ -36,12 +36,11 @@ const Details = () => {
   }, [])
 
 
-  //For Deleting the Book
+  //For Deleting the item
   const navigateTo = useNavigate();
+  const deleteItem = async (id) => {
 
-  const deleteBook = async (id) => {
-
-    const res2 = await fetch(`http://localhost:8000/deleteBook/${id}`, {
+    const res2 = await fetch(`http://localhost:8000/deleteItem/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json"
@@ -56,13 +55,13 @@ const Details = () => {
     }
     else {
       getdata();
-      navigateTo("/BookList");
+      navigateTo("/ItemList");
     }
   }
 
   const checkDelete = (id) => {
     Swal.fire({
-        title: 'Are you sure?',
+        title: 'Are You Sure?',
         text: "Data will be removed permanently!",
         icon: 'question',
         showCancelButton: true,
@@ -72,7 +71,7 @@ const Details = () => {
         cancelButtonText: 'No ',
       }).then((result) => {
         if (result.isConfirmed) {
-          deleteBook(id);
+          deleteItem(id);
         }
       })
 }
@@ -82,8 +81,8 @@ const Details = () => {
     <>
       <div className="card-div">
         <div className="add_btn mb-4">
-          <h2>Book Details</h2>
-          <NavLink to="/BookList">
+          <h2>Item Details</h2>
+          <NavLink to="/ItemList">
             <button className="btn btn-primary home-btn">List</button>
           </NavLink>
         </div>
@@ -96,45 +95,45 @@ const Details = () => {
           </thead>
           <tbody>
             <tr className='record-row'>
-              <th scope="row">Book</th>
-              <td>{getBookData.bookName}</td>
+              <th scope="row">Item</th>
+              <td>{getItemData.itemName}</td>
             </tr>
             <tr className='record-row'>
-              <th scope="row">Author</th>
-              <td>{getBookData.authorName}</td>
+              <th scope="row">Quantity Received</th>
+              <td>{getItemData.quantityReceived}</td>
             </tr>
             <tr className='record-row'>
-              <th scope="row">Category</th>
-              <td >{getBookData.category}</td>
-            </tr>
-            <tr className='record-row'>
-              <th scope="row">Stock Available</th>
-              <td >{getBookData.stock}</td>
-            </tr>
-            <tr className='record-row'>
-              <th scope="row">Publisher</th>
-              <td >{getBookData.publisherName}</td>
-            </tr>
-            <tr className='record-row'>
-              <th scope="row">Vendor</th>
-              <td >{getBookData.vendorName}</td>
-            </tr>
-            <tr className='record-row'>
-              <th scope="row">Year Of Publication</th>
-              <td >{getBookData.yearOfPublication}</td>
-            </tr>
-            <tr className='record-row'>
-              <th scope="row">Price</th>
-              <td >{"Rs. " + getBookData.price}</td>
+              <th scope="row">Stock</th>
+              <td >{getItemData.stock}</td>
             </tr>
             <tr className='record-row'>
               <th scope="row">Date Of Purchase</th>
-              <td >{getBookData.dateOfPurchase}</td>
+              <td >{getItemData.dateOfPurchase}</td>
+            </tr>
+            <tr className='record-row'>
+              <th scope="row">Vendor</th>
+              <td >{getItemData.vendorName}</td>
+            </tr>
+            <tr className='record-row'>
+              <th scope="row">Name Of Requisition Court</th>
+              <td >{getItemData.requisitionCourtName}</td>
+            </tr>
+            <tr className='record-row'>
+              <th scope="row">Date Of Requisition Receipt</th>
+              <td >{getItemData.dateOfRequisitionReceipt}</td>
+            </tr>
+            <tr className='record-row'>
+              <th scope="row">Date Of Issuance Of Item</th>
+              <td >{getItemData.dateOfItemIssuance}</td>
+            </tr>
+            <tr className='record-row'>
+              <th scope="row">Last Remaining</th>
+              <td >{getItemData.lastRemaining}</td>
             </tr>
           </tbody>
         </table>
         <div className='card-footer'>
-          <NavLink to={`/BookList/edit/${id}`} > <button className="btn btn-outline-primary mx-4">Edit</button></NavLink>
+          <NavLink to={`/ItemList/edit/${id}`} > <button className="btn btn-outline-primary mx-4">Edit</button></NavLink>
           <button className="btn btn-outline-danger" onClick={() => checkDelete(id)}>Delete</button>
         </div>
       </div>
@@ -142,4 +141,4 @@ const Details = () => {
   )
 }
 
-export default Details
+export default ItemDetails

@@ -1,8 +1,8 @@
 import React from 'react'
 import {useParams} from "react-router-dom"
-import UserForm from "./UserForm"
+import ItemForm from "./ItemForm"
 
-const Edit = () => {
+const EditItem = () => {
     const { id } = useParams("");
 
     const [data, setData] = React.useState(null)
@@ -11,7 +11,7 @@ const Edit = () => {
 
         const getdata = async () => {
 
-            const res = await fetch(`http://localhost:8000/getBook/${id}`, {
+            const res = await fetch(`http://localhost:8000/getItem/${id}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
@@ -31,7 +31,7 @@ const Edit = () => {
         getdata();
     }, [])
 
-    return (data ? <UserForm preLoadedValues={data} id={id} /> : <div>Loading...</div>)
+    return (data ? <ItemForm preLoadedValues={data} id={id} /> : <div>Loading...</div>)
 }
 
-export default Edit;
+export default EditItem;

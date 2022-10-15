@@ -36,7 +36,7 @@ const sidebar_section = [
     icon: <IoFileTrayStackedSharp />,
     subRoutes: [
       {
-        path: "/settings/profile",
+        path: "/ItemList",
         name: "General Item",
         icon: <MdProductionQuantityLimits />,
       },

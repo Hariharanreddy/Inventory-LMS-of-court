@@ -161,7 +161,7 @@ router.post("/registerItem", async (req, res) => {
 
         if (item) {
             res.status(422).json("This item is already present!");
-            console.log("Item is already present.")
+            console.log("Server side : Item is already present.")
         }
         else {
             let newItem = new items({

@@ -2,91 +2,12 @@ import React from 'react'
 import { NavLink, useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 
+import Swal from "sweetalert2"
+
+
 const Register = () => {
 
     const navigateTo = useNavigate();
-
-    // const [inpval, setINP] = React.useState({
-    //     bookName: "",
-    //     category: "",
-    //     authorName: "",
-    //     stock: 0,
-    //     publisherName: "",
-    //     yearOfPublication: "",
-    //     price: 0,
-    //     vendorName: "",
-    //     dateOfPurchase: ""
-    // })
-
-
-    // //Sending Entered Data To Backend
-    // const addInputData = async (e) => {
-    //     e.preventDefault();
-    //     // console.log("button working");
-
-    //     const { bookName,
-    //         category,
-    //         authorName,
-    //         stock,
-    //         publisherName,
-    //         yearOfPublication,
-    //         price,
-    //         vendorName,
-    //         dateOfPurchase } = inpval;
-
-    //     if (!bookName || !category || !dateOfPurchase) {
-    //         // res.status(204).send("Field's are Empty!");
-    //         alert("Book-Name, Category, Price and Date-Of-Purchase Fields Are Mandatory!")
-    //     }
-    //     else {
-    //         const res = await fetch("http://localhost:8000/registerBook", {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json"
-    //             },
-    //             //whenever we send data to database, we convert it into string first
-    //             body: JSON.stringify({
-    //                 bookName,
-    //                 category,
-    //                 authorName,
-    //                 stock,
-    //                 publisherName,
-    //                 yearOfPublication,
-    //                 price,
-    //                 vendorName,
-    //                 dateOfPurchase
-    //             })
-    //         });
-
-    //         const data = await res.json();
-    //         console.log(data);
-
-    //         if (res.status === 422) {
-    //             alert("This Book Name Is Already Present!");
-    //         }
-    //         else {
-    //             alert("Book Has Been Added Successfully!");
-    //             console.log("Book Has Been Added Successfully!");
-    //             navigateTo("/BookList");
-    //         }
-    //     }
-    // }
-
-    // const [defaultVal, setDefaultValue] = React.useState({
-    //     stock: 0,
-    //     price: 0
-    // })
-
-    // const setdata = (e) => {
-    //     console.log(e.target.value);
-    //     const { name, value } = e.target;
-    //     setDefaultValue((preval) => {
-    //         return {
-    //             ...preval,
-    //             [name]: value
-    //         }
-    //     })
-    // }
 
     const preLoadedValues = {
         // bookName: "",
@@ -109,7 +30,14 @@ const Register = () => {
 
     const onFormSubmit = async (formData) => {
         // console.log(formData);
+        console.log(formData.price);
+        
 
+        if(formData.price == undefined){
+            
+            formData.price = 0;
+        }
+        
         const { bookName,
             category,
             authorName,
@@ -144,12 +72,37 @@ const Register = () => {
         console.log(data);
 
         if (res.status === 422) {
-            alert("This Book Name Is Already Present!");
+            Swal.fire({
+                title: '',
+                text: "Book name is already present!",
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: '#0d6efd',
+                cancelButtonColor: '#dc3545',
+                confirmButtonText: 'Ok',
+                cancelButtonText: 'No ',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                }
+            })
         }
         else {
-            alert("Book Has Been Added Successfully!");
             console.log("Book Has Been Added Successfully!");
-            navigateTo("/BookList");
+
+            Swal.fire({
+                title: '',
+                text: "Book has been added successfully!",
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#0d6efd',
+                cancelButtonColor: '#dc3545',
+                confirmButtonText: 'Ok',
+                cancelButtonText: 'No ',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    navigateTo("/BookList");
+                }
+            })
         }
 
     }
@@ -201,6 +154,7 @@ const Register = () => {
                                 <div className="invalid-feedback">This Field Is Required.</div>
                             )}
                         </div>
+
                         <div className="mb-3 col-lg-6 col-md-6 col-12">
                             <label htmlFor="category" className="form-label">
                                 Category
@@ -218,6 +172,7 @@ const Register = () => {
                                 <div className="invalid-feedback">This Field Is Required.</div>
                             )}
                         </div>
+
                         <div className="mb-3 col-lg-6 col-md-6 col-12">
                             <label htmlFor="authorName" className="form-label">
                                 Author Name
@@ -235,15 +190,22 @@ const Register = () => {
                                 <div className="invalid-feedback">This Field Is Required.</div>
                             )}
                         </div>
+
                         <div className="mb-3 col-lg-6 col-md-6 col-12">
                             <label htmlFor='stock' className="form-label">Stock Available</label>
                             <input
                                 type="number"
                                 id="stock"
-                                className="form-control"
+                                className={`form-control ${errors.stock ? "is-invalid" : ""}`}
                                 name="stock"
-                                {...register("stock")}
+                                {...register("stock", {min: 0, required: true})}
                             />
+                            {errors.stock?.type === "min" && (
+                                <div className="invalid-feedback">Quantity cannot be less than 0.</div>
+                            )}
+                            {errors.stock?.type === "required" && (
+                                <div className="invalid-feedback">This Field Is Required.</div>
+                            )}
                         </div>
 
                         <div className="mb-3 col-lg-6 col-md-6 col-12">
@@ -282,12 +244,18 @@ const Register = () => {
                         <div className="mb-3 col-lg-6 col-md-6 col-12">
                             <label htmlFor="price" className="form-label">Price</label>
                             <input
-                                type="text"
-                                className="form-control"
+                                type="number"
+                                className={`form-control ${errors.price ? "is-invalid" : ""}`}
                                 id="price"
                                 name="price"
-                                {...register("price", { valueAsNumber: true })}
+                                {...register("price", { min:0, required: true })}
                             />
+                            {errors.price?.type === "min" && (
+                                <div className="invalid-feedback">Quantity cannot be less than 0.</div>
+                            )}
+                            {errors.price?.type === "required" && (
+                                <div className="invalid-feedback">This Field Is Required.</div>
+                            )}
                         </div>
 
                         <div className="mb-3 col-lg-6 col-md-6 col-12">
