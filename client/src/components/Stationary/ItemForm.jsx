@@ -101,14 +101,9 @@ const ItemForm = ({ preLoadedValues, id }) => {
             <div className='container edit-form'>
                 <div className='card-header'>
                     <h2>Edit Details</h2>
-                    <div>
-                        <NavLink to={`/ItemList/view/${id}`}  >
-                            <button className="btn btn-outline-success">Detail</button>
-                        </NavLink>
-                        <NavLink to="/ItemList">
-                            <button className="btn btn-primary home-btn">List</button>
-                        </NavLink>
-                    </div>
+                    <NavLink to="/ItemList">
+                        <button className="btn btn-primary home-btn">List</button>
+                    </NavLink>
                 </div>
                 <form className="mt-4" onSubmit={handleSubmit(onFormSubmit)}>
                     <div className="row">

@@ -86,14 +86,13 @@ const BookList = () => {
     }
 
     return (
-        <div className="mt-2">
-            <div className="container">
+            <div className="container mt-4">
                 <div className="add_btn mt-2 mb-4">
                     <div>
                         <img src={SearchIcon} alt="" width="30px" height="30px" />
                         <input className="search-button" type="search" placeholder="Search..." aria-label="Search" onChange={(e) => { setSearchTerm(e.target.value) }} />
                     </div>
-                    <NavLink to="/BookList/registerBook" className="btn btn-primary"><i className="fa-solid fa-plus"></i> Add New Book</NavLink>
+                    <NavLink to="/BookList/registerBook" className="btn btn-primary"><i className="fa-solid fa-plus"></i> Add Book</NavLink>
                 </div>
                 <table className="table">
                     <thead>
@@ -108,7 +107,7 @@ const BookList = () => {
                     </thead>
                     <tbody>
                         {
-                            getBookData.filter((element) => {
+                            getBookData && getBookData.filter((element) => {
                                 if (searchTerm === "") {
                                     return element;
                                 }
@@ -135,7 +134,6 @@ const BookList = () => {
                     </tbody>
                 </table>
             </div>
-        </div >
     )
 }
 

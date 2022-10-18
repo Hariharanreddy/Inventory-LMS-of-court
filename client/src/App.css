@@ -109,18 +109,34 @@ td:nth-child(5) {
 /* view section */
 
 .card-div {
+  position: relative;
+  top: 3rem;
   max-width: 600px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   padding: 1.5em;
   padding-bottom: 1em;
-  margin-top: 1rem;
+  margin-bottom: 2rem;
   margin-left: auto;
   margin-right: auto;
+}
+
+@media(max-width: 760px){
+  .container{
+    margin-left: 15%;
+  }
+  .card-div{
+    position: static;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    margin-left: 15%;
+    margin-right: 8%;
+  }
 }
 
 .card-header{
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding-bottom: 1.2em !important;
   border-bottom: 1px solid rgba(173, 163, 163, 0.5) !important;
 }
@@ -156,14 +172,14 @@ input{
 }
 
 /* ~~~~~~~~~~~~~~~~~~~SIDE-BAR~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-.main-container {
+/* .main-container {
   display: flex;
-}
+} */
 
-main {
+/* main {
   width: 100%;
   padding: 10px;
-}
+} */
 
 .title {
   font-size: 3rem;
@@ -173,6 +189,9 @@ main {
 
 /* Sidebar */
 .sidebar {
+  position: fixed;
+  top: 0;
+  z-index: 10;
   background: rgb(6, 0, 97);
   color: white;
   min-height: 100vh;

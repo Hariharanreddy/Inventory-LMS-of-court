@@ -23,11 +23,11 @@ const ItemDetails = () => {
     console.log(data);
 
     if (res.status === 422 || !data) {
-      console.log("client side, data couldn't be fetched.");
+      console.log("Client side, data couldn't be fetched.");
     }
     else {
       setItemData(data)
-      console.log("client side, data fetched successfully.");
+      console.log("Client side, data fetched successfully.");
     }
   }
 

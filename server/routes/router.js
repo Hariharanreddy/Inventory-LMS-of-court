@@ -21,10 +21,10 @@ router.get("/getBooks", async (req, res) => {
 //To Return the individual book details
 router.get("/getBook/:id", async (req, res) => {
     try {
-        // console.log(req.params);
+        //when we want to take out id from the url
         const { id } = req.params;
 
-        const individualBook = await books.findById({ _id: id });
+        const individualBook = await books.findById(id);    //also can be written {_id : id}
         console.log(individualBook);
         res.status(201).json(individualBook)
     }
@@ -57,7 +57,8 @@ router.post("/registerBook", async (req, res) => {
             console.log("Book is already present.")
         }
         else {
-            let newBook = new books({
+
+            const insertedBook = await books.create({
                 bookName,
                 category,
                 authorName,
@@ -69,7 +70,6 @@ router.post("/registerBook", async (req, res) => {
                 dateOfPurchase
             });
 
-            const insertedBook = await newBook.save();
             res.status(201).json(insertedBook);
             console.log(insertedBook);
         }
@@ -84,10 +84,7 @@ router.patch("/updateBook/:id", async (req, res) => {
     try {
         const id = req.params.id;
 
-        const updatedBook = await books.findByIdAndUpdate(id, req.body, {
-            new: true
-        });
-
+        const updatedBook = await books.findByIdAndUpdate(id, req.body, {new: true});   
         console.log(updatedBook);
         res.status(201).json(updatedBook);
     }
@@ -99,10 +96,9 @@ router.patch("/updateBook/:id", async (req, res) => {
 //delete book
 router.delete("/deleteBook/:id", async (req, res) => {
     try {
-        const id = req.params.id;
+        const {id} = req.params;
 
-        const deletedBook = await books.findByIdAndDelete({ _id: id })
-
+        const deletedBook = await books.findByIdAndDelete({_id : id})   //also can be written id
         console.log(deletedBook);
         res.status(201).json(deletedBook);
     }
@@ -132,7 +128,7 @@ router.get("/getItem/:id", async (req, res) => {
         // console.log(req.params);
         const { id } = req.params;
 
-        const individualItem = await items.findById({ _id: id });
+        const individualItem = await items.findById(id);        //also can be written {_id : id}
         console.log(individualItem);
         res.status(201).json(individualItem)
     }
@@ -164,7 +160,7 @@ router.post("/registerItem", async (req, res) => {
             console.log("Server side : Item is already present.")
         }
         else {
-            let newItem = new items({
+            const insertedItem = await items.create({
                 itemName,
                 quantityReceived,
                 stock,
@@ -176,7 +172,6 @@ router.post("/registerItem", async (req, res) => {
                 lastRemaining
             });
 
-            const insertedItem = await newItem.save();
             res.status(201).json(insertedItem);
             console.log(insertedItem);
         }
@@ -193,7 +188,7 @@ router.patch("/updateItem/:id", async (req, res) => {
 
         const updatedItem = await items.findByIdAndUpdate(id, req.body, {
             new: true
-        }); 
+        });
 
         console.log(updatedItem);
         res.status(201).json(updatedItem);

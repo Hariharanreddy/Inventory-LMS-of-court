@@ -1,10 +1,10 @@
 import React from 'react'
 import { NavLink, useNavigate } from "react-router-dom"
-import {useForm} from "react-hook-form"
+import { useForm } from "react-hook-form"
 
 import Swal from 'sweetalert2'
 
-const UserForm = ( {preLoadedValues , id} ) => {
+const UserForm = ({ preLoadedValues, id }) => {
 
     const navigate = useNavigate("");
 
@@ -14,7 +14,7 @@ const UserForm = ( {preLoadedValues , id} ) => {
         handleSubmit,
         formState: { errors }
     } = useForm({
-        defaultValues : preLoadedValues
+        defaultValues: preLoadedValues
     });
 
     const onFormSubmit = async (formData) => {
@@ -98,7 +98,7 @@ const UserForm = ( {preLoadedValues , id} ) => {
 
     function checkNumbers(name) {
         var letters = /^[A-Za-z ]+$/;
-        if (name == "" || name.match(letters) ) {
+        if (name == "" || name.match(letters)) {
             return true;
         }
         else {
@@ -111,14 +111,9 @@ const UserForm = ( {preLoadedValues , id} ) => {
             <div className='container edit-form'>
                 <div className='card-header'>
                     <h2>Edit Details</h2>
-                    <div>
-                        <NavLink to={`/BookList/view/${id}`}  >
-                            <button className="btn btn-outline-success">Detail</button>
-                        </NavLink>
-                        <NavLink to="/BookList">
-                            <button className="btn btn-primary home-btn">List</button>
-                        </NavLink>
-                    </div>
+                    <NavLink to="/BookList">
+                        <button className="btn btn-primary home-btn">List</button>
+                    </NavLink>
                 </div>
                 <form className="mt-4" onSubmit={handleSubmit(onFormSubmit)}>
                     <div className="row">
@@ -131,7 +126,7 @@ const UserForm = ( {preLoadedValues , id} ) => {
                                 type="text"
                                 className={`form-control ${errors.bookName ? "is-invalid" : ""}`}
                                 id="bookName"
-                                name = "bookName"
+                                name="bookName"
                                 {...register("bookName", { required: true })}
                             />
                             {errors.bookName && (

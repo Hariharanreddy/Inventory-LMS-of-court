@@ -88,7 +88,7 @@ const SideBar = ({ children }) => {
 
   return (
     <>
-      <div className="main-container">
+      {/* <div className="main-container"> */}
         <motion.div
           className={`sidebar`}
           animate={{
@@ -164,9 +164,7 @@ const SideBar = ({ children }) => {
           </section>
 
         </motion.div>
-
-        <main>{children}</main>
-      </div>
+        {/* <main>{}</main> */}
     </>
   );
 };
