@@ -84,7 +84,7 @@ const ItemList = () => {
     }
 
     return (
-            <div className="container mt-4">
+            <div className="container list-section mt-4">
                 <div className="add_btn mt-2 mb-4">
                     <div>
                         <img src={SearchIcon} alt="" width="30px" height="30px" />

@@ -8,13 +8,13 @@ const menuAnimation = {
     opacity: 0,
     height: 0,
     padding: 0,
-    transition: { duration: 0.3, when: "afterChildren" },
+    transition: { duration: 0.2, when: "afterChildren" },
   },
   show: {
     opacity: 1,
     height: "auto",
     transition: {
-      duration: 0.3,
+      duration: 0.2,
       when: "beforeChildren",
     },
   },

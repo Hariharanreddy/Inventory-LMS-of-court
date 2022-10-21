@@ -1,7 +1,99 @@
 const express = require("express");
-const router = express.Router();
+const router = new express.Router();
 const books = require("../models/Book List/bookSchema");
 const items = require("../models/Stationary List/itemsSchema")
+const users = require("../models/User List/userSchema")
+const bcrypt = require("bcryptjs");
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~User ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+//User login
+router.post("/login", async (req, res) => {
+
+    const {
+        email,
+        password
+    } = req.body;
+
+    try {
+        const userValid = await users.findOne({ email: email });
+
+        if (userValid) {
+            const isMatch = await bcrypt.compare(password, userValid.password);
+
+            if (!isMatch) {
+                res.status(422).json({ error: "invalid user details" })
+            }
+            else {
+                //token generate
+                const token = await userValid.generateAuthtoken();
+
+                // cookiegenerate
+                res.cookie("usercookie", token, {
+                    expires: new Date(Date.now() + 9000000),
+                    httpOnly: true
+                });
+
+                const result = {
+                    userValid,
+                    token
+                }
+                res.status(201).json({ status: 201, result })
+            }
+        }
+    }
+    catch (error) {
+        res.status(401).json(error);
+        console.log("catch block error");
+    }
+})
+
+
+//To Register A New User
+router.post("/registerUser", async (req, res) => {
+
+    const {
+        name,
+        email,
+        department,
+        departmentId,
+        dob,
+        password,
+        cpassword } = req.body;
+
+    try {
+        const preuser = await users.findOne({ email: email });
+
+        if (preuser) {
+            res.status(422).json({ error: "Email Already Exists." })
+        }
+        else if (password !== cpassword) {
+            res.status(422).json({ error: "Password and Confirm Password Did Not Match" })
+        }
+        else {
+            const finalUser = new users({
+                name,
+                email,
+                department,
+                departmentId,
+                dob,
+                password,
+                cpassword
+            });
+
+            // Here Password Hashing
+            const insertedUser = await finalUser.save();
+            res.status(201).json({ status: 201, insertedUser });
+
+        }
+    } catch (error) {
+        res.status(422).json(error);
+        console.log("Server side: catch block error");
+    }
+})
+
+
+
 
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Book List~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -50,14 +142,12 @@ router.post("/registerBook", async (req, res) => {
 
     try {
         const book = await books.findOne({ bookName: bookName });     // it can also be written just bookName  //object destructuring
-        // console.log(book);
 
         if (book) {
             res.status(422).json("This book is already present!");
             console.log("Book is already present.")
         }
         else {
-
             const insertedBook = await books.create({
                 bookName,
                 category,
@@ -84,7 +174,7 @@ router.patch("/updateBook/:id", async (req, res) => {
     try {
         const id = req.params.id;
 
-        const updatedBook = await books.findByIdAndUpdate(id, req.body, {new: true});   
+        const updatedBook = await books.findByIdAndUpdate(id, req.body, { new: true });
         console.log(updatedBook);
         res.status(201).json(updatedBook);
     }
@@ -96,9 +186,9 @@ router.patch("/updateBook/:id", async (req, res) => {
 //delete book
 router.delete("/deleteBook/:id", async (req, res) => {
     try {
-        const {id} = req.params;
+        const { id } = req.params;
 
-        const deletedBook = await books.findByIdAndDelete({_id : id})   //also can be written id
+        const deletedBook = await books.findByIdAndDelete({ _id: id })   //also can be written id
         console.log(deletedBook);
         res.status(201).json(deletedBook);
     }

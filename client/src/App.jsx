@@ -25,24 +25,30 @@ import EditItem from "./components/Stationary/EditItem"
 
 //import authentication components
 import Login from "./components/Authentication/Login"
+import RegisterUser from './components/Authentication/RegisterUser'
+import Dash from "./components/Authentication/Dash"
 
 const App = () => {
   return (
     <>
       <Routes>
-        <Route path="/login" element={<Login />}></Route>
+        <Route path="/login" element={<Login />} />
+        <Route path="/registerUser" element={<RegisterUser />} />
+        <Route path="/dash" element={<Dash />} />
 
         <Route element={<SideBarLayout />}>
+          {/* Book Section Routes */}
           <Route path="/BookList" element={<BookList />} />
           <Route path="/BookList/registerBook" element={<RegisterBook />} />
           <Route path="/BookList/edit/:id" element={<Edit />} />
           <Route path="/BookList/view/:id" element={<Details />} />
 
+          {/* Item Section Routes */}
           <Route path="/ItemList" element={<ItemList />} />
           <Route path="/ItemList/registerItem" element={<RegisterItem />} />
           <Route path="/ItemList/edit/:id" element={<EditItem />} />
           <Route path="/ItemList/view/:id" element={<ItemDetails />} />
-          <Route path="*" element={<> not found</>} />
+          <Route path="*" element={<div style={{textAlign: "center"}}>PAGE NOT FOUND</div>} />
         </Route>
       </Routes>
     </>

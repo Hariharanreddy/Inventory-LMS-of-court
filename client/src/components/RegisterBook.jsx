@@ -30,11 +30,8 @@ const Register = () => {
 
     const onFormSubmit = async (formData) => {
         // console.log(formData);
-        console.log(formData.price);
-        
 
         if(formData.price == undefined){
-            
             formData.price = 0;
         }
         
