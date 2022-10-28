@@ -34,6 +34,7 @@ import { LoginContext } from "./components/ContextProvider/Context"
 import UserList from "./components/Admin/UserList"
 import UserDetails from "./components/Admin/UserDetails"
 import UserIssuedBooks from "./components/Admin/UserIssuedBooks"
+import IssueRequests from "./components/Admin/IssueRequests"
 
 const App = () => {
   const [data, setData] = useState(false);
@@ -90,6 +91,7 @@ const App = () => {
               <Route path="/UserList" element={<UserList />} />
               <Route path="/UserList/view/:id" element={<UserDetails />} />
               <Route path="/UserList/viewIssue/:id" element={<UserIssuedBooks />} />
+              <Route path="/IssueRequests" element={<IssueRequests />} />
 
               {/* Item Section Routes */}
               <Route path="/ItemList" element={<ItemList />} />

@@ -1,5 +1,4 @@
 import React, { useContext } from 'react'
-import SearchIcon from "../../images/search-icon.png"
 import { useParams } from 'react-router-dom';
 import { LoginContext } from "../ContextProvider/Context"
 import Swal from 'sweetalert2'
@@ -86,10 +85,7 @@ const UserIssuedBooks = () => {
     return (
         <>{data ? <div className="container list-section mt-4">
             <div className="add_btn mt-2 mb-4">
-                <div>
-                    <img src={SearchIcon} alt="" width="30px" height="30px" />
-                    <input className="search-button" type="search" placeholder="Search..." aria-label="Search" onChange={(e) => { setSearchTerm(e.target.value) }} />
-                </div>
+                <h2>Issued Books By User</h2>
             </div>
             <table className="table">
                 <thead>
@@ -109,10 +105,10 @@ const UserIssuedBooks = () => {
                             if (element.userId == id) {
                                 return element;
                             }
-                        }).map((element, id) => {
+                        }).map((element, serialNum) => {
                             return (
-                                <tr className="record-row" key={id}>
-                                    <th scope="row">{id + 1}</th>
+                                <tr className="record-row" key={serialNum}>
+                                    <th scope="row">{serialNum + 1}</th>
                                     <td>{element.bookName} </td>
                                     <td>{element.authorName}</td>
                                     <td>{element.createdAt ? element.createdAt.slice(0, 10) : ""}</td>

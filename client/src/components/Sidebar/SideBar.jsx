@@ -23,7 +23,7 @@ const sidebar_section_admin = [
     icon: <FaUser />
   },
   {
-    path: "/requests",
+    path: "/IssueRequests",
     name: "Issue Requests",
     icon: <MdMessage />,
   },
