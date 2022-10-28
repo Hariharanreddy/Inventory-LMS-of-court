@@ -24,7 +24,7 @@ const sidebar_section_admin = [
   },
   {
     path: "/requests",
-    name: "Requests",
+    name: "Issue Requests",
     icon: <MdMessage />,
   },
   {

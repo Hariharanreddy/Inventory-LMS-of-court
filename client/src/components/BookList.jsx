@@ -9,9 +9,9 @@ import Swal from 'sweetalert2'
 const BookList = () => {
 
     const [getBookData, setBookData] = React.useState([]);
-    const [data, setData] = React.useState(false);
     const [searchTerm, setSearchTerm] = React.useState("");
     const { logindata, setLoginData } = useContext(LoginContext);
+    const [data, setData] = React.useState(false);
 
     const navigateTo = useNavigate();
 
@@ -35,8 +35,6 @@ const BookList = () => {
             console.log("All Books have been fetched properly.");
         }
     }
-
-
 
     const Valid = async () => {
 
@@ -62,13 +60,6 @@ const BookList = () => {
     }
 
     React.useEffect(() => {
-        // let x = 100;
-        // const interval = setInterval(() => {
-
-        //     // console.log(++x);
-        // }, 1000);
-        // return () => clearInterval(interval);
-
         Valid()
             .then(() => {
                 setData(true);

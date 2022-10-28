@@ -114,8 +114,8 @@ const UserList = () => {
                                         <td>xxxx</td>
                                         <td className="d-flex justify-content-between">
                                             <NavLink to={`view/${element._id}`}> <button className="btn btn-outline-success">Details</button></NavLink>
-                                            <NavLink /*to={`edit/${element._id}`}*/>  <button className="btn btn-outline-primary">Issued Books</button></NavLink>
-                                            <button className="btn btn-outline-danger" onClick={() => checkDelete(element._id)}>Remove</button>
+                                            <NavLink to={`viewIssue/${element._id}`}>  <button className="btn btn-outline-primary">Issued Books</button></NavLink>
+                                            <button className="btn btn-outline-danger" onClick={() => checkDelete(element._id)}>Delete</button>
                                         </td>
                                     </tr>
                                 )
