@@ -32,7 +32,7 @@ const itemsSchema = new mongoose.Schema({
     lastRemaining: {
         type: Number
     }
-});
+}, { timestamps: true });
 
 const items = new mongoose.model("items", itemsSchema);
 

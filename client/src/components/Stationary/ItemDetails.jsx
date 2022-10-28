@@ -1,7 +1,5 @@
 import React from 'react'
-import { NavLink, useNavigate, useParams } from 'react-router-dom';
-
-import Swal from 'sweetalert2'
+import { NavLink, useParams } from 'react-router-dom';
 
 const ItemDetails = () => {
 
@@ -34,48 +32,6 @@ const ItemDetails = () => {
   React.useEffect(() => {
     getdata();
   }, [])
-
-
-  //For Deleting the item
-  const navigateTo = useNavigate();
-  const deleteItem = async (id) => {
-
-    const res2 = await fetch(`http://localhost:8000/deleteItem/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-
-    const deleteData = await res2.json();
-    console.log(deleteData);
-
-    if (res2.status === 422) {
-      console.log("Record could not be deleted.");
-    }
-    else {
-      getdata();
-      navigateTo("/ItemList");
-    }
-  }
-
-  const checkDelete = (id) => {
-    Swal.fire({
-        title: 'Are You Sure?',
-        text: "Data will be removed permanently!",
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#0d6efd',
-        cancelButtonColor: '#dc3545',
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'No ',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          deleteItem(id);
-        }
-      })
-}
-
 
   return (
     <>
@@ -132,10 +88,10 @@ const ItemDetails = () => {
             </tr>
           </tbody>
         </table>
-        <div className='card-footer'>
+        {/* <div className='card-footer'>
           <NavLink to={`/ItemList/edit/${id}`} > <button className="btn btn-outline-primary mx-4">Edit</button></NavLink>
           <button className="btn btn-outline-danger" onClick={() => checkDelete(id)}>Delete</button>
-        </div>
+        </div> */}
       </div>
     </>
   )

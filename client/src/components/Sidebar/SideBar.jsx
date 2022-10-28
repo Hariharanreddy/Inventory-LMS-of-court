@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { NavLink } from "react-router-dom";
 
 import { FaBars, FaUser } from "react-icons/fa";
@@ -13,12 +13,14 @@ import { IoIosColorFill } from "react-icons/io"
 
 import { AnimatePresence, motion } from "framer-motion";
 import SidebarMenu from "./SidebarMenu";
+import { LoginContext } from "../ContextProvider/Context"
+import { useEffect } from "react";
 
-const sidebar_section = [
+const sidebar_section_admin = [
   {
-    path: "/users",
-    name: "Users",
-    icon: <FaUser />,
+    path: "/UserList",
+    name: "All Users",
+    icon: <FaUser />
   },
   {
     path: "/requests",
@@ -58,7 +60,35 @@ const sidebar_section = [
     ],
   },
   {
-    path: "/saved",
+    path: "/logout",
+    name: "Log Out",
+    icon: <BiLogOut />,
+  },
+];
+
+const sidebar_section_user = [
+  {
+    path: "/profile",
+    name: "Profile",
+    icon: <FaUser />
+  },
+  {
+    path: "/issuedRequests",
+    name: "Issued Requests",
+    icon: <MdMessage />,
+  },
+  {
+    path: "/BookList",
+    name: "Book List",
+    icon: <ImBooks />,
+  },
+  {
+    path: "/ItemList",
+    name: "General Item",
+    icon: <MdProductionQuantityLimits />,
+  },
+  {
+    path: "/logout",
     name: "Log Out",
     icon: <BiLogOut />,
   },
@@ -67,6 +97,17 @@ const sidebar_section = [
 const SideBar = ({ children }) => {
 
   const [isOpen, setIsOpen] = useState(false);
+  const [navUserType, setNavUserType] = useState(sidebar_section_user);
+  const { logindata, setLoginData } = useContext(LoginContext);
+  
+  useEffect(() => {
+      if(logindata.ValidUserOne != undefined){
+        if(logindata.ValidUserOne.isAdmin == true){
+          setNavUserType(sidebar_section_admin);
+        }
+      }
+  }, [logindata]) 
+
   const toggle = () => setIsOpen(!isOpen);
 
   const showAnimation = {
@@ -96,11 +137,12 @@ const SideBar = ({ children }) => {
           transition: {
             duration: 0.5,
             type: "spring",
-            damping: 10,
+            damping: 12,
           },
         }}
       >
         <div className="top_section" >
+
           <AnimatePresence>
             {isOpen && (
               <motion.h1
@@ -119,10 +161,9 @@ const SideBar = ({ children }) => {
             <FaBars size={20} />
           </div>
         </div>
-
         <section className="sidebar_section">
 
-          {sidebar_section.map((route, index) => {
+          {navUserType.map((route, index) => {
             if (route.subRoutes) {
               return (
                 <SidebarMenu

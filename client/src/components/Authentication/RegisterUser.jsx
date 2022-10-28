@@ -7,10 +7,8 @@ import Swal from "sweetalert2"
 const RegisterUser = () => {
 
     const navigateTo = useNavigate();
-
     const [passShow, setPassShow] = useState(false);
     const [cpassShow, setCPassShow] = useState(false);
-    const [isSafeToReset, setIsSafeToReset] = useState(false);  //for emptying the input fields after submission happens.
 
     const {
         register,
@@ -20,14 +18,6 @@ const RegisterUser = () => {
         reset
     } = useForm();
 
-    useEffect(() => {
-        if (!isSafeToReset) {
-            return;
-        }
-
-        reset(); // asynchronously reset your form values
-        setIsSafeToReset(false);
-    }, [isSafeToReset]);
 
     const onFormSubmit = async (formData) => {
 
@@ -63,9 +53,9 @@ const RegisterUser = () => {
 
         if (res.status === 422) {
             Swal.fire({
-                title: '',
-                text: "Email is already present!",
-                icon: 'warning',
+                title: 'Sign Up Unsuccessful!',
+                text: `${"Try Using Another Email."}`,
+                icon: 'error',
                 showCancelButton: false,
                 confirmButtonColor: '#0d6efd',
                 cancelButtonColor: '#dc3545',
@@ -73,18 +63,33 @@ const RegisterUser = () => {
                 cancelButtonText: 'No ',
             }).then((result) => {
                 if (result.isConfirmed) {
+                    
+                }
+            })
+        }
+        else if(res.status === 400){
+            Swal.fire({
+                title: 'Email Already Exist!',
+                text: `${"Try Using Another Email."}`,
+                icon: 'error',
+                showCancelButton: false,
+                confirmButtonColor: '#0d6efd',
+                cancelButtonColor: '#dc3545',
+                confirmButtonText: 'Ok',
+                cancelButtonText: 'No ',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    
                 }
             })
         }
         else {
-            console.log("User Has Been Added Successfully!");
+            console.log("User Has Been Added Successfully!")
 
-            //reset the form after submission
-            setIsSafeToReset(true);
-
+            reset(); 
             Swal.fire({
-                title: '',
-                text: "User has been added successfully!",
+                title: 'User has been added successfully!',
+                text: "",
                 icon: 'success',
                 showCancelButton: false,
                 confirmButtonColor: '#0d6efd',
@@ -93,15 +98,13 @@ const RegisterUser = () => {
                 cancelButtonText: 'No ',
             }).then((result) => {
                 if (result.isConfirmed) {
-
-                    // navigateTo("/BookList");
+                    navigateTo("/login");
+                    reset();
                 }
             })
         }
 
     }
-
-    var year = new Date();
 
     function checkNumbers(name) {
         var letters = /^[A-Za-z ]+$/;
@@ -121,7 +124,7 @@ const RegisterUser = () => {
     }
 
     return (
-        <div className='card-div' style={{padding:"1em 3em 2em"}}>
+        <div className='card-div' style={{ padding: "1em 3em 1em" }}>
             <h1 style={{ textAlign: "center", fontWeight: "600", color: "rgb(6, 0, 97)", lineHeight: "1.5", opacity: "0.9" }}>Sign Up</h1>
             <p style={{ textAlign: "center", opacity: "0.6", color: "rgb(6, 0, 97)" }}>Thanks for preferring CManager.<br />We hope you will like it.</p>
             <form className="mt-4" onSubmit={handleSubmit(onFormSubmit)}>
@@ -268,8 +271,8 @@ const RegisterUser = () => {
                     </div>
 
                     <div className="d-grid">
-                        <br />
                         <button className="btn btn-primary submit-button" type="submit">Create Account</button>
+                        <p style={{ textAlign: "center", opacity: "0.6", color: "rgb(6, 0, 97)", marginTop: "1rem" }}>Already, have an Account? <NavLink to="/login">Sign In</NavLink> </p>
                     </div>
                 </div>
             </form>

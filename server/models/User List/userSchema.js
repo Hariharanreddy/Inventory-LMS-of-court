@@ -33,6 +33,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    // phoneNo:{
+    //     type: Number,
+    //     required:true
+    // },
     password: {
         type: String,
         required: true,
@@ -43,6 +47,10 @@ const userSchema = new mongoose.Schema({
         required: true,
         minlength: 6
     },
+    isAdmin: {
+        type: Boolean,
+        default: false
+    },
     tokens: [
         {
             token: {
@@ -51,13 +59,12 @@ const userSchema = new mongoose.Schema({
             }
         }
     ]
-});
+}, { timestamps: true });
 
 
 //hash password
-
+//before save of mongodb, this executes and hashes the password
 userSchema.pre("save", async function (next) {
-    
     if (this.isModified("password")) {
         this.password = await bcrypt.hash(this.password, 6);
         this.cpassword = await bcrypt.hash(this.cpassword, 6);
@@ -66,18 +73,23 @@ userSchema.pre("save", async function (next) {
 });
 
 
-// token generate
+// token generate while login
 userSchema.methods.generateAuthtoken = async function () {
     try {
-        let token23 = jwt.sign({ _id: this._id }, keysecret, {
+        //jwt.sign(payload, secretOrPrivateKey, [options, callback])
+        let new_token = jwt.sign({ _id: this._id }, keysecret, {
             expiresIn: "1d"
         });
 
-        this.tokens = this.tokens.concat({ token: token23 });
+        //add the new_token inside tokens array
+        this.tokens = this.tokens.concat({ token: new_token });
+
+        //now save the token
         await this.save();
-        return token23;
+
+        return new_token;
     } catch (error) {
-        res.status(422).json(error)
+        return res.status(422).json(error)
     }
 }
 

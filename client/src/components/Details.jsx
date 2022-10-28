@@ -36,48 +36,6 @@ const Details = () => {
   }, [])
 
 
-  //For Deleting the Book
-  const navigateTo = useNavigate();
-
-  const deleteBook = async (id) => {
-
-    const res2 = await fetch(`http://localhost:8000/deleteBook/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-
-    const deleteData = await res2.json();
-    console.log(deleteData);
-
-    if (res2.status === 422) {
-      console.log("Record could not be deleted.");
-    }
-    else {
-      getdata();
-      navigateTo("/BookList");
-    }
-  }
-
-  const checkDelete = (id) => {
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "Data will be removed permanently!",
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#0d6efd',
-        cancelButtonColor: '#dc3545',
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'No ',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          deleteBook(id);
-        }
-      })
-}
-
-
   return (
     <>
       <div className="card-div">
@@ -133,10 +91,10 @@ const Details = () => {
             </tr>
           </tbody>
         </table>
-        <div className='card-footer'>
+        {/* <div className='card-footer'>
           <NavLink to={`/BookList/edit/${id}`} > <button className="btn btn-outline-primary mx-4">Edit</button></NavLink>
           <button className="btn btn-outline-danger" onClick={() => checkDelete(id)}>Delete</button>
-        </div>
+        </div> */}
       </div>
     </>
   )

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { NavLink, useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
+import Swal from "sweetalert2"
 
 const Login = () => {
 
     const navigateTo = useNavigate();
     const [passShow, setPassShow] = useState(false);
-    const [isSafeToReset, setIsSafeToReset] = useState(false);  //for emptying the input fields after submission happens.
 
     const {
         register,
@@ -15,20 +15,11 @@ const Login = () => {
         reset
     } = useForm();
 
-    useEffect(() => {
-        if (!isSafeToReset) {
-            return;
-        }
-
-        reset(); // asynchronously reset your form values
-        setIsSafeToReset(false);
-    }, [isSafeToReset]);
-
     const onFormSubmit = async (formData) => {
 
         const { email, password } = formData;
 
-        const res = await fetch("http://localhost:8000/login", {
+        const data = await fetch("http://localhost:8000/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -40,16 +31,48 @@ const Login = () => {
             })
         });
 
-        const res2 = await res.json();
+        const res = await data.json();
 
-        if (res2.status === 201) {
-            console.log(res2.result.token);
-            localStorage.setItem("usersdatatoken", res2.result.token);
-            setIsSafeToReset(true);            
-            navigateTo("/dash");
+        if (res.status === 201) {
+
+            localStorage.setItem("usersdatatoken", res.result.token);          
+            navigateTo("/BookList");
+            reset(); 
+
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer)
+                  toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+              })
+              
+              Toast.fire({
+                icon: 'success',
+                title: 'Signed in successfully'
+              })
+              
         }
-        else{
-            
+        else
+        {
+            Swal.fire({
+                title: 'Login Failed.',
+                text: `${"Try Again!"}`,
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: '#0d6efd',
+                cancelButtonColor: '#dc3545',
+                confirmButtonText: 'Ok',
+                cancelButtonText: 'No ',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    reset(); 
+                }
+            })
         }
     }
 
