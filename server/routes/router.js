@@ -388,31 +388,28 @@ router.delete("/deleteItem/:id", async (req, res) => {
 
 //Register New Issue of Book
 router.post("/bookIssueRequest", async (req, res) => {
-    
-    const {
-        userId,
-        userName,
-        userDepartment,
-        bookId,
-        bookName,
-        authorName,
-        publisherName,
-        yearOfPublication } = req.body;
+
+    const { userId, bookId } = req.body;
 
     try {
-        const new_issue = await issuedBooks.create({
-            userId,
-            userName,
-            userDepartment,
-            bookId,
-            bookName,
-            authorName,
-            publisherName,
-            yearOfPublication
-        });
+        const book = await books.findOne({ _id: bookId });
+        const user = await users.findOne({ _id: userId });
 
-        console.log(new_issue);
-        return res.status(201).json(new_issue);
+        if (book && user) {
+            const new_issue = await issuedBooks.create({
+                userId: user._id,
+                userName: user.name,
+                userDepartment: user.department,
+                bookId: book._id,
+                bookName: book.bookName,
+                authorName: book.authorName,
+                publisherName: book.publisherName,
+                yearOfPublication: book.yearOfPublication
+            });
+
+            console.log(new_issue);
+            return res.status(201).json(new_issue);
+        }
     }
     catch (error) {
         return res.status(422).json(error);
@@ -445,7 +442,7 @@ router.patch("/acceptBookIssueRequest/:id", async (req, res) => {
 
                 issue.isIssued = true;
                 await issue.save();
-        
+
                 // console.log({ issue, book });
                 return res.status(201).json(issue);
             }

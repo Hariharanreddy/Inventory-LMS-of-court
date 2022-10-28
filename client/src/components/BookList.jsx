@@ -54,6 +54,7 @@ const BookList = () => {
             navigateTo("/login");
         }
         else {
+            console.log(data);
             setLoginData(data);
             navigateTo("/BookList");
         }
@@ -107,6 +108,60 @@ const BookList = () => {
         })
     }
 
+    const sendRequest = async (bookid) => {
+
+        const res = await fetch("http://localhost:8000/bookIssueRequest", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            //whenever we send data to database, we convert it into string first
+            body: JSON.stringify({
+                userId: logindata.ValidUserOne._id,
+                bookId:bookid
+            })
+        });
+
+        const data = await res.json();
+        console.log(data);
+
+        if (res.status === 422) {
+            Swal.fire({
+                title: '',
+                text: "Request could not be sent",
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: '#0d6efd',
+                cancelButtonColor: '#dc3545',
+                confirmButtonText: 'Ok',
+                cancelButtonText: 'No ',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                }
+            })
+        }
+        else {
+            console.log("Issue request has been sent successfully!");
+
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top',
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer)
+                  toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+              })
+              
+              Toast.fire({
+                icon: 'success',
+                title: 'Issue request has been sent successfully!'
+              })
+        }
+    }
+
     return (
         <>
             {data ? <div className="container list-section mt-4">
@@ -151,7 +206,7 @@ const BookList = () => {
                                                 <button className="btn btn-outline-danger" onClick={() => checkDelete(element._id)}>Delete</button>
                                             </> :
                                             <>
-                                                <button className="btn btn-outline-primary">Issue</button>
+                                                <button className="btn btn-outline-primary" onClick={() => sendRequest(element._id)}>Issue</button>
                                                 <NavLink to={`view/${element._id}`}> <button className="btn btn-outline-success">Details</button></NavLink>
                                             </>}
                                     </td>

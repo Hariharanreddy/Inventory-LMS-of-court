@@ -1,13 +1,16 @@
 import React from 'react'
 import SearchIcon from "../../images/search-icon.png"
-import { NavLink } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
+import { LoginContext } from "../ContextProvider/Context"
 import Swal from 'sweetalert2'
 
 const UserList = () => {
 
     const [getUserData, setUserData] = React.useState([]);
     const [searchTerm, setSearchTerm] = React.useState("");
-
+    const { logindata, setLoginData } = React.useContext(LoginContext);
+    const [data, setData] = React.useState(false);
+    const { id } = useParams("");
 
     //for printing all the users from the database
     const getdata = async () => {
@@ -33,7 +36,12 @@ const UserList = () => {
 
 
     React.useEffect(() => {
-        getdata();
+        if (logindata.ValidUserOne != undefined) {
+            if (logindata.ValidUserOne.name) {
+                setData(true);
+                getdata();
+            }
+        }
     }, []);
 
 
@@ -68,62 +76,66 @@ const UserList = () => {
             cancelButtonColor: '#dc3545',
             confirmButtonText: 'Yes',
             cancelButtonText: 'No ',
-          }).then((result) => {
+        }).then((result) => {
             if (result.isConfirmed) {
                 deleteUser(id);
             }
-          })
+        })
     }
 
     return (
-            <div className="container list-section mt-4">
-                <div className="add_btn mt-2 mb-4">
-                    <div>
-                        <img src={SearchIcon} alt="" width="30px" height="30px" />
-                        <input className="search-button" type="search" placeholder="Search..." aria-label="Search" onChange={(e) => { setSearchTerm(e.target.value) }} />
-                    </div>
+        <>{data && logindata.ValidUserOne.isAdmin ? <div className="container list-section mt-4">
+            <div className="add_btn mt-2 mb-4">
+                <div>
+                    <img src={SearchIcon} alt="" width="30px" height="30px" />
+                    <input className="search-button" type="search" placeholder="Search..." aria-label="Search" onChange={(e) => { setSearchTerm(e.target.value) }} />
                 </div>
-                <table className="table">
-                    <thead>
-                        <tr className="attribute-row">
-                            <th scope="col">S.No</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Department</th>
-                            <th scope="col">Department Id</th>
-                            <th className="stock-attribute" scope="col">Phone No</th>
-                            <th className="action-attribute" scope="col">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            getUserData && getUserData.filter((element) => {
-                                if (searchTerm === "") {
-                                    return element;
-                                }
-                                else if (element.name.toLowerCase().includes(searchTerm.toLowerCase()) || element.email.toLowerCase().includes(searchTerm.toLowerCase())) {
-                                    return element;
-                                }
-                            }).map((element, id) => {
-                                return (
-                                    <tr className="record-row" key={id}>
-                                        <th scope="row">{id + 1}</th>
-                                        <td>{element.name} </td>
-                                        <td>{element.department}</td>
-                                        {/* <td>{element.quantityReceived}</td> */}
-                                        <td>{element.departmentId}</td>
-                                        <td>xxxx</td>
-                                        <td className="d-flex justify-content-between">
-                                            <NavLink to={`view/${element._id}`}> <button className="btn btn-outline-success">Details</button></NavLink>
-                                            <NavLink to={`viewIssue/${element._id}`}>  <button className="btn btn-outline-primary">Issued Books</button></NavLink>
-                                            <button className="btn btn-outline-danger" onClick={() => checkDelete(element._id)}>Delete</button>
-                                        </td>
-                                    </tr>
-                                )
-                            })
-                        }
-                    </tbody>
-                </table>
             </div>
+            <table className="table">
+                <thead>
+                    <tr className="attribute-row">
+                        <th scope="col">S.No</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Department</th>
+                        <th scope="col">Department Id</th>
+                        <th className="stock-attribute" scope="col">Phone No</th>
+                        <th className="action-attribute" scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        getUserData && getUserData.filter((element) => {
+                            if (searchTerm === "") {
+                                return element;
+                            }
+                            else if (element.name.toLowerCase().includes(searchTerm.toLowerCase()) || element.email.toLowerCase().includes(searchTerm.toLowerCase())) {
+                                return element;
+                            }
+                        }).map((element, id) => {
+                            return (
+                                <tr className="record-row" key={id}>
+                                    <th scope="row">{id + 1}</th>
+                                    <td>{element.name} </td>
+                                    <td>{element.department}</td>
+                                    {/* <td>{element.quantityReceived}</td> */}
+                                    <td>{element.departmentId}</td>
+                                    <td>xxxx</td>
+                                    <td className="d-flex justify-content-between">
+                                        <NavLink to={`view/${element._id}`}> <button className="btn btn-outline-success">Details</button></NavLink>
+                                        <NavLink to={`viewIssue/${element._id}`}>  <button className="btn btn-outline-primary">Issued Books</button></NavLink>
+                                        <button className="btn btn-outline-danger" onClick={() => checkDelete(element._id)}>Delete</button>
+                                    </td>
+                                </tr>
+                            )
+                        })
+                    }
+                </tbody>
+            </table>
+        </div> :
+            <div className="m-auto" >
+                <div className="spinner-border" style={{ height: "4rem", width: "4rem", color: "rgb(6, 0, 97)" }} role="status">
+                </div>
+            </div>}</>
     )
 }
 

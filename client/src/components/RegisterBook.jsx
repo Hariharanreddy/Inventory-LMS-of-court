@@ -101,7 +101,6 @@ const Register = () => {
                 }
             })
         }
-
     }
 
     var year = new Date();

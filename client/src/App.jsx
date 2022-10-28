@@ -35,6 +35,7 @@ import UserList from "./components/Admin/UserList"
 import UserDetails from "./components/Admin/UserDetails"
 import UserIssuedBooks from "./components/Admin/UserIssuedBooks"
 import IssueRequests from "./components/Admin/IssueRequests"
+import MyIssuedBooks from "./components/User/MyIssuedBooks"
 
 const App = () => {
   const [data, setData] = useState(false);
@@ -60,6 +61,7 @@ const App = () => {
     } else {
       console.log("User verified");
       setLoginData(data);
+      navigateTo("/booklist");
     }
   }
 
@@ -91,7 +93,11 @@ const App = () => {
               <Route path="/UserList" element={<UserList />} />
               <Route path="/UserList/view/:id" element={<UserDetails />} />
               <Route path="/UserList/viewIssue/:id" element={<UserIssuedBooks />} />
-              <Route path="/IssueRequests" element={<IssueRequests />} />
+              <Route path="/IssueRequests" element={<IssueRequests />} />   
+
+              {/* User Personal Routes */}
+              <Route path="/MyIssuedBooks" element={<MyIssuedBooks />} />   
+              
 
               {/* Item Section Routes */}
               <Route path="/ItemList" element={<ItemList />} />

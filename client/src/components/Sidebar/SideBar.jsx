@@ -16,95 +16,105 @@ import SidebarMenu from "./SidebarMenu";
 import { LoginContext } from "../ContextProvider/Context"
 import { useEffect } from "react";
 
-const sidebar_section_admin = [
-  {
-    path: "/UserList",
-    name: "All Users",
-    icon: <FaUser />
-  },
-  {
-    path: "/IssueRequests",
-    name: "Issue Requests",
-    icon: <MdMessage />,
-  },
-  {
-    path: "/BookList",
-    name: "Book List",
-    icon: <ImBooks />,
-  },
-  {
-    path: "/file-manager",
-    name: "Stationary Items",
-    icon: <IoFileTrayStackedSharp />,
-    subRoutes: [
-      {
-        path: "/ItemList",
-        name: "General Item",
-        icon: <MdProductionQuantityLimits />,
-      },
-      {
-        path: "/settings/2fa",
-        name: "Printed Format",
-        icon: <HiPrinter />,
-      },
-      {
-        path: "/settings/billing",
-        name: "Printer Catridges",
-        icon: <IoIosColorFill />,
-      },
-      {
-        path: "/settings/billing",
-        name: "Seals/Stamps",
-        icon: <FaStamp />,
-      }
-    ],
-  },
-  {
-    path: "/logout",
-    name: "Log Out",
-    icon: <BiLogOut />,
-  },
-];
 
-const sidebar_section_user = [
-  {
-    path: "/profile",
-    name: "Profile",
-    icon: <FaUser />
-  },
-  {
-    path: "/issuedRequests",
-    name: "Issued Requests",
-    icon: <MdMessage />,
-  },
-  {
-    path: "/BookList",
-    name: "Book List",
-    icon: <ImBooks />,
-  },
-  {
-    path: "/ItemList",
-    name: "General Item",
-    icon: <MdProductionQuantityLimits />,
-  },
-  {
-    path: "/logout",
-    name: "Log Out",
-    icon: <BiLogOut />,
-  },
-];
 
 const SideBar = ({ children }) => {
 
+  const { logindata, setLoginData } = useContext(LoginContext);
+  const [data, setData] = useState(false);
+
+  const sidebar_section_admin = [
+    {
+      path: "/UserList",
+      name: "All Users",
+      icon: <FaUser />
+    },
+    {
+      path: "/IssueRequests",
+      name: "Issue Requests",
+      icon: <MdMessage />,
+    },
+    {
+      path: "/BookList",
+      name: "Book List",
+      icon: <ImBooks />,
+    },
+    {
+      path: "/file-manager",
+      name: "Stationary Items",
+      icon: <IoFileTrayStackedSharp />,
+      subRoutes: [
+        {
+          path: "/ItemList",
+          name: "General Item",
+          icon: <MdProductionQuantityLimits />,
+        },
+        {
+          path: "/settings/2fa",
+          name: "Printed Format",
+          icon: <HiPrinter />,
+        },
+        {
+          path: "/settings/billing",
+          name: "Printer Catridges",
+          icon: <IoIosColorFill />,
+        },
+        {
+          path: "/settings/billing",
+          name: "Seals/Stamps",
+          icon: <FaStamp />,
+        }
+      ],
+    },
+    {
+      path: "/logout",
+      name: "Log Out",
+      icon: <BiLogOut />,
+    },
+  ];
+  
+  const sidebar_section_user = [
+    {
+      path: "/profile",
+      name: "Profile",
+      icon: <FaUser />
+    },
+    {
+      path: "/myIssuedBooks",
+      name: "My Issued Books",
+      icon: <MdMessage />,
+    },
+    {
+      path: "/BookList",
+      name: "Book List",
+      icon: <ImBooks />,
+    },
+    {
+      path: "/ItemList",
+      name: "General Item",
+      icon: <MdProductionQuantityLimits />,
+    },
+    {
+      path: "/logout",
+      name: "Log Out",
+      icon: <BiLogOut />,
+    },
+  ];
+
   const [isOpen, setIsOpen] = useState(false);
   const [navUserType, setNavUserType] = useState(sidebar_section_user);
-  const { logindata, setLoginData } = useContext(LoginContext);
   
+
   useEffect(() => {
       if(logindata.ValidUserOne != undefined){
         if(logindata.ValidUserOne.isAdmin == true){
           setNavUserType(sidebar_section_admin);
+          setData(true);
         }
+        else{
+          setData(true);
+        }
+
       }
   }, [logindata]) 
 
@@ -129,7 +139,7 @@ const SideBar = ({ children }) => {
 
   return (
     <>
-      <motion.div
+      {data ? <motion.div
         className={`sidebar`}
         animate={{
           width: isOpen ? "250px" : "45px",
@@ -203,7 +213,7 @@ const SideBar = ({ children }) => {
 
         </section>
 
-      </motion.div>
+      </motion.div> : ""}
     </>
   );
 };
