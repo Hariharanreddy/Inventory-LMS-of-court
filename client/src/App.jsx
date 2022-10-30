@@ -22,13 +22,15 @@ import ItemList from "./components/Stationary/ItemList"
 import RegisterItem from "./components/Stationary/RegisterItem"
 import ItemDetails from './components/Stationary/ItemDetails'
 import EditItem from "./components/Stationary/EditItem"
+import HomePage from "./components/HomePage"
 
 //import authentication components
 import Login from "./components/Authentication/Login"
 import RegisterUser from './components/Authentication/RegisterUser'
 import Error from "./components/Authentication/Error"
 import LogOut from "./components/Authentication/LogOut"
-import { LoginContext } from "./components/ContextProvider/Context"
+import ForgotPassword from './components/Authentication/ForgotPassword'
+import PasswordReset from './components/Authentication/PasswordReset'
 
 //import admin specific components
 import UserList from "./components/Admin/UserList"
@@ -36,6 +38,9 @@ import UserDetails from "./components/Admin/UserDetails"
 import UserIssuedBooks from "./components/Admin/UserIssuedBooks"
 import IssueRequests from "./components/Admin/IssueRequests"
 import MyIssuedBooks from "./components/User/MyIssuedBooks"
+
+//import login context
+import { LoginContext } from "./components/ContextProvider/Context"
 
 const App = () => {
   const [data, setData] = useState(false);
@@ -57,7 +62,12 @@ const App = () => {
 
     if (data.status == 401 || !data) {
       console.log("User not valid");
-      navigateTo("/login"); 
+
+      if(window.location.href.slice(0, 36) == "http://localhost:5173/forgotPassword")
+      { }
+      else{
+        navigateTo("/login");
+      }
     } else {
       console.log("User verified");
       setLoginData(data);
@@ -78,9 +88,12 @@ const App = () => {
       {
         data ? (
           <Routes>
+            <Route path="/" element={<HomePage/>}></Route>
             <Route path="/login" element={<Login />} />
             <Route path="/registerUser" element={<RegisterUser />} />
             <Route path="/logout" element={<LogOut />} />
+            <Route path="/passwordReset" element={<PasswordReset />} />
+            <Route path="/forgotPassword/:id/:token/:non" element={<ForgotPassword />} />
 
             <Route element={<SideBarLayout />}>
               {/* Book Section Routes */}
@@ -104,6 +117,8 @@ const App = () => {
               <Route path="/ItemList/registerItem" element={<RegisterItem />} />
               <Route path="/ItemList/edit/:id" element={<EditItem />} />
               <Route path="/ItemList/view/:id" element={<ItemDetails />} />
+              
+              <Route path="*" element={<Error />} />
             </Route>
 
             <Route path="*" element={<Error />} />

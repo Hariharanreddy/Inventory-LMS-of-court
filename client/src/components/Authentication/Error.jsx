@@ -3,7 +3,11 @@ import error from "../../images/error.png"
 
 const Error = () => {
   return (
-    <><img src={error} style={{margin:"auto" ,maxWidth:"100%", maxHeight:"100%", objectFit:"cover", height:"500px" }}/></>
+    <>
+    <div style={{ height:"100vh", display: "flex", justifyContent:"center", alignItems:"center" , width:"100%"}}>
+    <img src={error} style={{maxWidth: "100%", maxHeight: "100%", objectPosition: "center"}}/>
+    </div>
+    </>
   )
 }
 

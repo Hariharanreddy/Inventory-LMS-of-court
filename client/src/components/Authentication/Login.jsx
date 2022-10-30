@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { NavLink, useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import Swal from "sweetalert2"
@@ -35,9 +35,9 @@ const Login = () => {
 
         if (res.status === 201) {
 
-            localStorage.setItem("usersdatatoken", res.result.token);          
+            localStorage.setItem("usersdatatoken", res.result.token);
             navigateTo("/BookList");
-            reset(); 
+            reset();
 
             const Toast = Swal.mixin({
                 toast: true,
@@ -46,19 +46,18 @@ const Login = () => {
                 timer: 3000,
                 timerProgressBar: true,
                 didOpen: (toast) => {
-                  toast.addEventListener('mouseenter', Swal.stopTimer)
-                  toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
                 }
-              })
-              
-              Toast.fire({
+            })
+
+            Toast.fire({
                 icon: 'success',
                 title: 'Signed in successfully'
-              })
-              
+            })
+
         }
-        else
-        {
+        else {
             Swal.fire({
                 title: 'Login Failed.',
                 text: `${"Try Again!"}`,
@@ -70,7 +69,7 @@ const Login = () => {
                 cancelButtonText: 'No ',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    reset(); 
+                    reset();
                 }
             })
         }
@@ -78,6 +77,7 @@ const Login = () => {
 
     return (
         <div className='card-div' style={{ padding: "1em 3em 1em", maxWidth: "500px" }}>
+            
             <h1 style={{ textAlign: "center", fontWeight: "600", color: "rgb(6, 0, 97)", lineHeight: "1.5" }}>Log In</h1>
             <p style={{ textAlign: "center", opacity: "0.6", color: "rgb(6, 0, 97)" }}>Welcome to CManager,<br />we are glad that you are back.</p>
             <form className="mt-4" onSubmit={handleSubmit(onFormSubmit)}>
@@ -127,10 +127,11 @@ const Login = () => {
                         </div>
                     </div>
 
-                    <div className="d-grid">
-                        <button className="btn btn-primary submit-button" type="submit">Login</button>
-                    </div>
-                    <p style={{ textAlign: "center", opacity: "0.6", color: "rgb(6, 0, 97)", marginTop: "1rem" }}>Don't have an Account? <NavLink to="/registerUser">Sign Up</NavLink> </p>
+
+                    <button className="btn btn-primary submit-button" type="submit">Login</button>
+
+                    <p style={{ textAlign: "center", opacity: "0.6", color: "rgb(6, 0, 97)", marginTop: "1.3rem" }}>Don't have an Account? <NavLink to="/registerUser">Sign Up</NavLink> </p>
+                    <p style={{ textAlign: "center", color: "rgb(6, 0, 97)", fontWeight: "500", marginTop: "-0.5rem" }}>Forgot Password? <NavLink to="/passwordReset">Click Here</NavLink> </p>
                 </div>
             </form>
         </div>
