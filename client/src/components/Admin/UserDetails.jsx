@@ -59,6 +59,10 @@ const UserDetails = () => {
                             <td>{getUserData.email}</td>
                         </tr>
                         <tr className='record-row'>
+                            <th scope="row">Phone No</th>
+                            <td>{getUserData.phoneNo}</td>
+                        </tr>
+                        <tr className='record-row'>
                             <th scope="row">Department</th>
                             <td >{getUserData.department}</td>
                         </tr>

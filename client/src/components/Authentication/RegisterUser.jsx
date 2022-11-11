@@ -27,6 +27,7 @@ const RegisterUser = () => {
             department,
             departmentId,
             dob,
+            phoneNo,
             password,
             cpassword } = formData;
 
@@ -43,6 +44,7 @@ const RegisterUser = () => {
                 department,
                 departmentId,
                 dob,
+                phoneNo,
                 password,
                 cpassword
             })
@@ -63,11 +65,11 @@ const RegisterUser = () => {
                 cancelButtonText: 'No ',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    
+
                 }
             })
         }
-        else if(res.status === 400){
+        else if (res.status === 400) {
             Swal.fire({
                 title: 'Email Already Exist!',
                 text: `${"Try Using Another Email."}`,
@@ -79,14 +81,14 @@ const RegisterUser = () => {
                 cancelButtonText: 'No ',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    
+
                 }
             })
         }
         else {
             console.log("User Has Been Added Successfully!")
 
-            reset(); 
+            reset();
             Swal.fire({
                 title: 'User has been added successfully!',
                 text: "",
@@ -253,6 +255,30 @@ const RegisterUser = () => {
                                 <div className="invalid-feedback">This Field Is Required</div>
                             )}
                         </div>
+                    </div>
+
+                    <div className="mb-3 col-lg-6 col-md-6 col-12">
+                        <label htmlFor="phoneNo" className="form-label">
+                            Phone No<span style={{ color: "red" }}>*</span>
+                        </label>
+                        <input
+                            type="number"
+                            className={`form-control ${errors.phoneNo ? "is-invalid" : ""}`}
+                            id="phoneNo"
+                            {...register("phoneNo", { min: 0, maxLength: 10, minLength: 10, required: true })}
+                        />
+                        {errors.phoneNo?.type === "min" && (
+                            <div className="invalid-feedback">Number Cannot Be Negative</div>
+                        )}
+                        {errors.phoneNo?.type === "maxLength" && (
+                            <div className="invalid-feedback">Number Cannot Exceed 10 Digits</div>
+                        )}
+                        {errors.phoneNo?.type === "minLength" && (
+                            <div className="invalid-feedback">Number Cannot Be Less Than 10 Digits</div>
+                        )}
+                        {errors.phoneNo?.type === "required" && (
+                            <div className="invalid-feedback">This Field Is Required</div>
+                        )}
                     </div>
 
                     <div className="mb-3 col-lg-6 col-md-6 col-12">

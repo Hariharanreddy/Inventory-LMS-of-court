@@ -108,7 +108,7 @@ const UserList = () => {
                             if (searchTerm === "") {
                                 return element;
                             }
-                            else if (element.name.toLowerCase().includes(searchTerm.toLowerCase()) || element.email.toLowerCase().includes(searchTerm.toLowerCase())) {
+                            else if (element.name.toLowerCase().includes(searchTerm.toLowerCase()) || element.email.toLowerCase().includes(searchTerm.toLowerCase()) || element.departmentId.toLowerCase().includes(searchTerm.toLowerCase())) {
                                 return element;
                             }
                         }).map((element, id) => {
@@ -117,9 +117,8 @@ const UserList = () => {
                                     <th scope="row">{id + 1}</th>
                                     <td>{element.name} </td>
                                     <td>{element.department}</td>
-                                    {/* <td>{element.quantityReceived}</td> */}
                                     <td>{element.departmentId}</td>
-                                    <td>xxxx</td>
+                                    <td>{element.phoneNo}</td>
                                     <td className="d-flex justify-content-between">
                                         <NavLink to={`view/${element._id}`}> <button className="btn btn-outline-success">Details</button></NavLink>
                                         <NavLink to={`viewIssue/${element._id}`}>  <button className="btn btn-outline-primary">Issued Books</button></NavLink>

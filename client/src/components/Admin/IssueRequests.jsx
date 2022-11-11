@@ -4,18 +4,16 @@ import Swal from 'sweetalert2'
 const IssueRequests = () => {
 
     const [getRequestData, setRequestData] = React.useState([]);
-    const [searchTerm, setSearchTerm] = React.useState("");
 
-
-    //for printing all the issue requests from the database
+    //For Printing All the issue requests from the database
     const getdata = async () => {
-
+        
         const res = await fetch("http://localhost:8000/showIssuedBooksRequest", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
             }
-        });
+        });  
 
         const data = await res.json();
         console.log(data);
@@ -69,6 +67,25 @@ const IssueRequests = () => {
 
         if (res2.status === 422) {
             console.log("Request Could Not Be Accepted.");
+
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer)
+                  toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+              })
+              
+              Toast.fire({
+                icon: 'error',
+                title: 'Request could not be accepted.'
+              })
+
+
         }
         else {
             console.log("Request Accepted Successfully.");
@@ -120,9 +137,9 @@ const IssueRequests = () => {
                         <tr className="attribute-row">
                             <th scope="col">Book Name</th>
                             <th scope="col">Author</th>
+                            <th scope="col">Stock</th>
                             <th scope="col">User Name</th>
                             <th scope="col">Department</th>
-                            {/* <th scope="col">Department Id</th> */}
                             <th className="action-attribute" scope="col">Actions</th>
                         </tr>
                     </thead>
@@ -137,6 +154,7 @@ const IssueRequests = () => {
                                     <tr className="record-row" key={id}>
                                         <td>{element.bookName} </td>
                                         <td>{element.authorName}</td>
+                                        <td>{element.stock}</td>
                                         <td>{element.userName}</td>
                                         <td>{element.userDepartment}</td>
                                         <td className="d-flex justify-content-around">

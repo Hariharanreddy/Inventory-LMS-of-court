@@ -7,7 +7,7 @@ const issuedBooks = require("../models/Issued List/issueBookSchema")
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
-const authenticate = require("../middleware/authenticate")
+const authenticate = require("../middleware/authenticate");
 
 const keysecret = "hariharanReddyqwertyuiopasdfghjk";
 
@@ -76,10 +76,11 @@ router.post("/registerUser", async (req, res) => {
         department,
         departmentId,
         dob,
+        phoneNo,
         password,
         cpassword } = req.body;
 
-    if (!name || !email || !department || !departmentId || !dob || !password || !cpassword) {
+    if (!name || !email || !department || !departmentId || !dob || !password || !cpassword || !phoneNo) {
         return res.status(422).json({ error: "Fields Missing" });
     }
 
@@ -99,6 +100,7 @@ router.post("/registerUser", async (req, res) => {
                 department,
                 departmentId,
                 dob,
+                phoneNo,
                 password,
                 cpassword
             });
@@ -145,101 +147,101 @@ router.get("/logout", authenticate, async (req, res) => {
 
 //Email Configuration
 const transporter = nodemailer.createTransport({
-    service:"gmail",
-    auth:{
-        user:"animatrix536@gmail.com",
+    service: "gmail",
+    auth: {
+        user: "animatrix536@gmail.com",
         pass: "vffzxtibzapdozpn"
     }
-}) 
+})
 
 //Send Email Link for reset password
-router.post("/sendPasswordLink", async(req, res) => {
-    const {email} = req.body;
+router.post("/sendPasswordLink", async (req, res) => {
+    const { email } = req.body;
 
-    if(!email){
-        res.status(401).json({status:401,message:"Enter Your Email"})
+    if (!email) {
+        res.status(401).json({ status: 401, message: "Enter Your Email" })
     }
 
     try {
-        const userfind = await users.findOne({email:email});
+        const userfind = await users.findOne({ email: email });
 
         // token generate for reset password
-        const token = jwt.sign({_id:userfind._id},keysecret,{
-            expiresIn:"1d"
+        const token = jwt.sign({ _id: userfind._id }, keysecret, {
+            expiresIn: "1d"
         });
 
-        const setusertoken = await users.findByIdAndUpdate({_id:userfind._id},{verifytoken:token},{new:true});
+        const setusertoken = await users.findByIdAndUpdate({ _id: userfind._id }, { verifytoken: token }, { new: true });
 
-        if(setusertoken){
+        if (setusertoken) {
             const mailOptions = {
-                from:"animatrix536@gmail.com",
-                to:email,
-                subject:"Email For Password Reset",
-                text:`This Link Will Be Valid For 2 MINUTES http://localhost:5173/forgotPassword/${userfind.id}/${setusertoken.verifytoken}/hfus`
+                from: "animatrix536@gmail.com",
+                to: email,
+                subject: "Email For Password Reset",
+                text: `This Link Will Be Valid For 2 MINUTES http://localhost:5173/forgotPassword/${userfind.id}/${setusertoken.verifytoken}/hfus`
             }
 
-            transporter.sendMail(mailOptions,(error,info)=>{
-                if(error){
-                    console.log("error",error);
-                    res.status(401).json({status:401,message:"email not send"})
-                }else{
-                    console.log("Email sent",info.response);
-                    res.status(201).json({status:201,message:"Email sent Succsfully"})
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.log("error", error);
+                    res.status(401).json({ status: 401, message: "email not send" })
+                } else {
+                    console.log("Email sent", info.response);
+                    res.status(201).json({ status: 201, message: "Email sent Succsfully" })
                 }
             })
         }
     } catch (error) {
-        res.status(401).json({status:401,message:"invalid user"})
+        res.status(401).json({ status: 401, message: "invalid user" })
     }
 })
 
 //verify user for forgot password time
 router.get("/forgotPassword/:id/:token", async (req, res) => {
-    const {id, token} = req.params;
+    const { id, token } = req.params;
 
     try {
-        const validuser = await users.findOne({_id:id, verifytoken: token});
-        
-        const verifyToken = jwt.verify(token,keysecret);
+        const validuser = await users.findOne({ _id: id, verifytoken: token });
+
+        const verifyToken = jwt.verify(token, keysecret);
 
         // console.log(verifyToken)
 
-        if(validuser && verifyToken._id){
-            res.status(201).json({status:201,validuser})
-        }else{
-            res.status(401).json({status:401,message:"user not exist"})
+        if (validuser && verifyToken._id) {
+            res.status(201).json({ status: 201, validuser })
+        } else {
+            res.status(401).json({ status: 401, message: "user not exist" })
         }
 
     } catch (error) {
-        res.status(401).json({status:401,error})
+        res.status(401).json({ status: 401, error })
     }
 })
 
 // change password
 
-router.post("/:id/:token",async(req,res)=>{
+router.post("/:id/:token", async (req, res) => {
 
-    const {id,token} = req.params;
-    const {password} = req.body;
+    const { id, token } = req.params;
+    const { password } = req.body;
 
     try {
-        const validuser = await users.findOne({_id:id, verifytoken:token});
-        
-        const verifyToken = jwt.verify(token,keysecret);
+        const validuser = await users.findOne({ _id: id, verifytoken: token });
 
-        if(validuser && verifyToken._id){
-            const newpassword = await bcrypt.hash(password,12);
+        const verifyToken = jwt.verify(token, keysecret);
 
-            const setnewuserpass = await users.findByIdAndUpdate({_id:id},{password:newpassword});
+        if (validuser && verifyToken._id) {
+            const newpassword = await bcrypt.hash(password, 12);
+
+            const setnewuserpass = await users.findByIdAndUpdate({ _id: id }, { password: newpassword });
 
             setnewuserpass.save();
-            res.status(201).json({status:201,setnewuserpass})
+            res.status(201).json({ status: 201, setnewuserpass })
 
-        }else{
-            res.status(401).json({status:401,message:"user not exist"})
+        } else {
+            res.status(401).json({ status: 401, message: "user not exist" })
         }
     } catch (error) {
-        res.status(401).json({status:401,error})
+        res.status(401).json({ status: 401, error })
     }
 })
 
@@ -544,14 +546,21 @@ router.patch("/acceptBookIssueRequest/:id", async (req, res) => {
             const book = await books.findOne({ _id: issue.bookId })
 
             if (book) {
-                book.stock -= 1;
-                await book.save();
+                if (book.stock != 0) {
+                    book.stock -= 1;
+                    await book.save();
 
-                issue.isIssued = true;
-                await issue.save();
+                    issue.isIssued = true;
+                    await issue.save();
 
-                // console.log({ issue, book });
-                return res.status(201).json(issue);
+                    return res.status(201).json(issue);
+                }
+                else {
+                    return res.status(422).json({status : 422, message: "Stock is 0."});
+                }
+            }
+            else{
+                return res.status(422).json("Book Not Found");
             }
         }
         else {
