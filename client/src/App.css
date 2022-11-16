@@ -40,16 +40,66 @@ h2{
 
 .imageArea{
   width: 50%;
-  /* The image used */
-  background-image: url("./images/library.jpg");
-
-  /* Full height */
+  background-image: url("./images/library.png");
   min-height: 100vh; 
-
-  /* Center and scale the image nicely */
-  background-position: left;
+  background-position: center;
   background-repeat: no-repeat;
-  background-size:cover;
+  background-size:contain;
+}
+
+.landingPageImageArea{
+  width: 50%;
+  background-image: url("./images/landingPage.png");
+  min-height: 100vh; 
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size:contain;
+}
+
+.landingPageTitle{
+  margin: 5% auto;
+}
+
+.btn-effect {
+  border: none;
+  display: block;
+  text-align: center;
+  cursor: pointer;
+  font-size: 25px !important;
+  outline: none;
+  overflow: hidden;
+  position: relative;
+  font-weight: 700;
+  background-color: white;
+  padding: 10px 20px; 
+  margin-left: 40%;
+  margin-right: 20%;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.20);
+}
+
+.btn-effect span {
+  position: relative; 
+  z-index: 1;
+}
+
+.btn-effect:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 490%;
+  width: 140%;
+  background: #91b3fa;
+  -webkit-transition: all .5s ease-in-out;
+  transition: all .5s ease-in-out;
+  -webkit-transform: translateX(-98%) translateY(-25%) rotate(45deg);
+  transform: translateX(-98%) translateY(-25%) rotate(45deg);
+}
+
+.btn-effect:hover:after {
+  
+  -webkit-transform: translateX(-9%) translateY(-25%) rotate(45deg);
+  transform: translateX(-9%) translateY(-25%) rotate(45deg);
 }
 
 .authenticatePages{
@@ -69,7 +119,7 @@ h2{
   display: flex;
   justify-content: space-between !important;
   align-items: center;
-  color: rgb(6, 0, 97);;
+  color: rgb(6, 0, 97);
   padding-bottom: 1.2em;
 }
 
@@ -92,9 +142,6 @@ img {
 .attribute-row {
   background: rgb(6, 0, 97);
   color: aliceblue;
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
-
 }
 
 .attribute-row>th {
@@ -104,8 +151,9 @@ img {
   letter-spacing: 0.3px;
 }
 
-td{
-  border: 0 !important; 
+
+th, td{
+  border: 0 !important;
 }
 
 .record-row {
@@ -113,7 +161,7 @@ td{
   background-color: white;
   font-weight: 500 !important;
   letter-spacing: 0.01rem;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  /* box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px; */
   text-transform: capitalize;
   transition: transform 250ms;
 }
@@ -121,7 +169,6 @@ td{
 .record-row:hover {
   background-color: aliceblue;
   transform: scale(1.01);
-
 }
 
 .btn {

@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { NavLink, useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import Swal from "sweetalert2"
-import durg from "../../images/durg.jpg"
 
 const Login = () => {
 
@@ -79,8 +78,6 @@ const Login = () => {
     return (
         <>
             <div className='flexArea'>
-                
-
                 <div className='card-div authenticatePages' style={{ padding: "1em 3em 1em", display: "flex", flexDirection: "column", justifyContent: "center" }}>
                     <h1 style={{ fontWeight: "600", color: "rgb(6, 0, 97)", lineHeight: "1.5" }}>Log In</h1>
                     <p style={{  color: "rgb(6, 0, 97)" }}>Enter Your Email And Password.</p>

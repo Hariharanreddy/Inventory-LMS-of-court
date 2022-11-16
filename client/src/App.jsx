@@ -66,7 +66,7 @@ const App = () => {
       if(window.location.href.slice(0, 36) == "http://localhost:5173/forgotPassword")
       { }
       else{
-        navigateTo("/login");
+        navigateTo("/");
       }
     } else {
       console.log("User verified");

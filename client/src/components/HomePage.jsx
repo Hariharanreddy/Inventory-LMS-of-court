@@ -3,21 +3,23 @@ import label from "../images/label.png"
 
 
 const HomePage = () => {
+    
     return (
         <>
-            <div className="bg-img" style={{ height: "100vh", width: "100%" }}></div>
-            <div className="heading">
-                <marquee width="100%" direction="right" height="100px">
-                    <h1>Library Management System District <span style={{ color: "blue " }}>Court</span>, Durg</h1>
-                </marquee>
-            </div>
-            <div className="fourlions">
-                <img src={label} />
-            </div>
-            <div className="buttons">
-                <h1>Login As :</h1>
-                <NavLink className="btn btn-primary"> Admin</NavLink>
-                <NavLink className="btn btn-primary"> User</NavLink>
+            <div className="flexArea">
+                <div style={{minHeight:"100vh", width:"50%", display:"flex", flexDirection:"column"}}>
+                    <img src={label} style={{width:"60px", marginTop:"20px", marginLeft:"20px"}}/>
+                    <div className="landingPageTitle">
+                        <h1 style={{color:"#91b3fa", fontWeight:"800",fontSize:"60px", letterSpacing:"2px"}}>Library</h1>
+                        <h1 style={{color:"rgb(6, 0, 97)", fontWeight:"800",fontSize:"60px", letterSpacing:"2px"}}>Management</h1>
+                        <h1 style={{color:"#91b3fa", fontWeight:"800",fontSize:"60px", letterSpacing:"2px"}}>System</h1>
+                        <marquee width="100%" direction="left" height="50px">
+                        <h3 style={{color:"grey",opacity:"0.4", fontWeight:"700",fontSize:"40px", letterSpacing:"1px"}}>Durg District Court</h3>
+                        </marquee>
+                    </div>
+                    <button className="btn-effect" style={{alignSelf:"right"}}><NavLink to="/login"><span style={{color:"#060061"}}>Click Here</span></NavLink></button>
+                </div>
+                <div className="landingPageImageArea"></div>
             </div>
         </>
     )
