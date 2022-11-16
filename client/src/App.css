@@ -57,7 +57,7 @@ h2{
 }
 
 .landingPageTitle{
-  margin: 5% auto;
+  margin:auto;
 }
 
 .btn-effect {
@@ -72,8 +72,8 @@ h2{
   font-weight: 700;
   background-color: white;
   padding: 10px 20px; 
-  margin-left: 40%;
-  margin-right: 20%;
+  margin-top: 1em;
+  margin-left: auto;
   box-shadow: 0 5px 15px rgba(0,0,0,0.20);
 }
 
@@ -88,7 +88,7 @@ h2{
   left: 0;
   top: 0;
   height: 490%;
-  width: 140%;
+  width: 200%;
   background: #91b3fa;
   -webkit-transition: all .5s ease-in-out;
   transition: all .5s ease-in-out;

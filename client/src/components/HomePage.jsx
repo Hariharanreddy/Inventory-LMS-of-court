@@ -16,8 +16,8 @@ const HomePage = () => {
                         <marquee width="100%" direction="left" height="50px">
                         <h3 style={{color:"grey",opacity:"0.4", fontWeight:"700",fontSize:"40px", letterSpacing:"1px"}}>Durg District Court</h3>
                         </marquee>
+                        <button className="btn-effect" style={{alignSelf:"right"}}><NavLink to="/login"><span style={{color:"#060061"}}>Click Here</span></NavLink></button>
                     </div>
-                    <button className="btn-effect" style={{alignSelf:"right"}}><NavLink to="/login"><span style={{color:"#060061"}}>Click Here</span></NavLink></button>
                 </div>
                 <div className="landingPageImageArea"></div>
             </div>
