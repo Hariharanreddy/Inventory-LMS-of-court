@@ -4,6 +4,7 @@ const itemsSchema = new mongoose.Schema({
     itemName: {
         type: String,
         required: true,
+        trim: true
     },
     quantityReceived: {
         type: Number,
@@ -18,16 +19,18 @@ const itemsSchema = new mongoose.Schema({
         required: true
     },
     vendorName: {
-        type: String
+        type: String,
+        trim: true
     },
     requisitionCourtName: {
-        type: String
+        type: String,
+        trim: true
     },
     dateOfRequisitionReceipt: {
-        type: String
+        type: String,
     },
     dateOfItemIssuance: {
-        type: String
+        type: String,
     },
     lastRemaining: {
         type: Number

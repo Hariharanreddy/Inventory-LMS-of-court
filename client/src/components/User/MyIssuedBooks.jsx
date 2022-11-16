@@ -66,9 +66,9 @@ const myIssuedBooks = () => {
                                     <td>{element.authorName}</td>
                                     <td>{element.createdAt ? element.createdAt.slice(0, 10) : ""}</td>
                                     {
-                                        <td className="d-flex justify-content-center">
-                                            {element.isIssued ? "Accepted" : "Not Accepted"}
-                                        </td>
+                                        element.isIssued ?
+                                         <td className="d-flex justify-content-center" style={{color:"green"}}>Accepted</td> :
+                                         <td className="d-flex justify-content-center" style={{color:"red"}}>Not Accepted</td>
                                     }
                                 </tr>
                             )

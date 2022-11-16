@@ -126,10 +126,10 @@ const RegisterUser = () => {
     }
 
     return (
-        <div className='card-div' style={{ padding: "1em 3em 1em" }}>
-            <h1 style={{ textAlign: "center", fontWeight: "600", color: "rgb(6, 0, 97)", lineHeight: "1.5", opacity: "0.9" }}>Sign Up</h1>
-            <p style={{ textAlign: "center", opacity: "0.6", color: "rgb(6, 0, 97)" }}>Thanks for preferring CManager.<br />We hope you will like it.</p>
-            <form className="mt-4" onSubmit={handleSubmit(onFormSubmit)}>
+        <div className='card-div authenticatePages' style={{ padding: "1em 3em 1em" }}>
+            <h1 style={{fontWeight: "600", color: "rgb(6, 0, 97)", lineHeight: "1.5", opacity: "0.9" }}>Sign Up</h1>
+            <p style={{  color: "rgb(6, 0, 97)" }}>Please, Enter Your Details.</p>
+            <form className="mt-2" onSubmit={handleSubmit(onFormSubmit)}>
                 <div className="row">
 
                     <div className="mb-3 col-lg-6 col-md-6 col-12">
@@ -298,7 +298,7 @@ const RegisterUser = () => {
 
                     <div className="d-grid">
                         <button className="btn btn-primary submit-button" type="submit">Create Account</button>
-                        <p style={{ textAlign: "center", opacity: "0.6", color: "rgb(6, 0, 97)", marginTop: "1rem" }}>Already, have an Account? <NavLink to="/login">Sign In</NavLink> </p>
+                        <p style={{ textAlign: "center", fontWeight:"500", color: "rgb(6, 0, 97)", marginTop: "1.2em" }}>Already, have an Account? <NavLink to="/login">Sign In</NavLink> </p>
                     </div>
                 </div>
             </form>

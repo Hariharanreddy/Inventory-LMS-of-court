@@ -3,8 +3,6 @@ const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-const keysecret = "hariharanReddyqwertyuiopasdfghjk"
-
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -23,28 +21,32 @@ const userSchema = new mongoose.Schema({
     },
     department: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
     departmentId: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
     dob: {
         type: String
     },
     phoneNo:{
         type: Number,
-        required:true
+        required:true,
     },
     password: {
         type: String,
         required: true,
-        minlength: 6
+        minlength: 6,
+        trim: true
     },
     cpassword: {
         type: String,
         required: true,
-        minlength: 6
+        minlength: 6,
+        trim: true
     },
     isAdmin: {
         type: Boolean,
@@ -63,7 +65,6 @@ const userSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-
 //hash password
 //before save of mongodb, this executes and hashes the password
 userSchema.pre("save", async function (next) {
@@ -79,7 +80,7 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.generateAuthtoken = async function () {
     try {
         //jwt.sign(payload, secretOrPrivateKey, [options, callback])
-        let new_token = jwt.sign({ _id: this._id }, keysecret, {
+        let new_token = jwt.sign({ _id: this._id }, process.env.SECRET_KEY, {
             expiresIn: "1d"
         });
 

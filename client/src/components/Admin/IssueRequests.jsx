@@ -154,9 +154,10 @@ const IssueRequests = () => {
                                     <tr className="record-row" key={id}>
                                         <td>{element.bookName} </td>
                                         <td>{element.authorName}</td>
-                                        <td>{element.stock}</td>
+                                        {/* <td>{element.stock}</td> */}
+                                        <td>NA</td>
                                         <td>{element.userName}</td>
-                                        <td>{element.userDepartment}</td>
+                                        <td style={{textAlign:"left"}}>{element.userDepartment}</td>
                                         <td className="d-flex justify-content-around">
                                             <button className="btn btn-outline-success" onClick={() => acceptRequest(element._id)}>Accept</button>
                                             <button className="btn btn-outline-danger" onClick={() => checkDelete(element._id)}>Reject</button>

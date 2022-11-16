@@ -1,4 +1,4 @@
-
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
@@ -7,7 +7,7 @@ require("./db/conn");
 const cors = require("cors");
 const router = require("./routes/router");
 
-const port = process.env.PORT || 8000;
+const port = process.env.PORT;
 
 const app = express();
 app.use(cors());

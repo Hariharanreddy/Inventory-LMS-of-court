@@ -4,20 +4,24 @@ const bookSchema = new mongoose.Schema({
     bookName: {
         type: String,
         required: true,
+        trim: true
     },
     category:{
         type: String,
         required: true,
+        trim: true
     },
     authorName: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
     stock:{
         type: Number,
     },
     publisherName: {
         type: String,
+        trim: true
     },
     yearOfPublication: {
         type: Number,
@@ -27,6 +31,7 @@ const bookSchema = new mongoose.Schema({
     },
     vendorName: {
         type: String,
+        trim: true
     }, 
     dateOfPurchase: {
         type: String,

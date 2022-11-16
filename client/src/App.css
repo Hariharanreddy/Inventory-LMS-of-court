@@ -13,8 +13,11 @@ body {
 #root{
   min-height: 100vh;
   display: flex;
-  
   align-items: center;
+  background-image: url("./images/bg-pattern.jpg");
+  background-repeat: no-repeat;
+  background-position:center;
+  background-size:cover;
 }
 
 h1,
@@ -25,17 +28,49 @@ h5 {
   margin-bottom: 0;
 }
 
-.add_btn {
+h2{
+  color: rgb(6, 0, 97);
+}
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~flex separation related css~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+.flexArea{
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 1.2em;
-  border-bottom: 1px solid rgba(173, 163, 163, 0.5) !important;
+  width: 100%;
+}
+
+.imageArea{
+  width: 50%;
+  /* The image used */
+  background-image: url("./images/library.jpg");
+
+  /* Full height */
+  min-height: 100vh; 
+
+  /* Center and scale the image nicely */
+  background-position: left;
+  background-repeat: no-repeat;
+  background-size:cover;
+}
+
+.authenticatePages{
+  min-height: 100vh;
+  box-shadow: none !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .add_btn>input {
   width: 30%;
   max-width: 280px !important;
+}
+
+.add_btn {
+  display: flex;
+  justify-content: space-between !important;
+  align-items: center;
+  color: rgb(6, 0, 97);;
+  padding-bottom: 1.2em;
 }
 
 img {
@@ -64,11 +99,20 @@ img {
 
 .attribute-row>th {
   font-weight: 600 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.3px !important;
   letter-spacing: 0.3px;
+}
+
+td{
+  border: 0 !important; 
 }
 
 .record-row {
   vertical-align: middle;
+  background-color: white;
+  font-weight: 500 !important;
+  letter-spacing: 0.01rem;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   text-transform: capitalize;
   transition: transform 250ms;
@@ -88,7 +132,7 @@ img {
 }
 
 .btn:hover {
-  transform: scale(1.03);
+  transform: scale(1.04);
 }
 
 .stock-attribute,
@@ -116,96 +160,16 @@ td:nth-child(5) {
   margin-top: 9px;
 }
 
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Front Page~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-.bg-img{
-  background-image: url("./images/durg.jpg");
-  height: 100%;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  z-index: -100;
-}
-
-.heading {
-  background-color: rgba(14, 7, 64, 0.4); /* Black w/opacity/see-through */
-  color: white;
-  font-weight: bold;
-  border: 3px solid #f1f1f1;
-  border-radius: 5px;
-  position: absolute;
-  top: 15%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 20;
-  width: 80%;
-  padding: 20px;
-  text-align: center;
-}
-.buttons{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color:rgb(6, 0, 97, 0.4); /* Black w/opacity/see-through */
-  color: white;
-  border-radius: 5px;
-  border: 3px solid #f1f1f1;
-  position: absolute;
-  top: 55.5%;
-  left: 69%;
-  transform: translate(-50%, -50%);
-  z-index: 20;
-  width: 42%;
-  padding: 20px;
-}
-#frontPage-btn{
-  margin:20px;
-  margin: 55px 0 37px 0;
-  padding: 20px;
-  padding-left:2rem ;
-  padding-right: 2rem;
-  font-weight: bold;
-  font-size: 2rem;
-  border-radius: 5px;
-  background-color: blue;
-  color: white;
-}
-
-.fourlions{
-  background-color: rgba(14, 7, 64, 0.4);
-  color: white;
-  font-weight: bold;
-  border: 3px solid #f1f1f1;
-  border-radius: 5px;
-  position: absolute;
-  top: 15%;
-  left: 50%;
-  transform: translate(-110%, 17%);
-  z-index: 20;
-  width: 36.2%;
-  padding: 2rem;
-  text-align: center;
-}
-
-.fourlions img{
-  height: 50vh;
-}
-
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 /* view section */
 
 .card-div {
-  /* position: relative;
-  top: 3rem; */
   width: 600px;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+  background-color: rgba(255, 253, 253, 0.993, 0.41);
+  backdrop-filter: blur(1px);
   padding: 1.5em;
-  padding-bottom: 1em;
-  margin-top: 1rem;
-  margin-bottom: 1rem !important;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto !important;
 }
 
 @media(max-width: 760px) {
@@ -214,12 +178,25 @@ td:nth-child(5) {
   }
 
   .card-div {
-    position: static;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    margin-left: 15%;
-    margin-right: 8%;
+    margin: 1rem 0;
+    margin-left: 15% !important;
+    margin-right: 8% !important;
   }
+
+  .flexArea{
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+
+  .imageArea{
+    display: none;
+  }
+
+  .authenticatePages{
+    width: 100%;
+    margin: 0 auto !important;
+  }
+
 }
 
 .list-section{
@@ -240,8 +217,7 @@ td:nth-child(5) {
 }
 
 div>label {
-  color: rgb(92, 90, 90, 0.9);
-  font-size: medium;
+  font-weight: 600;  
   letter-spacing: 0.4px;
 }
 
@@ -253,6 +229,7 @@ input {
 .search-button {
   background-image: url(./images/search-icon.png) no-repeat scroll 7px 7px;
   padding-left: 30px;
+  background-color: aliceblue !important;
   padding: 0.3em 0.5em;
   border: 1px solid lightgrey;
   border-radius: 5px;
@@ -290,7 +267,7 @@ input {
 }
 
 .logo {
-  font-size: 18px;
+  font-size: 1.2em;
   line-height: 0;
 }
 
@@ -306,10 +283,10 @@ input {
 }
 
 .sidebar_section {
-  margin-top: 15px;
+  margin-top: 1em;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 1em;
 }
 
 .link {
@@ -335,6 +312,8 @@ input {
 }
 
 .link_text {
+  font-weight: 600;
+  letter-spacing: 0.5px;
   white-space: nowrap;
   font-size: 15px;
 }
@@ -375,4 +354,3 @@ input {
   font-size: small !important;
   font-weight: 400 !important;
 }
-

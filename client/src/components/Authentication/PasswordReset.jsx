@@ -66,9 +66,9 @@ const PasswordReset = () => {
     }
 
     return (
-        <div className='card-div' style={{ padding: "1em 3em 1em", maxWidth: "500px" }}>
-            <h1 style={{ textAlign: "center", fontWeight: "600", color: "rgb(6, 0, 97)", lineHeight: "1.5" }}>Enter Your Email</h1>
-            <form className="mt-4" onSubmit={handleSubmit(onFormSubmit)}>
+        <div className='card-div authenticatePages' style={{ padding: "1em 3em 1em", maxWidth: "500px" }}>
+            <h1 style={{ fontWeight: "600", color: "rgb(6, 0, 97)", lineHeight: "1.5" }}>Enter Your Email</h1>
+            <form className="mt-2" onSubmit={handleSubmit(onFormSubmit)}>
                 <div className="row">
 
                     <div className="mb-3 col-12">
@@ -91,7 +91,7 @@ const PasswordReset = () => {
                     <div className='d-grid'>
                         <button className="btn btn-primary submit-button" type="submit">Submit</button>
                     </div>
-                    <p style={{ textAlign: "center", color: "rgb(6, 0, 97)", fontWeight: "500", marginTop: "1rem" }}>Go Back To Login Page <NavLink to="/login">Click Here</NavLink> </p>
+                    <p style={{ textAlign: "right", color: "rgb(6, 0, 97)", fontWeight: "500", marginTop: "1.5rem" }}>Go Back To Login Page <NavLink to="/login">Click Here</NavLink> </p>
                 </div>
             </form>
         </div>

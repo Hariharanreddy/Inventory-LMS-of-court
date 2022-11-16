@@ -9,24 +9,22 @@ const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
 const authenticate = require("../middleware/authenticate");
 
-const keysecret = "hariharanReddyqwertyuiopasdfghjk";
-
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~User Related API~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 //User login
 router.post("/login", async (req, res) => {
 
-    const {
-        email,
-        password
-    } = req.body;
-
-    if (!email || !password) {
-        return res.status(422).json({ error: "Fields Missing" })
-    }
-
     try {
+        const {
+            email,
+            password
+        } = req.body;
+    
+        if (!email || !password) {
+            return res.status(422).json({ error: "Fields Missing" })
+        }
+
         const userValid = await users.findOne({ email: email });
 
         if (userValid) {
@@ -70,21 +68,21 @@ router.post("/login", async (req, res) => {
 //To Register A New User
 router.post("/registerUser", async (req, res) => {
 
-    const {
-        name,
-        email,
-        department,
-        departmentId,
-        dob,
-        phoneNo,
-        password,
-        cpassword } = req.body;
-
-    if (!name || !email || !department || !departmentId || !dob || !password || !cpassword || !phoneNo) {
-        return res.status(422).json({ error: "Fields Missing" });
-    }
-
     try {
+        const {
+            name,
+            email,
+            department,
+            departmentId,
+            dob,
+            phoneNo,
+            password,
+            cpassword } = req.body;
+    
+        if (!name || !email || !department || !departmentId || !dob || !password || !cpassword || !phoneNo) {
+            return res.status(422).json({ error: "Fields Missing" });
+        }
+
         const preuser = await users.findOne({ email: email });
 
         if (preuser) {
@@ -138,7 +136,7 @@ router.get("/logout", authenticate, async (req, res) => {
         // res.clearCookie("usercookie", { path: "/" });
 
         req.rootUser.save();
-        res.status(201).json({ status: 201 })
+        return res.status(201).json({ status: 201 })
     } catch (error) {
         return res.status(401).json({ status: 401, error })
     }
@@ -149,24 +147,25 @@ router.get("/logout", authenticate, async (req, res) => {
 const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-        user: "animatrix536@gmail.com",
-        pass: "vffzxtibzapdozpn"
+        user: process.env.SENDER_EMAIL,
+        pass: process.env.SENDER_PASSWORD
     }
 })
 
 //Send Email Link for reset password
 router.post("/sendPasswordLink", async (req, res) => {
-    const { email } = req.body;
-
-    if (!email) {
-        res.status(401).json({ status: 401, message: "Enter Your Email" })
-    }
 
     try {
+        const { email } = req.body;
+
+        if (!email) {
+            res.status(401).json({ status: 401, message: "Enter Your Email" })
+        }
+
         const userfind = await users.findOne({ email: email });
 
         // token generate for reset password
-        const token = jwt.sign({ _id: userfind._id }, keysecret, {
+        const token = jwt.sign({ _id: userfind._id }, process.env.SECRET_KEY, {
             expiresIn: "1d"
         });
 
@@ -174,10 +173,10 @@ router.post("/sendPasswordLink", async (req, res) => {
 
         if (setusertoken) {
             const mailOptions = {
-                from: "animatrix536@gmail.com",
+                from: process.env.SENDER_EMAIL,
                 to: email,
                 subject: "Email For Password Reset",
-                text: `This Link Will Be Valid For 2 MINUTES http://localhost:5173/forgotPassword/${userfind.id}/${setusertoken.verifytoken}/hfus`
+                text: `This Link Will Be Valid For 2 Minutes http://localhost:5173/forgotPassword/${userfind.id}/${setusertoken.verifytoken}/hfus`
             }
 
             transporter.sendMail(mailOptions, (error, info) => {
@@ -202,9 +201,7 @@ router.get("/forgotPassword/:id/:token", async (req, res) => {
     try {
         const validuser = await users.findOne({ _id: id, verifytoken: token });
 
-        const verifyToken = jwt.verify(token, keysecret);
-
-        // console.log(verifyToken)
+        const verifyToken = jwt.verify(token, process.env.SECRET_KEY);
 
         if (validuser && verifyToken._id) {
             res.status(201).json({ status: 201, validuser })
@@ -227,7 +224,7 @@ router.post("/:id/:token", async (req, res) => {
     try {
         const validuser = await users.findOne({ _id: id, verifytoken: token });
 
-        const verifyToken = jwt.verify(token, keysecret);
+        const verifyToken = jwt.verify(token, process.env.SECRET_KEY);
 
         if (validuser && verifyToken._id) {
             const newpassword = await bcrypt.hash(password, 12);
@@ -319,24 +316,28 @@ router.get("/getBook/:id", async (req, res) => {
 
 //Register New Book
 router.post("/registerBook", async (req, res) => {
-    // console.log(req.body);
-    const {
-        bookName,
-        category,
-        authorName,
-        stock,
-        publisherName,
-        yearOfPublication,
-        price,
-        vendorName,
-        dateOfPurchase } = req.body;
 
     try {
-        const book = await books.findOne({ bookName: bookName });     // it can also be written just bookName  //object destructuring
+        const {
+            bookName,
+            category,
+            authorName,
+            stock,
+            publisherName,
+            yearOfPublication,
+            price,
+            vendorName,
+            dateOfPurchase } = req.body;
+
+        if (!bookName || !category || !authorName || !stock || !dateOfPurchase) {
+            return res.status(422).json({ status: 422, message: "incomplete data" });
+        }
+
+        const book = await books.findOne({ bookName: bookName });   // it can also be written just bookName  //object destructuring
 
         if (book) {
-            res.status(422).json("This book is already present!");
             console.log("Book is already present.")
+            return res.status(422).json({ status: 422, message: "book already present" });
         }
         else {
             const insertedBook = await books.create({
@@ -351,8 +352,9 @@ router.post("/registerBook", async (req, res) => {
                 dateOfPurchase
             });
 
-            return res.status(201).json(insertedBook);
             console.log(insertedBook);
+            return res.status(201).json(insertedBook);
+
         }
     }
     catch (error) {
@@ -405,7 +407,6 @@ router.get("/getItems", async (req, res) => {
 //To Return the individual item details
 router.get("/getItem/:id", async (req, res) => {
     try {
-        // console.log(req.params);
         const { id } = req.params;
 
         const individualItem = await items.findById(id);        //also can be written {_id : id}
@@ -419,19 +420,19 @@ router.get("/getItem/:id", async (req, res) => {
 
 //Register New Item
 router.post("/registerItem", async (req, res) => {
-    // console.log(req.body);
-    const {
-        itemName,
-        quantityReceived,
-        stock,
-        dateOfPurchase,
-        vendorName,
-        requisitionCourtName,
-        dateOfRequisitionReceipt,
-        dateOfItemIssuance,
-        lastRemaining } = req.body;
 
     try {
+        const {
+            itemName,
+            quantityReceived,
+            stock,
+            dateOfPurchase,
+            vendorName,
+            requisitionCourtName,
+            dateOfRequisitionReceipt,
+            dateOfItemIssuance,
+            lastRemaining } = req.body;
+
         const item = await items.findOne({ itemName: itemName });     // it can also be written just bookName  //object destructuring
         console.log(item);
 
@@ -498,9 +499,9 @@ router.delete("/deleteItem/:id", async (req, res) => {
 //Register New Issue of Book
 router.post("/bookIssueRequest", async (req, res) => {
 
-    const { userId, bookId } = req.body;
-
     try {
+        const { userId, bookId } = req.body;
+
         const book = await books.findOne({ _id: bookId });
         const user = await users.findOne({ _id: userId });
 
@@ -519,6 +520,10 @@ router.post("/bookIssueRequest", async (req, res) => {
             console.log(new_issue);
             return res.status(201).json(new_issue);
         }
+        else {
+            return res.status(401).json({ status: 401, message: "book or user does not exist" });
+        }
+
     }
     catch (error) {
         return res.status(422).json(error);
@@ -556,15 +561,15 @@ router.patch("/acceptBookIssueRequest/:id", async (req, res) => {
                     return res.status(201).json(issue);
                 }
                 else {
-                    return res.status(422).json({status : 422, message: "Stock is 0."});
+                    return res.status(422).json({ status: 422, message: "Stock is 0." });
                 }
             }
-            else{
-                return res.status(422).json("Book Not Found");
+            else {
+                return res.status(401).json({ status: 401, message: "Book does not exist" });
             }
         }
         else {
-            return res.status(422).json("Issue Not Found");
+            return res.status(401).json({ status: 401, message: "Issue does not exist" });
         }
     }
     catch (err) {
