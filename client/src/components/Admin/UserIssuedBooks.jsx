@@ -112,7 +112,11 @@ const UserIssuedBooks = () => {
                                     <td>{element.bookName} </td>
                                     <td>{element.authorName}</td>
                                     <td>{element.createdAt ? element.createdAt.slice(0, 10) : ""}</td>
-                                    <td>{element.isIssued ? "Accepted" : "Not Accepted"}</td>
+                                    {
+                                        element.isIssued ?
+                                         <td style={{color:"green"}}>Accepted</td> :
+                                         <td style={{color:"red"}}>Not Accepted</td>
+                                    }
                                     <td className="d-flex justify-content-center">
                                         <button className="btn btn-outline-danger" onClick={() => checkDelete(element._id)}>Delete</button>
                                     </td>
