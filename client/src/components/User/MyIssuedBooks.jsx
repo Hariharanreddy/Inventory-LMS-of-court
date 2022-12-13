@@ -42,7 +42,7 @@ const myIssuedBooks = () => {
             <div className="add_btn mt-2 mb-4">
                 <h2>Issued Books By User</h2>
             </div>
-            <table className="table">
+            <table className="table table-bordered">
                 <thead>
                     <tr className="attribute-row">
                         <th scope="col">S.No</th>

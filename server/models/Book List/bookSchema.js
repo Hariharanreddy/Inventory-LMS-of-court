@@ -19,6 +19,9 @@ const bookSchema = new mongoose.Schema({
     stock:{
         type: Number,
     },
+    initialStock:{
+        type:Number,
+    },
     publisherName: {
         type: String,
         trim: true
@@ -29,16 +32,23 @@ const bookSchema = new mongoose.Schema({
     price: {
         type: Number,
     },
-    vendorName: {
-        type: String,
-        trim: true
-    }, 
-    dateOfPurchase: {
-        type: String,
-        required: true
-    }
+    purchase: [
+        {
+            vendorName: {
+                type: String,
+                required: true
+            },
+            dateOfPurchase: {
+                type: String,
+                required: true
+            },
+            quantityPurchased:{
+                type: Number,
+                required: true
+            }
+        }
+    ]
 }, { timestamps: true });
 
 const books = new mongoose.model("books", bookSchema);
-
 module.exports = books;

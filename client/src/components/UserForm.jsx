@@ -6,7 +6,7 @@ import Swal from 'sweetalert2'
 
 const UserForm = ({ preLoadedValues, id }) => {
 
-    const navigate = useNavigate("");
+    const navigateTo = useNavigate("");
 
     //For fetching the book details
     const {
@@ -23,11 +23,10 @@ const UserForm = ({ preLoadedValues, id }) => {
             category,
             authorName,
             stock,
+            initialStock,
             publisherName,
             yearOfPublication,
-            price,
-            vendorName,
-            dateOfPurchase } = formData;
+            price } = formData;
 
         const res2 = await fetch(`http://localhost:8000/updateBook/${id}`, {
             method: "PATCH",
@@ -39,11 +38,10 @@ const UserForm = ({ preLoadedValues, id }) => {
                 category,
                 authorName,
                 stock,
+                initialStock,
                 publisherName,
                 yearOfPublication,
-                price,
-                vendorName,
-                dateOfPurchase
+                price
             })
         });
 
@@ -62,7 +60,7 @@ const UserForm = ({ preLoadedValues, id }) => {
                 cancelButtonText: 'No ',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    navigate("/ItemList");
+                    navigateTo("/ItemList");
                 }
             })
         }
@@ -78,16 +76,54 @@ const UserForm = ({ preLoadedValues, id }) => {
                 cancelButtonText: 'No ',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    navigate("/BookList");
+                    navigateTo("/BookList");
                 }
             })
         }
     }
 
+    const deleteBook = async (id) => {
+
+        const res2 = await fetch(`http://localhost:8000/deleteBook/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+
+        const deleteData = await res2.json();
+        console.log(deleteData);
+
+
+        if (res2.status === 422) {
+            console.log("Data could not be deleted.");
+        }
+        else {
+            console.log("Data has been deleted.");
+            navigateTo("/BookList");
+        }
+    }
+
+    const checkDelete = (id) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Data will be removed permanently!",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#0d6efd',
+            cancelButtonColor: '#dc3545',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No ',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                deleteBook(id);
+            }
+        })
+    }
+
     var year = new Date();
 
     function noOfDigits(number) {
-
         if (isNaN(number) || number == null || number.toString().length == 4) {
             return true;
         }
@@ -111,9 +147,12 @@ const UserForm = ({ preLoadedValues, id }) => {
             <div className='container edit-form'>
                 <div className='card-header'>
                     <h2>Edit Details</h2>
-                    <NavLink to="/BookList">
-                        <button className="btn btn-primary home-btn">List</button>
-                    </NavLink>
+                    <div>
+                        <button className="btn btn-danger" onClick={() => checkDelete(id)}>Delete</button>
+                        <NavLink to="/BookList">
+                            <button className="btn btn-primary home-btn">Book List</button>
+                        </NavLink>
+                    </div>
                 </div>
                 <form className="mt-4" onSubmit={handleSubmit(onFormSubmit)}>
                     <div className="row">
@@ -169,15 +208,39 @@ const UserForm = ({ preLoadedValues, id }) => {
                                 <div className="invalid-feedback">This Field Is Required.</div>
                             )}
                         </div>
+
                         <div className="mb-3 col-lg-6 col-md-6 col-12">
-                            <label htmlFor='stock' className="form-label">Stock Available</label>
+                            <label htmlFor='stock' className="form-label">Current Stock</label>
                             <input
                                 type="number"
                                 id="stock"
-                                className="form-control"
+                                className={`form-control ${errors.stock ? "is-invalid" : ""}`}
                                 name="stock"
-                                {...register("stock")}
+                                {...register("stock", {min: 0, required: true})}
                             />
+                            {errors.stock?.type === "min" && (
+                                <div className="invalid-feedback">Quantity cannot be less than 0.</div>
+                            )}
+                            {errors.stock?.type === "required" && (
+                                <div className="invalid-feedback">This Field Is Required.</div>
+                            )}
+                        </div>
+
+                        <div className="mb-3 col-lg-6 col-md-6 col-12">
+                            <label htmlFor='initialStock' className="form-label">Initial Stock</label>
+                            <input
+                                type="number"
+                                id="initialStock"
+                                className={`form-control ${errors.initialStock ? "is-invalid" : ""}`}
+                                name="initialStock"
+                                {...register("initialStock", {min: 0, required: true})}
+                            />
+                            {errors.initialStock?.type === "min" && (
+                                <div className="invalid-feedback">Quantity cannot be less than 0.</div>
+                            )}
+                            {errors.initialStock?.type === "required" && (
+                                <div className="invalid-feedback">This Field Is Required.</div>
+                            )}
                         </div>
 
                         <div className="mb-3 col-lg-6 col-md-6 col-12">
@@ -193,6 +256,23 @@ const UserForm = ({ preLoadedValues, id }) => {
                             />
                             {errors.publisherName?.type === "validate" && (
                                 <div className="invalid-feedback">Numbers And Special Characters Are Not Allowed.</div>
+                            )}
+                        </div>
+
+                        <div className="mb-3 col-lg-6 col-md-6 col-12">
+                            <label htmlFor="price" className="form-label">Price</label>
+                            <input
+                                type="number"
+                                className={`form-control ${errors.price ? "is-invalid" : ""}`}
+                                id="price"
+                                name="price"
+                                {...register("price", { min:0, required: true })}
+                            />
+                            {errors.price?.type === "min" && (
+                                <div className="invalid-feedback">Quantity cannot be less than 0.</div>
+                            )}
+                            {errors.price?.type === "required" && (
+                                <div className="invalid-feedback">This Field Is Required.</div>
                             )}
                         </div>
 
@@ -215,50 +295,8 @@ const UserForm = ({ preLoadedValues, id }) => {
                             )}
                         </div>
 
-                        <div className="mb-3 col-lg-6 col-md-6 col-12">
-                            <label htmlFor="price" className="form-label">Price</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                id="price"
-                                name="price"
-                                {...register("price", { valueAsNumber: true })}
-                            />
-                        </div>
-
-                        <div className="mb-3 col-lg-6 col-md-6 col-12">
-                            <label htmlFor="vendorName" className="form-label">
-                                Vendor Name
-                            </label>
-                            <input
-                                type="text"
-                                className={`form-control ${errors.vendorName ? "is-invalid" : ""}`}
-                                id="vendorName"
-                                name="vendorName"
-                                {...register("vendorName", { validate: checkNumbers })}
-                            />
-                            {errors.vendorName?.type === "validate" && (
-                                <div className="invalid-feedback">Numbers And Special Characters Are Not Allowed.</div>
-                            )}
-                        </div>
-                        <div className="mb-3 col-lg-6 col-md-6 col-12">
-                            <label htmlFor="dateOfPurchase" className="form-label">
-                                Date Of Purchase
-                            </label>
-                            <input
-                                type="date"
-                                className={`form-control ${errors.dateOfPurchase ? "is-invalid" : ""}`}
-                                id="dateOfPurchase"
-                                name="dateOfPurchase"
-                                {...register("dateOfPurchase", { required: true })}
-                            />
-                            {errors.dateOfPurchase && (
-                                <div className="invalid-feedback">This Field Is Required.</div>
-                            )}
-                        </div>
-                        <div className="mb-3 col-lg-6 col-md-6 col-12 submit-button-div">
-                            <br />
-                            <button className="btn btn-primary w-40 h-50 submit-button" type="submit">Submit</button>
+                        <div className="d-grid">
+                            <button className="btn btn-primary submit-button" type="submit">Submit</button>
                         </div>
                     </div>
                 </form>

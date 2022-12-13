@@ -4,20 +4,13 @@ import { useForm } from "react-hook-form"
 
 import Swal from "sweetalert2"
 
-
 const Register = () => {
 
     const navigateTo = useNavigate();
 
     const preLoadedValues = {
-        // bookName: "",
-        // category: "",
-        // authorName: "",
-        stock: 0,
-        // publisherName: "",
-        // yearOfPublication: "",
+        initialStock: 0,
         price: 0
-        // vendorName: "",
     };
 
     const {
@@ -29,39 +22,31 @@ const Register = () => {
     });
 
     const onFormSubmit = async (formData) => {
-        // console.log(formData);
 
-        if(formData.price == undefined){
-            formData.price = 0;
-        }
-        
         const { bookName,
             category,
             authorName,
-            stock,
+            initialStock,
             publisherName,
             yearOfPublication,
-            price,
-            vendorName,
-            dateOfPurchase } = formData;
-
+            price
+        } = formData;
 
         const res = await fetch("http://localhost:8000/registerBook", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            //whenever we send data to database, we convert it into string first
+            //whenever we send data to database, we convert it into JSON type string first
             body: JSON.stringify({
                 bookName,
                 category,
                 authorName,
-                stock,
+                stock: 0,
+                initialStock,
                 publisherName,
                 yearOfPublication,
-                price,
-                vendorName,
-                dateOfPurchase
+                price
             })
         });
 
@@ -130,7 +115,7 @@ const Register = () => {
                 <div className='card-header'>
                     <h2>Add New Book</h2>
                     <NavLink to="/BookList">
-                        <button className="btn btn-primary">Home</button>
+                        <button className="btn btn-primary">Book List</button>
                     </NavLink>
                 </div>
                 <form className="mt-4" onSubmit={handleSubmit(onFormSubmit)}>
@@ -147,24 +132,6 @@ const Register = () => {
                                 {...register("bookName", { required: true })}
                             />
                             {errors.bookName && (
-                                <div className="invalid-feedback">This Field Is Required.</div>
-                            )}
-                        </div>
-
-                        <div className="mb-3 col-lg-6 col-md-6 col-12">
-                            <label htmlFor="category" className="form-label">
-                                Category
-                            </label>
-                            <input
-                                type="text"
-                                className={`form-control ${errors.category ? "is-invalid" : ""}`}
-                                id="category"
-                                {...register("category", { validate: checkNumbers, required: true })}
-                            />
-                            {errors.category?.type === "validate" && (
-                                <div className="invalid-feedback">Numbers And Special Characters Are Not Allowed.</div>
-                            )}
-                            {errors.category?.type === "required" && (
                                 <div className="invalid-feedback">This Field Is Required.</div>
                             )}
                         </div>
@@ -188,52 +155,37 @@ const Register = () => {
                         </div>
 
                         <div className="mb-3 col-lg-6 col-md-6 col-12">
-                            <label htmlFor='stock' className="form-label">Stock Available</label>
+                            <label htmlFor="category" className="form-label">
+                                Category
+                            </label>
                             <input
-                                type="number"
-                                id="stock"
-                                className={`form-control ${errors.stock ? "is-invalid" : ""}`}
-                                name="stock"
-                                {...register("stock", {min: 0, required: true})}
+                                type="text"
+                                className={`form-control ${errors.category ? "is-invalid" : ""}`}
+                                id="category"
+                                {...register("category", { validate: checkNumbers, required: true })}
                             />
-                            {errors.stock?.type === "min" && (
-                                <div className="invalid-feedback">Quantity cannot be less than 0.</div>
+                            {errors.category?.type === "validate" && (
+                                <div className="invalid-feedback">Numbers And Special Characters Are Not Allowed.</div>
                             )}
-                            {errors.stock?.type === "required" && (
+                            {errors.category?.type === "required" && (
                                 <div className="invalid-feedback">This Field Is Required.</div>
                             )}
                         </div>
 
                         <div className="mb-3 col-lg-6 col-md-6 col-12">
-                            <label htmlFor="publisherName" className="form-label">
-                                Publisher Name
-                            </label>
+                            <label htmlFor='initialStock' className="form-label">Initial Stock</label>
                             <input
-                                type="text"
-                                className={`form-control ${errors.publisherName ? "is-invalid" : ""}`}
-                                id="publisherName"
-                                {...register("publisherName", { validate: checkNumbers })}
+                                type="number"
+                                id="initialStock"
+                                className={`form-control ${errors.initialStock ? "is-invalid" : ""}`}
+                                name="initialStock"
+                                {...register("initialStock", {min: 0, required: true})}
                             />
-                            {errors.publisherName?.type === "validate" && (
-                                <div className="invalid-feedback">Numbers And Special Characters Are Not Allowed.</div>
+                            {errors.initialStock?.type === "min" && (
+                                <div className="invalid-feedback">Quantity cannot be less than 0.</div>
                             )}
-                        </div>
-
-                        <div className="mb-3 col-lg-6 col-md-6 col-12">
-                            <label htmlFor="yearOfPublication" className="form-label">
-                                Publication Year
-                            </label>
-                            <input
-                                type="text"
-                                className={`form-control ${errors.yearOfPublication ? "is-invalid" : ""}`}
-                                id="yearOfPublication"
-                                {...register("yearOfPublication", { validate: noOfDigits, max: year.getFullYear() + 1, valueAsNumber: true })}
-                            />
-                            {errors.yearOfPublication?.type === "max" && (
-                                <div className="invalid-feedback">Year Should Not Exceed Present Year. </div>
-                            )}
-                            {errors.yearOfPublication?.type == "validate" && (
-                                <div className="invalid-feedback">Digits Should Be Equal To 4.</div>
+                            {errors.initialStock?.type === "required" && (
+                                <div className="invalid-feedback">This Field Is Required.</div>
                             )}
                         </div>
 
@@ -255,6 +207,40 @@ const Register = () => {
                         </div>
 
                         <div className="mb-3 col-lg-6 col-md-6 col-12">
+                            <label htmlFor="publisherName" className="form-label">
+                                Publisher Name
+                            </label>
+                            <input
+                                type="text"
+                                className={`form-control ${errors.publisherName ? "is-invalid" : ""}`}
+                                id="publisherName"
+                                {...register("publisherName", { validate: checkNumbers })}
+                            />
+                            {errors.publisherName?.type === "validate" && (
+                                <div className="invalid-feedback">Numbers And Special Characters Are Not Allowed.</div>
+                            )}
+                        </div>
+
+
+                        <div className="mb-3 col-lg-6 col-md-6 col-12">
+                            <label htmlFor="yearOfPublication" className="form-label">
+                                Publication Year
+                            </label>
+                            <input
+                                type="text"
+                                className={`form-control ${errors.yearOfPublication ? "is-invalid" : ""}`}
+                                id="yearOfPublication"
+                                {...register("yearOfPublication", { validate: noOfDigits, max: year.getFullYear() + 1, valueAsNumber: true })}
+                            />
+                            {errors.yearOfPublication?.type === "max" && (
+                                <div className="invalid-feedback">Year Should Not Exceed Present Year. </div>
+                            )}
+                            {errors.yearOfPublication?.type == "validate" && (
+                                <div className="invalid-feedback">Digits Should Be Equal To 4.</div>
+                            )}
+                        </div>
+
+                        {/* <div className="mb-3 col-lg-6 col-md-6 col-12">
                             <label htmlFor="vendorName" className="form-label">
                                 Vendor Name
                             </label>
@@ -281,11 +267,11 @@ const Register = () => {
                             {errors.dateOfPurchase && (
                                 <div className="invalid-feedback">This Field Is Required.</div>
                             )}
-                        </div>
-                        <div className="mb-3 col-lg-6 col-md-6 col-12 submit-button-div">
-                            <br />
-                            <button className="btn btn-primary w-40 h-50 submit-button" type="submit">Submit</button>
-                        </div>
+                        </div>*/}
+
+                        <div className="d-grid">
+                            <button className="btn btn-primary submit-button" type="submit">Submit</button>
+                        </div> 
                     </div>
                 </form>
             </div>

@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form"
 import Swal from "sweetalert2"
 
 const RegisterItem = () => {
-
+    
     const navigateTo = useNavigate();
 
     const preLoadedValues = {
@@ -29,7 +29,6 @@ const RegisterItem = () => {
     });
 
     const onFormSubmit = async (formData) => {
-        // console.log(formData);
 
         const {
             itemName,

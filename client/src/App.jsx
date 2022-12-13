@@ -10,8 +10,11 @@ import "../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
 //import all booklist the components individually
 import BookList from './components/BookList'
 import RegisterBook from './components/RegisterBook'
+import AddOnBook from "./components/AddOnBook"
 import Edit from './components/Edit'
 import Details from './components/Details'
+import PurchaseList from "./components/PurchaseList"
+import BookIssueRequest from "./components/User/BookIssueRequestForm"
 
 //import sidebar
 // import SideBar from "./components/Sidebar/SideBar"
@@ -100,7 +103,10 @@ const App = () => {
               <Route path="/BookList" element={<BookList />} />
               <Route path="/BookList/registerBook" element={<RegisterBook />} />
               <Route path="/BookList/edit/:id" element={<Edit />} />
+              <Route path="/BookList/addOn/:id" element={<AddOnBook />} />
               <Route path="/BookList/view/:id" element={<Details />} />
+              <Route path="/BookList/bookIssueRequestForm/:id" element={<BookIssueRequest />} />
+              <Route path="/BookList/view/:id/purchaseList/:newId" element={<PurchaseList/>}></Route>
 
               {/* Only Admin Routes */}
               <Route path="/UserList" element={<UserList />} />

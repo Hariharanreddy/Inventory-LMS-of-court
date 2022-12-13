@@ -97,7 +97,6 @@ const ItemList = () => {
                         <tr className="attribute-row">
                             <th scope="col">S.No</th>
                             <th scope="col">Item</th>
-                            <th className="author-attribute" scope="col">Purchase Date</th>
                             <th scope="col">Quantity Received</th>
                             <th className="stock-attribute" scope="col">Stock</th>
                             <th className="action-attribute" scope="col">Actions</th>
@@ -117,7 +116,6 @@ const ItemList = () => {
                                     <tr className="record-row" key={id}>
                                         <th scope="row">{id + 1}</th>
                                         <td>{element.itemName} </td>
-                                        <td>{element.dateOfPurchase}</td>
                                         <td>{element.quantityReceived}</td>
                                         <td>{element.stock}</td>
                                         <td className="d-flex justify-content-between">

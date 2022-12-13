@@ -41,7 +41,7 @@ const SideBar = ({ children }) => {
     },
     {
       path: "/file-manager",
-      name: "Stationary Items",
+      name: "Stationery Items",
       icon: <IoFileTrayStackedSharp />,
       subRoutes: [
         {

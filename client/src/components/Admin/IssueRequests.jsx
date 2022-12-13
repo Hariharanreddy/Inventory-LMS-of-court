@@ -2,12 +2,11 @@ import React from 'react'
 import Swal from 'sweetalert2'
 
 const IssueRequests = () => {
-
     const [getRequestData, setRequestData] = React.useState([]);
-
-    //For Printing All the issue requests from the database
+    
+    //For Printing All the Issue Requests From The Database
     const getdata = async () => {
-        
+
         const res = await fetch("http://localhost:8000/showIssuedBooksRequest", {
             method: "GET",
             headers: {
@@ -31,9 +30,7 @@ const IssueRequests = () => {
         getdata();
     }, [])
 
-
     const deleteRequest = async (id) => {
-
         const res2 = await fetch(`http://localhost:8000/deleteBookIssueRequest/${id}`, {
             method: "DELETE",
             headers: {
@@ -54,7 +51,6 @@ const IssueRequests = () => {
     }
 
     const acceptRequest = async (id) => {
-
         const res2 = await fetch(`http://localhost:8000/acceptBookIssueRequest/${id}`, {
             method: "PATCH",
             headers: {
@@ -132,12 +128,12 @@ const IssueRequests = () => {
                 <div className="add_btn mt-2 mb-4">
                     <h2>Book Issue Requests</h2>
                 </div>
-                <table className="table">
+                <table className="table table-bordered">
                     <thead>
                         <tr className="attribute-row">
                             <th scope="col">Book Name</th>
                             <th scope="col">Author</th>
-                            <th scope="col">Stock</th>
+                            {/* <th scope="col">Stock</th> */}
                             <th scope="col">User Name</th>
                             <th scope="col">Department</th>
                             <th className="action-attribute" scope="col">Actions</th>
@@ -145,17 +141,12 @@ const IssueRequests = () => {
                     </thead>
                     <tbody>
                         {
-                            getRequestData && getRequestData.filter((element) => {
-                                if(element.isIssued == false){
-                                    return element;
-                                }
-                            }).map((element, id) => {
+                            getRequestData && getRequestData.map((element, id) => {
                                 return (
                                     <tr className="record-row" key={id}>
                                         <td>{element.bookName} </td>
                                         <td>{element.authorName}</td>
                                         {/* <td>{element.stock}</td> */}
-                                        <td>NA</td>
                                         <td>{element.userName}</td>
                                         <td style={{textAlign:"left"}}>{element.userDepartment}</td>
                                         <td className="d-flex justify-content-around">

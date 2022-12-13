@@ -151,11 +151,6 @@ img {
   letter-spacing: 0.3px;
 }
 
-
-th, td{
-  border: 0 !important;
-}
-
 .record-row {
   vertical-align: middle;
   background-color: white;
@@ -184,7 +179,7 @@ th, td{
 
 .stock-attribute,
 .action-attribute {
-  text-align: center;
+  text-align: center !important;
 }
 
 .author-attribute {
@@ -197,10 +192,6 @@ td:nth-child(5) {
 
 .icons-section {
   border-bottom: 0;
-}
-
-.submit-button-div {
-  text-align: right;
 }
 
 .submit-button {

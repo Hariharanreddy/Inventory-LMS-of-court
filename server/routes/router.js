@@ -20,7 +20,7 @@ router.post("/login", async (req, res) => {
             email,
             password
         } = req.body;
-    
+
         if (!email || !password) {
             return res.status(422).json({ error: "Fields Missing" })
         }
@@ -38,13 +38,6 @@ router.post("/login", async (req, res) => {
                 //token generate
                 //from here it goes to userSchema
                 const token = await userValid.generateAuthtoken();
-
-                // Cookie Generate
-                //usercookie is the cookie name and token is stored inside it
-                // res.cookie("usercookie", token, {
-                //     expires: new Date((new Date()).getTime() + 9000000),    //it will expire in 9000000 milisec = 150 minutes
-                //     httpOnly: false
-                // });
 
                 const result = {
                     userValid,
@@ -78,7 +71,7 @@ router.post("/registerUser", async (req, res) => {
             phoneNo,
             password,
             cpassword } = req.body;
-    
+
         if (!name || !email || !department || !departmentId || !dob || !password || !cpassword || !phoneNo) {
             return res.status(422).json({ error: "Fields Missing" });
         }
@@ -291,7 +284,7 @@ router.get("/getBooks", async (req, res) => {
     try {
         const bookData = await books.find();
         return res.status(201).json(bookData)
-        console.log(bookData);
+        // console.log(bookData);
     }
     catch (error) {
         return res.status(422).json(error);
@@ -322,14 +315,14 @@ router.post("/registerBook", async (req, res) => {
             bookName,
             category,
             authorName,
+            initialStock,
             stock,
             publisherName,
             yearOfPublication,
-            price,
-            vendorName,
-            dateOfPurchase } = req.body;
+            price
+        } = req.body;
 
-        if (!bookName || !category || !authorName || !stock || !dateOfPurchase) {
+        if (!bookName || !category || !authorName) {
             return res.status(422).json({ status: 422, message: "incomplete data" });
         }
 
@@ -337,7 +330,7 @@ router.post("/registerBook", async (req, res) => {
 
         if (book) {
             console.log("Book is already present.")
-            return res.status(422).json({ status: 422, message: "book already present" });
+            return res.status(422).json({ status: 422, message: "Book already present" });
         }
         else {
             const insertedBook = await books.create({
@@ -345,11 +338,10 @@ router.post("/registerBook", async (req, res) => {
                 category,
                 authorName,
                 stock,
+                initialStock,
                 publisherName,
                 yearOfPublication,
-                price,
-                vendorName,
-                dateOfPurchase
+                price
             });
 
             console.log(insertedBook);
@@ -382,8 +374,33 @@ router.delete("/deleteBook/:id", async (req, res) => {
         const { id } = req.params;
 
         const deletedBook = await books.findByIdAndDelete({ _id: id })   //also can be written id
-        console.log(deletedBook);
         return res.status(201).json(deletedBook);
+    }
+    catch (err) {
+        return res.status(422).json(err);
+    }
+})
+
+router.post("/addOnBook", async (req, res) => {
+    try {
+        const {
+            bookId,
+            vendorName,
+            dateOfPurchase,
+            quantityPurchased } = req.body;
+
+        const newPurchase = { vendorName, dateOfPurchase, quantityPurchased };
+        const book = await books.findOne({ _id: bookId });
+
+        if (book) {
+            book.stock += JSON.parse(quantityPurchased);
+            book.purchase.push(newPurchase);
+            const updatedPurchaseList = await book.save()
+            return res.status(201).json(updatedPurchaseList);
+        }
+        else {
+            return res.status(401).json({ status: 401, message: "Book does not exist" });
+        }
     }
     catch (err) {
         return res.status(422).json(err);
@@ -399,8 +416,8 @@ router.get("/getItems", async (req, res) => {
         const itemData = await items.find();
         return res.status(201).json(itemData)
     }
-    catch (error) {
-        return res.status(422).json(error);
+    catch (err) {
+        return res.status(422).json(err);
     }
 })
 
@@ -454,11 +471,10 @@ router.post("/registerItem", async (req, res) => {
             });
 
             return res.status(201).json(insertedItem);
-            console.log(insertedItem);
         }
     }
-    catch (error) {
-        return res.status(422).json(error);
+    catch (err) {
+        return res.status(422).json(err);
     }
 })
 
@@ -498,9 +514,8 @@ router.delete("/deleteItem/:id", async (req, res) => {
 
 //Register New Issue of Book
 router.post("/bookIssueRequest", async (req, res) => {
-
     try {
-        const { userId, bookId } = req.body;
+        const { userId, bookId, dateOfIssue, quantity} = req.body;
 
         const book = await books.findOne({ _id: bookId });
         const user = await users.findOne({ _id: userId });
@@ -514,16 +529,59 @@ router.post("/bookIssueRequest", async (req, res) => {
                 bookName: book.bookName,
                 authorName: book.authorName,
                 publisherName: book.publisherName,
-                yearOfPublication: book.yearOfPublication
+                yearOfPublication: book.yearOfPublication,
+                dateOfIssue,
+                quantity
             });
 
-            console.log(new_issue);
             return res.status(201).json(new_issue);
         }
         else {
             return res.status(401).json({ status: 401, message: "book or user does not exist" });
         }
+    }
+    catch (error) {
+        return res.status(422).json(error);
+    }
+})
 
+router.post("/directAcceptIssueRequest", async (req, res) => {
+    try {
+        const { userId, bookId, dateOfIssue, quantity} = req.body;
+
+        const book = await books.findOne({ _id: bookId });
+        const user = await users.findOne({ _id: userId });
+
+        if (book && user) {
+
+            if(book.stock != 0 && book.stock >= quantity)
+            {
+                const new_issue = await issuedBooks.create({
+                    userId: user._id,
+                    userName: user.name,
+                    userDepartment: user.department,
+                    bookId: book._id,
+                    bookName: book.bookName,
+                    authorName: book.authorName,
+                    publisherName: book.publisherName,
+                    yearOfPublication: book.yearOfPublication,
+                    dateOfIssue,
+                    quantity,
+                    isIssued: true
+                });
+
+                book.stock -= quantity;
+                await book.save();
+    
+                return res.status(201).json(new_issue);
+            }
+            else{
+                return res.status(400).json({ status: 400, message: "Either stock is 0 or quantity asked is greater than stock." });
+            }
+        }
+        else {
+            return res.status(401).json({ status: 401, message: "book or user does not exist" });
+        }
     }
     catch (error) {
         return res.status(422).json(error);
@@ -551,8 +609,9 @@ router.patch("/acceptBookIssueRequest/:id", async (req, res) => {
             const book = await books.findOne({ _id: issue.bookId })
 
             if (book) {
-                if (book.stock != 0) {
-                    book.stock -= 1;
+                if (book.stock != 0 && book.stock >= issue.quantity) {
+
+                    book.stock -= issue.quantity;
                     await book.save();
 
                     issue.isIssued = true;
@@ -573,8 +632,7 @@ router.patch("/acceptBookIssueRequest/:id", async (req, res) => {
         }
     }
     catch (err) {
-        console.log("Catch Block Error");
-        return res.status(422).json("Catch Block Error");
+        return res.status(422).json(error);
     }
 })
 
@@ -589,7 +647,7 @@ router.delete("/deleteBookIssueRequest/:id", async (req, res) => {
         return res.status(201).json(deletedRequest);
     }
     catch (err) {
-        return res.status(422).json(err);
+        return res.status(422).json(error);
     }
 })
 

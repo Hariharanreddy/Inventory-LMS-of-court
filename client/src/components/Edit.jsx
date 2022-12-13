@@ -4,7 +4,6 @@ import UserForm from "./UserForm"
 
 const Edit = () => {
     const { id } = useParams("");
-
     const [data, setData] = React.useState(null)
 
     React.useEffect(() => {

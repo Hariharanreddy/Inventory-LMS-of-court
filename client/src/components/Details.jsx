@@ -1,12 +1,9 @@
 import React from 'react'
-import { NavLink, useNavigate, useParams } from 'react-router-dom';
-
-import Swal from 'sweetalert2'
+import { NavLink, useParams } from 'react-router-dom';
 
 const Details = () => {
 
   const [getBookData, setBookData] = React.useState({});
-
   const { id } = useParams("");
 
   //For fetching the book details
@@ -45,7 +42,7 @@ const Details = () => {
             <button className="btn btn-primary home-btn">List</button>
           </NavLink>
         </div>
-        <table className="table" >
+        <table className="table table-bordered" >
           <thead>
             <tr className='attribute-row'>
               <th scope="col">Property</th>
@@ -70,31 +67,22 @@ const Details = () => {
               <td >{getBookData.stock}</td>
             </tr>
             <tr className='record-row'>
-              <th scope="row">Publisher</th>
-              <td >{getBookData.publisherName}</td>
+              <th scope="row">Price</th>
+              <td >{"Rs. " + getBookData.price}</td>
             </tr>
             <tr className='record-row'>
-              <th scope="row">Vendor</th>
-              <td >{getBookData.vendorName}</td>
+              <th scope="row">Publisher</th>
+              <td >{getBookData.publisherName}</td>
             </tr>
             <tr className='record-row'>
               <th scope="row">Year Of Publication</th>
               <td >{getBookData.yearOfPublication}</td>
             </tr>
-            <tr className='record-row'>
-              <th scope="row">Price</th>
-              <td >{"Rs. " + getBookData.price}</td>
-            </tr>
-            <tr className='record-row'>
-              <th scope="row">Date Of Purchase</th>
-              <td >{getBookData.dateOfPurchase}</td>
-            </tr>
           </tbody>
         </table>
-        {/* <div className='card-footer'>
-          <NavLink to={`/BookList/edit/${id}`} > <button className="btn btn-outline-primary mx-4">Edit</button></NavLink>
-          <button className="btn btn-outline-danger" onClick={() => checkDelete(id)}>Delete</button>
-        </div> */}
+        <div className='card-footer'>
+        <NavLink to={`purchaseList/${id}`}><button className="btn btn-primary">Purchase List</button></NavLink>
+        </div>
       </div>
     </>
   )

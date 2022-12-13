@@ -3,7 +3,6 @@ import SearchIcon from "../images/search-icon.png"
 import { NavLink, useNavigate } from 'react-router-dom';
 import { LoginContext } from "./ContextProvider/Context"
 
-
 import Swal from 'sweetalert2'
 
 const BookList = () => {
@@ -37,7 +36,6 @@ const BookList = () => {
     }
 
     const Valid = async () => {
-
         let token = localStorage.getItem("usersdatatoken");
 
         const res = await fetch("http://localhost:8000/validuser", {
@@ -63,50 +61,10 @@ const BookList = () => {
     React.useEffect(() => {
         Valid()
             .then(() => {
-                setData(true);
                 getdata();
+                setData(true);
             })
     }, []);
-
-
-    const deleteBook = async (id) => {
-
-        const res2 = await fetch(`http://localhost:8000/deleteBook/${id}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-
-        const deleteData = await res2.json();
-        console.log(deleteData);
-
-
-        if (res2.status === 422) {
-            console.log("Data could not be deleted.");
-        }
-        else {
-            console.log("Data has been deleted.");
-            getdata();
-        }
-    }
-
-    const checkDelete = (id) => {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "Data will be removed permanently!",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#0d6efd',
-            cancelButtonColor: '#dc3545',
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No ',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                deleteBook(id);
-            }
-        })
-    }
 
     const sendRequest = async (bookid) => {
 
@@ -171,14 +129,13 @@ const BookList = () => {
                         <input className="search-button" type="search" placeholder="Search..." aria-label="Search" onChange={(e) => { setSearchTerm(e.target.value); }} />
                     </div>
                     <>{logindata.ValidUserOne.isAdmin ? <NavLink to="/BookList/registerBook" className="btn btn-primary"><i className="fa-solid fa-plus"></i> Add Book</NavLink> : ""}</>
-                </div><table className="table">
+                </div><table className="table table-bordered">
                     <thead>
                         <tr className="attribute-row">
-                            <th scope="col">S.No</th>
                             <th scope="col">Title</th>
-                            <th className="author-attribute" scope="col">Author</th>
-                            <th scope="col">Category</th>
-                            <th className="stock-attribute" scope="col">Stock</th>
+                            <th scope="col">Author</th>
+                            <th  className='stock-attribute' scope="col">Initial Stock</th>
+                            <th  className='stock-attribute' scope="col">Current Stock</th>
                             <th className="action-attribute" scope="col">Actions</th>
                         </tr>
                     </thead>
@@ -193,22 +150,24 @@ const BookList = () => {
                         }).map((element, id) => {
                             return (
                                 <tr className="record-row" key={id}>
-                                    <th scope="row">{id + 1}</th>
-                                    <td>{element.bookName} </td>
+                                    <td>{element.bookName}</td>
                                     <td>{element.authorName}</td>
-                                    <td>{element.category}</td>
-                                    <td>{element.stock}</td>
+                                    <td className='stock-attribute'>{element.initialStock}</td>
+                                    <td className='stock-attribute'>{element.stock}</td>
                                     <td className="d-flex justify-content-around">
-                                        {logindata.ValidUserOne.isAdmin ?
+                                        {
+                                            logindata.ValidUserOne.isAdmin ?
                                             <>
                                                 <NavLink to={`view/${element._id}`}> <button className="btn btn-outline-success">Details</button></NavLink>
-                                                <NavLink to={`edit/${element._id}`}>  <button className="btn btn-outline-primary">Edit</button></NavLink>
-                                                <button className="btn btn-outline-danger" onClick={() => checkDelete(element._id)}>Delete</button>
+                                                <NavLink to={`edit/${element._id}`}>  <button className="btn btn-outline-secondary">Edit</button></NavLink>
+                                                <NavLink to={`addOn/${element._id}`}> <button className="btn btn-outline-primary">Add</button></NavLink>
                                             </> :
                                             <>
-                                                <button className="btn btn-outline-primary" onClick={() => sendRequest(element._id)}>Issue</button>
+                                                {/* <button className="btn btn-outline-primary" onClick={() => sendRequest(element._id)}>Issue</button> */}
                                                 <NavLink to={`view/${element._id}`}> <button className="btn btn-outline-success">Details</button></NavLink>
-                                            </>}
+                                                <NavLink to={`bookIssueRequestForm/${element._id}`}> <button className="btn btn-outline-primary">Issue</button></NavLink>
+                                            </>
+                                        }
                                     </td>
                                 </tr>
                             );
