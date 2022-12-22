@@ -127,10 +127,6 @@ img {
   margin-right: 10px;
 }
 
-.home-btn {
-  margin-left: 1em;
-}
-
 .container {
   overflow: auto;
 }
@@ -156,7 +152,6 @@ img {
   background-color: white;
   font-weight: 500 !important;
   letter-spacing: 0.01rem;
-  /* box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px; */
   text-transform: capitalize;
   transition: transform 250ms;
 }
@@ -175,19 +170,6 @@ img {
 
 .btn:hover {
   transform: scale(1.04);
-}
-
-.stock-attribute,
-.action-attribute {
-  text-align: center !important;
-}
-
-.author-attribute {
-  margin-right: 0;
-}
-
-td:nth-child(5) {
-  text-align: center;
 }
 
 .icons-section {
@@ -249,6 +231,10 @@ td:nth-child(5) {
   border-bottom: 1px solid rgba(173, 163, 163, 0.5) !important;
 }
 
+.container{
+  overflow: hidden !important;
+}
+
 .card-footer {
   display: flex;
   justify-content: right;
@@ -261,7 +247,6 @@ div>label {
 
 input {
   background-color: aliceblue !important;
-  border: 0 !important;
 }
 
 .search-button {

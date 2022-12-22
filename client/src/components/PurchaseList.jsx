@@ -1,20 +1,15 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import SearchIcon from "../images/search-icon.png"
-import { LoginContext } from "../components/ContextProvider/Context"
-import { NavLink, useNavigate, useParams} from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 const PurchaseList = () => {
 
     const [getBookData, setBookData] = React.useState([]);
     const [searchTerm, setSearchTerm] = React.useState("");
-    const { logindata, setLoginData } = useContext(LoginContext);
     const [data, setData] = React.useState(false);
     const { id } = useParams("");
 
-    const navigateTo = useNavigate();
-
     //For Printing all the purchases of the book from the database
-    //For fetching the book details
     const getdata = async () => {
 
         const res = await fetch(`http://localhost:8000/getBook/${id}`, {
@@ -32,17 +27,13 @@ const PurchaseList = () => {
         }
         else {
             setBookData(data)
+            setData(true);
             console.log("client side, data fetched successfully.");
         }
     }
 
     React.useEffect(() => {
-        if (logindata.ValidUserOne != undefined) {
-            if (logindata.ValidUserOne.name) {
-                getdata();
-                setData(true);
-            }
-        }
+        getdata();
     }, []);
 
     return (
@@ -53,31 +44,35 @@ const PurchaseList = () => {
                         <img src={SearchIcon} alt="" width="30px" height="30px" />
                         <input className="search-button" type="search" placeholder="Search..." aria-label="Search" onChange={(e) => { setSearchTerm(e.target.value); }} />
                     </div>
-                </div><table className="table table-bordered    ">
+                </div><table className="table table-bordered text-center">
                     <thead>
                         <tr className="attribute-row">
                             <th scope="col">Vendor</th>
-                            <th className='stock-attribute' scope="col">Quantity Purchased</th>
-                            <th className='stock-attribute' scope="col">Date Of Purchase</th>
+                            <th scope="col">Quantity Purchased</th>
+                            <th scope="col">Date Of Purchase</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {getBookData.purchase && getBookData.purchase.filter((element) => {
-                            if (searchTerm === "") {
-                                return element;
-                            }
-                            else if (element.vendorName.toLowerCase().includes(searchTerm.toLowerCase()) || element.dateOfPurchase.includes(searchTerm)) {
-                                return element;
-                            }
-                        }).map((element, id) => {
-                            return (
-                                <tr className="record-row" key={id}>
-                                    <td>{element.vendorName}</td>
-                                    <td className='stock-attribute'>{element.quantityPurchased}</td>
-                                    <td className='stock-attribute'>{element.dateOfPurchase}</td>
-                                </tr>
-                            );
-                        })}
+                        {getBookData.purchase.length == 0 ?
+                            <tr className="record-row">
+                                <td colspan={8}> No Data Found </td>
+                            </tr>
+                            : getBookData.purchase.filter((element) => {
+                                if (searchTerm === "") {
+                                    return element;
+                                }
+                                else if (element.vendorName.toLowerCase().includes(searchTerm.toLowerCase()) || element.dateOfPurchase.includes(searchTerm)) {
+                                    return element;
+                                }
+                            }).map((element, id) => {
+                                return (
+                                    <tr className="record-row" key={id}>
+                                        <td>{element.vendorName}</td>
+                                        <td>{element.quantityPurchased}</td>
+                                        <td>{element.dateOfPurchase}</td>
+                                    </tr>
+                                );
+                            })}
                     </tbody>
                 </table>
             </div> :

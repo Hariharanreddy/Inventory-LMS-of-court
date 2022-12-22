@@ -109,7 +109,7 @@ const IssueRequests = () => {
     const checkDelete = (id) => {
         Swal.fire({
             title: 'Are You Sure?',
-            text: "User will be removed permanently!",
+            text: "Request will be removed permanently!",
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#0d6efd',

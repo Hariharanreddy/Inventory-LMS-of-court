@@ -39,7 +39,7 @@ const Details = () => {
         <div className="add_btn mb-4">
           <h2>Book Details</h2>
           <NavLink to="/BookList">
-            <button className="btn btn-primary home-btn">List</button>
+          <button className="btn mx-2" style={{backgroundColor: "rgb(6, 0, 97)", color:"white" }}> &lt; Back</button>
           </NavLink>
         </div>
         <table className="table table-bordered" >
@@ -81,7 +81,7 @@ const Details = () => {
           </tbody>
         </table>
         <div className='card-footer'>
-        <NavLink to={`purchaseList/${id}`}><button className="btn btn-primary">Purchase List</button></NavLink>
+        <NavLink to={`purchaseList/${id}`}><button className="btn" style={{backgroundColor: "rgb(6, 0, 97)", color:"white" }}>Vendor List</button></NavLink>
         </div>
       </div>
     </>

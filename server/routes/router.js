@@ -281,10 +281,68 @@ router.delete("/deleteUser/:id", async (req, res) => {
 
 //To Return the Entire Book Database
 router.get("/getBooks", async (req, res) => {
-    try {
-        const bookData = await books.find();
-        return res.status(201).json(bookData)
-        // console.log(bookData);
+    try { 
+
+        const page = parseInt(req.query.page) - 1 || 0;     //array starts from 0 in mongodb so minus 1
+        const limit = parseInt(req.query.limit) || 7;
+        let sort = req.query.sort || ""
+        const search = req.query.search || "";
+
+        // const {bookName} = req.query;
+        // const match = {};
+        
+        // if(bookName){
+        //     match.bookName = {$regex: bookName, $options: "i"};
+        // }
+        
+        // let category = req.query.genre || "All";
+
+        // const categoryOptions = [
+        //     "Lenore Dickerson",
+        //     "Sykes Shelton"
+        // ];
+
+        // category === "All"
+        //     ?(category = [...categoryOptions])
+        //     :(genre = req.query.genre.split(","));
+
+        req.query.sort ? (sort = req.query.sort.split(",")) : (sort = [sort]);
+
+        let sortBy = {};
+        if(sort[1]){
+            sortBy[sort[0]] = sort[1];
+        }else{
+            sortBy[sort[0]] = "asc";
+        }
+
+        const booksData = await books.find({
+            "$or" : [
+                {"bookName": {$regex: search, $options: "i"}},
+                {"authorName": {$regex: search, $options: "i"}}
+            ]
+        })
+        .sort(sortBy)
+        .skip(page * limit)     //skips no of documents
+        .limit(limit);
+        // .where("genre")
+        // .in([...genre])
+        
+        const total = await books.countDocuments({
+            "$or" : [
+                {"bookName": {$regex: search, $options: "i"}},
+                {"authorName": {$regex: search, $options: "i"}}
+            ]
+        });
+
+        const response = {
+            total,
+            page: page+1,
+            limit,
+            booksData
+            // genres: genreOptions
+        }
+
+        return res.status(201).json(response);
     }
     catch (error) {
         return res.status(422).json(error);
@@ -296,7 +354,6 @@ router.get("/getBook/:id", async (req, res) => {
     try {
         //when we want to take out id from the url
         const { id } = req.params;
-
         const individualBook = await books.findById(id);    //also can be written {_id : id}
         console.log(individualBook);
         return res.status(201).json(individualBook)
@@ -383,16 +440,26 @@ router.delete("/deleteBook/:id", async (req, res) => {
 
 router.post("/addOnBook", async (req, res) => {
     try {
-        const {
+        let {
             bookId,
             vendorName,
             dateOfPurchase,
             quantityPurchased } = req.body;
 
+        if (dateOfPurchase == "") {
+            let ts = Date.now();
+            let date_ob = new Date(ts);
+            let date = date_ob.getDate();
+            let month = date_ob.getMonth() + 1;
+            let year = date_ob.getFullYear();
+            dateOfPurchase = `${year}-${month}-${date}`;
+        }
+
         const newPurchase = { vendorName, dateOfPurchase, quantityPurchased };
         const book = await books.findOne({ _id: bookId });
 
         if (book) {
+
             book.stock += JSON.parse(quantityPurchased);
             book.purchase.push(newPurchase);
             const updatedPurchaseList = await book.save()
@@ -515,12 +582,22 @@ router.delete("/deleteItem/:id", async (req, res) => {
 //Register New Issue of Book
 router.post("/bookIssueRequest", async (req, res) => {
     try {
-        const { userId, bookId, dateOfIssue, quantity} = req.body;
+        let { userId, bookId, dateOfRequisition, quantity } = req.body;
 
         const book = await books.findOne({ _id: bookId });
         const user = await users.findOne({ _id: userId });
 
         if (book && user) {
+
+            if (dateOfRequisition == "") {
+                let ts = Date.now();
+                let date_ob = new Date(ts);
+                let date = date_ob.getDate();
+                let month = date_ob.getMonth() + 1;
+                let year = date_ob.getFullYear();
+                dateOfRequisition = `${year}-${month}-${date}`;
+            }
+
             const new_issue = await issuedBooks.create({
                 userId: user._id,
                 userName: user.name,
@@ -530,14 +607,14 @@ router.post("/bookIssueRequest", async (req, res) => {
                 authorName: book.authorName,
                 publisherName: book.publisherName,
                 yearOfPublication: book.yearOfPublication,
-                dateOfIssue,
+                dateOfRequisition,
                 quantity
             });
 
             return res.status(201).json(new_issue);
         }
         else {
-            return res.status(401).json({ status: 401, message: "book or user does not exist" });
+            return res.status(401).json({ status: 401, message: "quantity is 0 or book or user does not exist" });
         }
     }
     catch (error) {
@@ -545,17 +622,27 @@ router.post("/bookIssueRequest", async (req, res) => {
     }
 })
 
+//For Directly Crediting the book to user
 router.post("/directAcceptIssueRequest", async (req, res) => {
     try {
-        const { userId, bookId, dateOfIssue, quantity} = req.body;
+        let { userId, bookId, dateOfRequisition, quantity } = req.body;
 
         const book = await books.findOne({ _id: bookId });
         const user = await users.findOne({ _id: userId });
 
         if (book && user) {
 
-            if(book.stock != 0 && book.stock >= quantity)
-            {
+            if (book.stock != 0 && book.stock >= quantity) {
+
+                if (dateOfRequisition == "") {
+                    let ts = Date.now();
+                    let date_ob = new Date(ts);
+                    let date = date_ob.getDate();
+                    let month = date_ob.getMonth() + 1;
+                    let year = date_ob.getFullYear();
+                    dateOfRequisition = `${year}-${month}-${date}`;
+                }
+
                 const new_issue = await issuedBooks.create({
                     userId: user._id,
                     userName: user.name,
@@ -565,18 +652,17 @@ router.post("/directAcceptIssueRequest", async (req, res) => {
                     authorName: book.authorName,
                     publisherName: book.publisherName,
                     yearOfPublication: book.yearOfPublication,
-                    dateOfIssue,
+                    dateOfIssue:dateOfRequisition,
+                    dateOfRequisition,
                     quantity,
-                    isIssued: true
                 });
 
-                book.stock -= quantity;
+                book.stock -= JSON.parse(quantity);
                 await book.save();
-    
                 return res.status(201).json(new_issue);
             }
-            else{
-                return res.status(400).json({ status: 400, message: "Either stock is 0 or quantity asked is greater than stock." });
+            else {
+                return res.status(400).json({ status: 400, message: "Either stock or quantity is 0 or else quantity asked is greater than stock." });
             }
         }
         else {
@@ -600,6 +686,7 @@ router.get("/showIssuedBooksRequest", async (req, res) => {
 })
 
 //Accept Book Issue Request
+//needs to be re-written
 router.patch("/acceptBookIssueRequest/:id", async (req, res) => {
     try {
         const id = req.params.id;
@@ -609,18 +696,25 @@ router.patch("/acceptBookIssueRequest/:id", async (req, res) => {
             const book = await books.findOne({ _id: issue.bookId })
 
             if (book) {
-                if (book.stock != 0 && book.stock >= issue.quantity) {
-
+                if (book.stock != 0 && issue.quantity != 0 && book.stock >= issue.quantity) {
+                    console.log("coming here")
                     book.stock -= issue.quantity;
                     await book.save();
 
-                    issue.isIssued = true;
-                    await issue.save();
+                    let ts = Date.now();
+                    let date_ob = new Date(ts);
+                    let date = date_ob.getDate();
+                    let month = date_ob.getMonth() + 1;
+                    let year = date_ob.getFullYear();
 
-                    return res.status(201).json(issue);
+                    // date & time in YYYY-MM-DD format
+                    issue.dateOfIssue = `${year}-${month}-${date}`;
+                    const newIssue = await issue.save();
+
+                    return res.status(201).json(newIssue);
                 }
                 else {
-                    return res.status(422).json({ status: 422, message: "Stock is 0." });
+                    return res.status(422).json({ status: 422, message: "Either stock is 0 or quantity asked is greater than stock." });
                 }
             }
             else {
@@ -636,6 +730,61 @@ router.patch("/acceptBookIssueRequest/:id", async (req, res) => {
     }
 })
 
+//Book Return Date Registration
+router.patch("/bookReturn/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+        const issue = await issuedBooks.findOne({ _id: id })
+
+        if (issue && issue.dateOfRequisition) {
+            // current timestamp in milliseconds
+            let ts = Date.now();
+
+            let date_ob = new Date(ts);
+            let date = date_ob.getDate();
+            let month = date_ob.getMonth() + 1;
+            let year = date_ob.getFullYear();
+
+            // date & time in YYYY-MM-DD format
+            issue.dateOfReturn = `${year}-${month}-${date}`;
+            await issue.save();
+
+            return res.status(201).json(issue);
+        }
+        else {
+            return res.status(401).json({ status: 401, message: "Issue Request has not be accepted yet." });
+        }
+    }
+    catch (err) {
+        return res.status(422).json(error);
+    }
+})
+
+//Book Return Date Registration
+// router.patch("/bookReturnRevert/:id", async (req, res) => {
+//     try {
+//         const id = req.params.id;
+//         const issue = await issuedBooks.findOne({ _id: id })
+
+//         if (issue && issue.dateOfRequisition) {
+//             // current timestamp in milliseconds
+
+
+//             // date & time in YYYY-MM-DD format
+//             issue.dateOfReturn = `${year}-${month}-${date}`;
+//             await issue.save();
+
+//             return res.status(201).json(issue);
+//         }
+//         else {
+//             return res.status(401).json({ status: 401, message: "Issue Request has not be accepted yet." });
+//         }
+//     }
+//     catch (err) {
+//         return res.status(422).json(error);
+//     }
+// })
+
 //Delete Issued Book Request
 router.delete("/deleteBookIssueRequest/:id", async (req, res) => {
     try {
@@ -650,5 +799,6 @@ router.delete("/deleteBookIssueRequest/:id", async (req, res) => {
         return res.status(422).json(error);
     }
 })
+
 
 module.exports = router;

@@ -30,18 +30,15 @@ const UserList = () => {
         }
         else {
             setUserData(data)
+            setData(true);
             console.log("All Users have been fetched properly.");
         }
     }
 
 
     React.useEffect(() => {
-        if (logindata.ValidUserOne != undefined) {
-            if (logindata.ValidUserOne.name) {
-                setData(true);
-                getdata();
-            }
-        }
+        getdata();
+        setData(true);  
     }, []);
 
 
@@ -84,22 +81,22 @@ const UserList = () => {
     }
 
     return (
-        <>{data && logindata.ValidUserOne.isAdmin ? <div className="container list-section mt-4">
+        <>{data ? <div className="container list-section mt-4">
             <div className="add_btn mt-2 mb-4">
                 <div>
                     <img src={SearchIcon} alt="" width="30px" height="30px" />
                     <input className="search-button" type="search" placeholder="Search..." aria-label="Search" onChange={(e) => { setSearchTerm(e.target.value) }} />
                 </div>
             </div>
-            <table className="table">
+            <table className="table table-bordered text-center">
                 <thead>
                     <tr className="attribute-row">
                         <th scope="col">S.No</th>
                         <th scope="col">Name</th>
                         <th scope="col">Department</th>
                         <th scope="col">Department Id</th>
-                        <th className="stock-attribute" scope="col">Phone No</th>
-                        <th className="action-attribute" scope="col">Actions</th>
+                        <th scope="col">Phone No</th>
+                        <th scope="col">Actions</th>
                     </tr>
                 </thead>
                 <tbody>

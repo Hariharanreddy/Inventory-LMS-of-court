@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { NavLink, useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import Swal from "sweetalert2"
@@ -6,6 +6,7 @@ import Swal from "sweetalert2"
 const Login = () => {
 
     const navigateTo = useNavigate();
+    const [disable, setDisable] = useState(false);
     const [passShow, setPassShow] = useState(false);
 
     const {
@@ -17,6 +18,7 @@ const Login = () => {
 
     const onFormSubmit = async (formData) => {
 
+        setDisable(true);
         const { email, password } = formData;
 
         const data = await fetch("http://localhost:8000/login", {
@@ -38,6 +40,7 @@ const Login = () => {
             localStorage.setItem("usersdatatoken", res.result.token);
             navigateTo("/BookList");
             reset();
+            setDisable(false);
 
             const Toast = Swal.mixin({
                 toast: true,
@@ -70,6 +73,7 @@ const Login = () => {
             }).then((result) => {
                 if (result.isConfirmed) {
                     reset();
+                    setDisable(false);
                 }
             })
         }
@@ -129,7 +133,7 @@ const Login = () => {
                             </div>
 
                             <div className="d-grid">
-                                <button className="btn btn-primary submit-button" type="submit">Login</button>
+                                <button className="btn btn-primary submit-button" type="submit" disabled={disable}>Login</button>
                             </div>
                             <p style={{ textAlign: "right", color: "rgb(6, 0, 97)", fontWeight: "500", marginTop: "2rem" }}>Don't have an account? <NavLink to="/registerUser">Sign Up</NavLink> </p>
                             <p style={{ textAlign: "right", color: "rgb(6, 0, 97)", fontWeight: "500" }}>Forgot password? <NavLink to="/passwordReset">Click Here</NavLink> </p>

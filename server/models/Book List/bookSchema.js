@@ -40,7 +40,7 @@ const bookSchema = new mongoose.Schema({
             },
             dateOfPurchase: {
                 type: String,
-                required: true
+                default: ""
             },
             quantityPurchased:{
                 type: Number,

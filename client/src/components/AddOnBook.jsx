@@ -6,7 +6,7 @@ import Swal from "sweetalert2"
 
 const AddOnBook = () => {
     const navigateTo = useNavigate();
-    const {id} = useParams("");
+    const { id } = useParams("");
 
     const preLoadedValues = {
         quantityPurchased: 0
@@ -28,6 +28,7 @@ const AddOnBook = () => {
             quantityPurchased
         } = formData;
 
+
         const res = await fetch("http://localhost:8000/addOnBook", {
             method: "POST",
             headers: {
@@ -35,7 +36,7 @@ const AddOnBook = () => {
             },
             //whenever we send data to database, we convert it into JSON type string first
             body: JSON.stringify({
-                bookId:id,  
+                bookId: id,
                 vendorName,
                 dateOfPurchase,
                 quantityPurchased
@@ -96,9 +97,10 @@ const AddOnBook = () => {
                 <div className='card-header'>
                     <h2>Add On</h2>
                     <NavLink to="/BookList">
-                        <button className="btn btn-primary">Book List</button>
+                        <button className="btn" style={{ backgroundColor: "rgb(6, 0, 97)", color: "white" }}> &lt; Back</button>
                     </NavLink>
                 </div>
+                <p className="fw-normal fst-italic mt-3 text-primary">Today's Date will be registered, if not specified.</p>
                 <form className="mt-4" onSubmit={handleSubmit(onFormSubmit)}>
                     <div className="row">
 
@@ -139,17 +141,14 @@ const AddOnBook = () => {
 
                         <div className="mb-3 col-lg-6 col-md-6 col-12">
                             <label htmlFor="dateOfPurchase" className="form-label">
-                                Date Of Purchase
+                                Date Of Acquisition
                             </label>
                             <input
                                 type="date"
                                 className={`form-control ${errors.dateOfPurchase ? "is-invalid" : ""}`}
                                 id="dateOfPurchase"
-                                {...register("dateOfPurchase", { required: true })}
+                                {...register("dateOfPurchase")}
                             />
-                            {errors.dateOfPurchase && (
-                                <div className="invalid-feedback">This Field Is Required.</div>
-                            )}
                         </div>
 
                         <div className="d-grid">

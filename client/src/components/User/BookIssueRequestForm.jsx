@@ -2,7 +2,6 @@ import React, { useContext } from 'react'
 import { NavLink, useNavigate, useParams } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { LoginContext } from "../ContextProvider/Context"
-
 import Swal from "sweetalert2"
 
 const BookIssueRequest = () => {
@@ -95,7 +94,7 @@ const BookIssueRequest = () => {
     const formSubmit = async (formData, typeOfSubmit) => {
 
         const {
-            dateOfIssue,
+            dateOfRequisition,
             quantity
         } = formData;
 
@@ -112,7 +111,7 @@ const BookIssueRequest = () => {
                 body: JSON.stringify({
                     userId: logindata.ValidUserOne._id,
                     bookId: id,
-                    dateOfIssue,
+                    dateOfRequisition,
                     quantity
                 })
             });
@@ -132,7 +131,7 @@ const BookIssueRequest = () => {
                 body: JSON.stringify({
                     userId: logindata.ValidUserOne._id,
                     bookId: id,
-                    dateOfIssue,
+                    dateOfRequisition,
                     quantity
                 })
             });
@@ -150,12 +149,12 @@ const BookIssueRequest = () => {
                 <div className='card-header'>
                     <h2>Issue Request</h2>
                     <NavLink to="/BookList">
-                        <button className="btn btn-primary">Book List</button>
+                        <button className="btn" style={{backgroundColor: "rgb(6, 0, 97)", color:"white" }}> &lt; Back</button>
                     </NavLink>
                 </div>
-                <form className="mt-4" >
+                <p className="fw-normal fst-italic mt-3 text-primary">Today's Date will be registered, if not specified.</p>
+                <form className="mt-3" >
                     <div className="row">
-
                         <div className="mb-3 col-lg-6 col-md-6 col-12">
                             <label htmlFor='quantity' className="form-label">Quantity</label>
                             <input
@@ -163,10 +162,10 @@ const BookIssueRequest = () => {
                                 id="quantity"
                                 className={`form-control ${errors.quantity ? "is-invalid" : ""}`}
                                 name="quantity"
-                                {...register("quantity", { min: 0, required: true })}
+                                {...register("quantity", { min: 1, required: true })}
                             />
                             {errors.quantity?.type === "min" && (
-                                <div className="invalid-feedback">Quantity cannot be less than 0.</div>
+                                <div className="invalid-feedback">Quantity cannot be 0.</div>
                             )}
                             {errors.quantity?.type === "required" && (
                                 <div className="invalid-feedback">This Field Is Required.</div>
@@ -174,26 +173,23 @@ const BookIssueRequest = () => {
                         </div>
 
                         <div className="mb-3 col-lg-6 col-md-6 col-12">
-                            <label htmlFor="dateOfIssue" className="form-label">
-                                Date Of Issue
+                            <label htmlFor="dateOfRequisition" className="form-label">
+                                Date Of Requisition
                             </label>
                             <input
                                 type="date"
-                                className={`form-control ${errors.dateOfIssue ? "is-invalid" : ""}`}
-                                id="dateOfIssue"
-                                {...register("dateOfIssue", { required: true })}
+                                className={`form-control ${errors.dateOfRequisition ? "is-invalid" : ""}`}
+                                id="dateOfRequisition"
+                                {...register("dateOfRequisition")}
                             />
-                            {errors.dateOfIssue && (
-                                <div className="invalid-feedback">This Field Is Required.</div>
-                            )}
                         </div>
                     </div>
                 </form>
-                <div className="d-flex justify-content-end mt-2">
-                    <button className="btn btn-primary mx-4" type="submit" onClick={handleSubmit((data) => {
+                <div className="d-flex justify-content-end mt-2 mb-2">
+                    <button className="btn mx-4" style={{backgroundColor: "#EAE8FF", color:"black"}} type="submit" onClick={handleSubmit((data) => {
                         formSubmit(data, "generate");
                     })}>Generate Issue</button>
-                    <button className="btn btn-success" type="submit" onClick={handleSubmit((data) => {
+                    <button className="btn" style={{backgroundColor: "lightblue", color:"black"}} type="submit" onClick={handleSubmit((data) => {
                         formSubmit(data, "credit");
                     })}>Credit</button>
                 </div>

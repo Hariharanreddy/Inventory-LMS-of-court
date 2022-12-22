@@ -27,27 +27,27 @@ const issueBookSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    dateOfIssue: {
+    dateOfIssue:{
         type: String,
-        required: true
+        default: ""
+    },
+    dateOfRequisition: {
+        type: String,
+        default: ""
+    },
+    dateOfReturn: {
+        type: String,
+        default: ""
     },
     quantity:{
         type: Number,
         required: true
-    },
-    returnStatus:{
-        type: Boolean,
-        default: false
     },
     publisherName: {
         type: String,
     },
     yearOfPublication: {
         type: Number,
-    },
-    isIssued: {
-        type: Boolean,
-        default: false
     }
 }, { timestamps: true });
 

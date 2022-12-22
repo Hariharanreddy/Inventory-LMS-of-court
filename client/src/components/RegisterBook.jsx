@@ -115,7 +115,7 @@ const Register = () => {
                 <div className='card-header'>
                     <h2>Add New Book</h2>
                     <NavLink to="/BookList">
-                        <button className="btn btn-primary">Book List</button>
+                    <button className="btn" style={{backgroundColor: "rgb(6, 0, 97)", color:"white" }}> &lt; Back</button>
                     </NavLink>
                 </div>
                 <form className="mt-4" onSubmit={handleSubmit(onFormSubmit)}>

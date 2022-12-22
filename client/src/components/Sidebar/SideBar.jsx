@@ -1,7 +1,7 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
-import { FaBars, FaUser } from "react-icons/fa";
+import { FaBars } from "react-icons/fa";
 import { MdMessage } from "react-icons/md";
 import { BiLogOut } from "react-icons/bi"
 import { ImBooks } from "react-icons/im"
@@ -10,29 +10,27 @@ import { MdProductionQuantityLimits } from "react-icons/md"
 import { HiPrinter } from "react-icons/hi"
 import { FaStamp } from "react-icons/fa"
 import { IoIosColorFill } from "react-icons/io"
-
+import { TiDownload, TiGroup} from "react-icons/ti"
 import { AnimatePresence, motion } from "framer-motion";
 import SidebarMenu from "./SidebarMenu";
-import { LoginContext } from "../ContextProvider/Context"
-import { useEffect } from "react";
-
-
 
 const SideBar = ({ children }) => {
 
-  const { logindata, setLoginData } = useContext(LoginContext);
-  const [data, setData] = useState(false);
-
-  const sidebar_section_admin = [
+  const navBar_Tabs = [
     {
       path: "/UserList",
       name: "All Users",
-      icon: <FaUser />
+      icon: <TiGroup />
     },
     {
       path: "/IssueRequests",
-      name: "Issue Requests",
+      name: "Book Issue Requests",
       icon: <MdMessage />,
+    },
+    {
+      path: "/myIssuedBooks",
+      name: "My Issued Books",
+      icon: <TiDownload />,
     },
     {
       path: "/BookList",
@@ -72,51 +70,8 @@ const SideBar = ({ children }) => {
       icon: <BiLogOut />,
     },
   ];
-  
-  const sidebar_section_user = [
-    {
-      path: "/profile",
-      name: "Profile",
-      icon: <FaUser />
-    },
-    {
-      path: "/myIssuedBooks",
-      name: "My Issued Books",
-      icon: <MdMessage />,
-    },
-    {
-      path: "/BookList",
-      name: "Book List",
-      icon: <ImBooks />,
-    },
-    {
-      path: "/ItemList",
-      name: "General Item",
-      icon: <MdProductionQuantityLimits />,
-    },
-    {
-      path: "/logout",
-      name: "Log Out",
-      icon: <BiLogOut />,
-    },
-  ];
 
   const [isOpen, setIsOpen] = useState(false);
-  const [navUserType, setNavUserType] = useState(sidebar_section_user);
-  
-
-  useEffect(() => {
-      if(logindata.ValidUserOne != undefined){
-        if(logindata.ValidUserOne.isAdmin == true){
-          setNavUserType(sidebar_section_admin);
-          setData(true);
-        }
-        else{
-          setData(true);
-        }
-
-      }
-  }, [logindata]) 
 
   const toggle = () => setIsOpen(!isOpen);
 
@@ -139,7 +94,7 @@ const SideBar = ({ children }) => {
 
   return (
     <>
-      {data ? <motion.div
+      <motion.div
         className={`sidebar`}
         animate={{
           width: isOpen ? "250px" : "45px",
@@ -173,7 +128,7 @@ const SideBar = ({ children }) => {
         </div>
         <section className="sidebar_section">
 
-          {navUserType.map((route, index) => {
+          {navBar_Tabs.map((route, index) => {
             if (route.subRoutes) {
               return (
                 <SidebarMenu
@@ -191,6 +146,7 @@ const SideBar = ({ children }) => {
                 to={route.path}
                 key={index}
                 className="link"
+
               >
                 <div className="icon">{route.icon}</div>
 
@@ -213,7 +169,7 @@ const SideBar = ({ children }) => {
 
         </section>
 
-      </motion.div> : ""}
+      </motion.div>
     </>
   );
 };
