@@ -1,8 +1,16 @@
-import React, { useContext } from 'react'
+import React, { useContext, useRef } from 'react'
 import SearchIcon from "../images/search-icon.png"
 import { NavLink, useNavigate } from 'react-router-dom';
-import {BsArrowDownUp} from "react-icons/bs"
+import { BsArrowDownUp } from "react-icons/bs"
 import { LoginContext } from "./ContextProvider/Context"
+import { CSVLink } from "react-csv"
+
+const headers = [
+    { label: "Title", key: "bookName" },
+    { label: "Author", key: "authorName" },
+    { label: "Initial Stock", key: "initialStock" },
+    { label: "Current Stock", key: "stock" }
+]
 
 const BookList = () => {
 
@@ -10,8 +18,14 @@ const BookList = () => {
     const [searchTerm, setSearchTerm] = React.useState("");
     const { logindata, setLoginData } = useContext(LoginContext);
     const [data, setData] = React.useState(false);
+
+    //for sorting and filtering
     const [sort, setSort] = React.useState({ order: "desc" });
     const [page, setPage] = React.useState(1);
+
+    //for exporting to csv
+    const [dataToDownload, setDataToDownload] = React.useState([]);
+    const csvDownloadRef = useRef(0);
 
     const navigateTo = useNavigate();
 
@@ -34,6 +48,30 @@ const BookList = () => {
             console.log(data);
             setBookData(data);
             setData(true);
+            console.log("All Books have been fetched properly.");
+        }
+    }
+
+    const getdataToDownload = async () => {
+
+        const res = await fetch(`http://localhost:8000/getBooksToDownload?sort=stock,${sort.order}&search=${searchTerm}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        const data = await res.json();
+
+        if (res.status === 422 || !data) {
+            console.log("Books could not be fetched.");
+        }
+        else {
+            console.log(data);
+            setDataToDownload(data);
+            setTimeout(() => {
+                csvDownloadRef.current.link.click();
+            }, 2000);
             console.log("All Books have been fetched properly.");
         }
     }
@@ -77,9 +115,14 @@ const BookList = () => {
                             <img src={SearchIcon} alt="" width="30px" height="30px" />
                             <input className="search-button" type="search" placeholder="Title or Author" aria-label="Search" onChange={(e) => { setSearchTerm(e.target.value); }} />
                         </div>
-                        <h3 className='mx-4 align-self-center' style={{ color: "rgb(6, 0, 97)", fontWeight: "bold" }}> Total Count : {getBookData.total}</h3>
+
+                        <h4 className='mx-4' style={{ color: "rgb(6, 0, 97)", fontWeight: "bold" }}> Results : {getBookData.total}</h4>
+
                         <div>
-                            <button className='btn mx-4 btn-dark' onClick={() => {
+
+                            <CSVLink data={dataToDownload} headers={headers} filename="book_data.csv" target="_blank" ref={csvDownloadRef} />
+                            <button className='btn' onClick={getdataToDownload}>Export To CSV</button>
+                            <button className='btn mx-2' onClick={() => {
                                 if (sort.order == "desc") {
                                     setSort({ order: "asc" });
                                 }
@@ -87,7 +130,9 @@ const BookList = () => {
                                     setSort({ order: "desc" });
                                 }
                             }}><BsArrowDownUp /> Sort Stock</button>
+
                             <NavLink to="/BookList/registerBook" className="btn" style={{ backgroundColor: "rgb(6, 0, 97)", color: "white" }}><i className="fa-solid fa-plus"></i> Add Book</NavLink>
+                            
                         </div>
                     </div>
                     <table className="table table-bordered text-center">
@@ -125,9 +170,9 @@ const BookList = () => {
                                 })}
                         </tbody>
                     </table>
-                    <div className="d-flex justify-content-center align-items-center mt-4">
-                        <button disabled={page <= 1 ? true : false} className="btn" style={{ backgroundColor: "rgb(6, 0, 97)", color: "white" }} onClick={() => {setPage(page-1);}}>Prev Page</button>
-                            <p className='mx-4 my-1' style={{ color: "grey", fontWeight: "bold" }}>  {page > Math.ceil(getBookData.total / 7) && Math.ceil(getBookData.total) != 0 ? setPage(1) : page} of {Math.ceil(getBookData.total / 7)}</p>
+                    <div className="d-flex justify-content-center align-items-center mt-4 mb-4">
+                        <button disabled={page <= 1 ? true : false} className="btn" style={{ backgroundColor: "rgb(6, 0, 97)", color: "white" }} onClick={() => { setPage(page - 1); }}>Prev Page</button>
+                        <p className='mx-4 my-1' style={{ color: "grey", fontWeight: "bold" }}>  {page > Math.ceil(getBookData.total / 7) && Math.ceil(getBookData.total) != 0 ? setPage(1) : page} of {Math.ceil(getBookData.total / 7)}</p>
                         <button disabled={page >= Math.ceil(getBookData.total / 7) ? true : false} className="btn" style={{ backgroundColor: "rgb(6, 0, 97)", color: "white" }} onClick={() => setPage(page + 1)}>Next Page</button>
                     </div>
                 </div>

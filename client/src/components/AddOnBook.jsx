@@ -29,14 +29,14 @@ const AddOnBook = () => {
         } = formData;
 
 
-        const res = await fetch("http://localhost:8000/addOnBook", {
+        const res = await fetch("http://localhost:8000/addOn", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             //whenever we send data to database, we convert it into JSON type string first
             body: JSON.stringify({
-                bookId: id,
+                itemId: id,
                 vendorName,
                 dateOfPurchase,
                 quantityPurchased

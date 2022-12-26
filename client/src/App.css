@@ -14,7 +14,8 @@ body {
   min-height: 100vh;
   display: flex;
   align-items: center;
-  background-image: url("./images/bg-pattern.jpg");
+  /* background-image: url("./images/bg-pattern.jpg"); */
+  /* background-color: rgb(240, 241, 241); */
   background-repeat: no-repeat;
   background-position:center;
   background-size:cover;
@@ -178,6 +179,7 @@ img {
 
 .submit-button {
   margin-top: 9px;
+  background: rgb(6, 0, 97) !important;
 }
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
@@ -261,7 +263,7 @@ input {
 
 .search-button:focus {
   outline-style: none;
-  border-bottom: 3px solid rgb(100, 213, 241) !important;
+  border-bottom: 3px solid rgb(6, 0, 97) !important;
 }
 
 /* ~~~~~~~~~~~~~~~~~~~SIDE-BAR~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
