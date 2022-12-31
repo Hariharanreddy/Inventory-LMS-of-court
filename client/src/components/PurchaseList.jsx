@@ -24,7 +24,7 @@ const PurchaseList = () => {
     //For Printing all the purchases of the book from the database
     const getdata = async () => {
 
-        const res = await fetch(`http://localhost:8000/getBookPurchaseList?id=${id}&page=${page}&search=${searchTerm}`, {
+        const res = await fetch(`http://localhost:8000/getPurchaseList?id=${id}&page=${page}&search=${searchTerm}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"

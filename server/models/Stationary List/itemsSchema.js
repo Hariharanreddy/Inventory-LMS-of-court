@@ -6,34 +6,22 @@ const itemsSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    quantityReceived: {
-        type: Number,
-        required: true,
-    },
     stock: {
         type: Number,
+        default: 0,
         required: true
     },
-    dateOfPurchase: {
+    initialStock:{
+        type:Number
+    },
+    price: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+    itemType:{
         type: String,
         required: true
-    },
-    vendorName: {
-        type: String,
-        trim: true
-    },
-    requisitionCourtName: {
-        type: String,
-        trim: true
-    },
-    dateOfRequisitionReceipt: {
-        type: String,
-    },
-    dateOfItemIssuance: {
-        type: String,
-    },
-    lastRemaining: {
-        type: Number
     }
 }, { timestamps: true });
 

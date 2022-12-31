@@ -15,7 +15,6 @@ const RegisterUser = () => {
         handleSubmit,
         formState: { errors },
         getValues,
-        reset
     } = useForm();
 
 
@@ -53,7 +52,7 @@ const RegisterUser = () => {
         const data = await res.json();
         console.log(data);
 
-        if (res.status === 422) {
+        if (res.status == 422) {
             Swal.fire({
                 title: 'Sign Up Unsuccessful!',
                 text: `${"Try Using Another Email."}`,
@@ -69,7 +68,7 @@ const RegisterUser = () => {
                 }
             })
         }
-        else if (res.status === 400) {
+        else if (res.status == 400) {
             Swal.fire({
                 title: 'Email Already Exist!',
                 text: `${"Try Using Another Email."}`,
@@ -88,7 +87,6 @@ const RegisterUser = () => {
         else {
             console.log("User Has Been Added Successfully!")
 
-            reset();
             Swal.fire({
                 title: 'User has been added successfully!',
                 text: "",
@@ -101,7 +99,6 @@ const RegisterUser = () => {
             }).then((result) => {
                 if (result.isConfirmed) {
                     navigateTo("/login");
-                    reset();
                 }
             })
         }

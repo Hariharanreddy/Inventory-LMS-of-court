@@ -23,8 +23,8 @@ import SideBarLayout from './components/Sidebar/SideBarLayout'
 //import all itemlist the components individually
 import ItemList from "./components/Stationary/ItemList"
 import RegisterItem from "./components/Stationary/RegisterItem"
-import ItemDetails from './components/Stationary/ItemDetails'
-import EditItem from "./components/Stationary/EditItem"
+// import ItemDetails from './components/Stationary/ItemDetails'
+import ItemEdit from "./components/Stationary/ItemEdit"
 import HomePage from "./components/HomePage"
 
 //import authentication components
@@ -35,12 +35,11 @@ import LogOut from "./components/Authentication/LogOut"
 import ForgotPassword from './components/Authentication/ForgotPassword'
 import PasswordReset from './components/Authentication/PasswordReset'
 
-//import admin specific components
+//import admin and user specific components
 import UserList from "./components/Admin/UserList"
 import UserDetails from "./components/Admin/UserDetails"
-import UserIssuedBooks from "./components/Admin/UserIssuedBooks"
-import IssueRequests from "./components/Admin/IssueRequests"
 import MyIssuedBooks from "./components/User/MyIssuedBooks"
+import EditIssue from './components/User/EditIssue'
 
 //import login context
 import { LoginContext } from "./components/ContextProvider/Context"
@@ -111,18 +110,38 @@ const App = () => {
               {/* Only Admin Routes */}
               <Route path="/UserList" element={<UserList />} />
               <Route path="/UserList/view/:id" element={<UserDetails />} />
-              <Route path="/UserList/viewIssue/:id" element={<UserIssuedBooks />} />
-              <Route path="/IssueRequests" element={<IssueRequests />} />   
+              <Route path="/IssueRequests" element={<MyIssuedBooks />} />
+              <Route path="/IssueRequests/editIssue/:id" element={<EditIssue />} />   
 
               {/* User Personal Routes */}
-              <Route path="/MyIssuedBooks" element={<MyIssuedBooks />} />   
+              <Route path="/MyIssuedBooks" element={<MyIssuedBooks userId={logindata.ValidUserOne ? logindata.ValidUserOne._id : ""} name={logindata.ValidUserOne ? logindata.ValidUserOne.name : ""}/>} />   
+              <Route path="/MyIssuedBooks/editIssue/:id" element={<EditIssue />} />   
               
-
               {/* Item Section Routes */}
-              <Route path="/ItemList" element={<ItemList />} />
-              <Route path="/ItemList/registerItem" element={<RegisterItem />} />
-              <Route path="/ItemList/edit/:id" element={<EditItem />} />
-              <Route path="/ItemList/view/:id" element={<ItemDetails />} />
+              {/* GENERAL ITEM */}
+              <Route path="/ItemListGi" element={<ItemList type="gi" />} />
+              <Route path="/ItemListGi/registerItem" element={<RegisterItem type="gi"/>} />
+              <Route path="/ItemListGi/view/:newId" element={<PurchaseList />} />
+              <Route path="/ItemListGi/edit/:id" element={<ItemEdit />} />
+
+              {/* PRINTED FORMAT */}
+              <Route path="/ItemListPf" element={<ItemList type="pf" />} />
+              <Route path="/ItemListPf/registerItem" element={<RegisterItem type="pf"/>} />
+              <Route path="/ItemListPf/view/:newId" element={<PurchaseList />} />
+              <Route path="/ItemListPf/edit/:id" element={<ItemEdit />} />
+
+              {/* PRINTER CATRIDGES */}
+              <Route path="/ItemListPc" element={<ItemList type="pc" />} />
+              <Route path="/ItemListPc/registerItem" element={<RegisterItem type="pc"/>} />
+              <Route path="/ItemListPc/view/:newId" element={<PurchaseList />} />
+              <Route path="/ItemListPc/edit/:id" element={<ItemEdit />} />
+
+              {/* SEALS / STAMPS */}
+              <Route path="/ItemListSs" element={<ItemList type="ss" />} />
+              <Route path="/ItemListSs/registerItem" element={<RegisterItem type="ss"/>} />
+              <Route path="/ItemListSs/view/:newId" element={<PurchaseList />} />
+              <Route path="/ItemListSs/edit/:id" element={<ItemEdit />} />
+              
               
               <Route path="*" element={<Error />} />
             </Route>
@@ -137,6 +156,6 @@ const App = () => {
       }
     </>
   )
-}
+} 
 
 export default App

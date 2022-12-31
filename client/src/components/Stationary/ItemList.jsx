@@ -1,20 +1,40 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import SearchIcon from "../../images/search-icon.png"
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { BsArrowDownUp } from "react-icons/bs"
+// import { LoginContext } from "./ContextProvider/Context"
+import { CSVLink } from "react-csv"
 
-import Swal from 'sweetalert2'
+const headers = [
+    { label: "Item", key: "itemName" },
+    { label: "Initial Stock", key: "initialStock" },
+    { label: "Current Stock", key: "stock" },
+    { label: "Price", key: "price" },
+    { label: "Type", key: "itemType" }
+]
 
-const ItemList = () => {
+const ItemList = (props) => {
 
     const [getItemData, setItemData] = React.useState([]);
+    const [data, setData] = React.useState(false);
+    // const { logindata, setLoginData } = useContext(LoginContext);
+     // const [type, setType] = React.useState("");
+
+    //for filtering and pagination
+    const [page, setPage] = React.useState(1);
     const [searchTerm, setSearchTerm] = React.useState("");
+    const [sortStock, setSortStock] = React.useState("");
 
-    // console.log(getBookData);
+    //for exporting to csv
+    const [dataToDownload, setDataToDownload] = React.useState([]);
+    const csvDownloadRef = useRef(0);
 
-    //for printing all the books from the database
+    const navigateTo = useNavigate();
+
+    //for printing all the Items from the database
     const getdata = async () => {
 
-        const res = await fetch("http://localhost:8000/getItems", {
+        const res = await fetch(`http://localhost:8000/getItems?page=${page}&sortStock=${sortStock}&search=${searchTerm}&type=${props.type}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -22,114 +42,156 @@ const ItemList = () => {
         });
 
         const data = await res.json();
-        console.log(data);
 
         if (res.status === 422 || !data) {
             console.log("Items could not be fetched.");
         }
         else {
-            setItemData(data)
+            console.log(data);
+            setItemData(data);
+            setData(true);
             console.log("All Items have been fetched properly.");
         }
     }
 
+    const getdataToDownload = async () => {
 
-    React.useEffect(() => {
-        // let x = 100;
-        getdata();
-        // const interval = setInterval(() => {
-
-        //     // console.log(++x);
-        // }, 1000);
-        // return () => clearInterval(interval);
-    }, []);
-
-
-    const deleteItem = async (id) => {
-
-        const res2 = await fetch(`http://localhost:8000/deleteItem/${id}`, {
-            method: "DELETE",
+        const res = await fetch(`http://localhost:8000/getItemsToDownload?sortStock=${sortStock}&search=${searchTerm}&type=${props.type}`, {
+            method: "GET",
             headers: {
                 "Content-Type": "application/json"
             }
-        })
+        });
 
-        const deleteData = await res2.json();
-        console.log(deleteData);
+        const data = await res.json();
 
-        if (res2.status === 422) {
-            console.log("Data could not be deleted.");
+        if (res.status === 422 || !data) {
+            console.log("Items could not be fetched.");
         }
         else {
-            console.log("Data has been deleted.");
-            getdata();
+            console.log(data);
+            setDataToDownload(data);
+            setTimeout(() => {
+                csvDownloadRef.current.link.click();
+            }, 2000);
+            console.log("All Items have been fetched properly.");
         }
     }
 
-    const checkDelete = (id) => {
-        Swal.fire({
-            title: 'Are You Sure?',
-            text: "Data will be removed permanently!",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#0d6efd',
-            cancelButtonColor: '#dc3545',
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No ',
-          }).then((result) => {
-            if (result.isConfirmed) {
-              deleteItem(id);
-            }
-          })
-    }
+    // const Valid = async () => {
+    //     let token = localStorage.getItem("usersdatatoken");
+
+    //     const res = await fetch("http://localhost:8000/validuser", {
+    //         method: "GET",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //             "Authorization": token
+    //         }
+    //     });
+
+    //     const data = await res.json();
+
+    //     if (data.status == 401 || !data) {
+    //         navigateTo("/login");
+    //     }
+    //     else {
+    //         setLoginData(data);
+    //         navigateTo("/BookList");
+    //     }
+    // }
+
+    // React.useEffect(() => {
+    //     Valid()
+    // }, []);
+
+    React.useEffect(() => {
+        getdata();
+    }, [searchTerm, page, sortStock ]);
 
     return (
-            <div className="container list-section mt-4">
-                <div className="add_btn mt-2 mb-4">
-                    <div>
-                        <img src={SearchIcon} alt="" width="30px" height="30px" />
-                        <input className="search-button" type="search" placeholder="Search..." aria-label="Search" onChange={(e) => { setSearchTerm(e.target.value) }} />
+        <>
+            {data ?
+                <div className="container list-section mt-4">
+
+                    <div className="add_btn mt-2">
+
+                        {props.type == "gi" && <h4>General List</h4>}
+                        {props.type == "pf" && <h4>Printed Format</h4>}
+                        {props.type == "pc" && <h4>Printer Catridges</h4>}
+                        {props.type == "ss" && <h4>Stamps And Seals</h4>}
+
+                        <h4 style={{ color: "grey", fontWeight: "500" }}> Results : {getItemData.total}</h4>
+
                     </div>
-                    <NavLink to="/ItemList/registerItem" className="btn btn-primary"><i className="fa-solid fa-plus"></i> Add Item</NavLink>
+
+                    <div className='add_btn mb-2'>
+
+                            <div>
+
+                                <img src={SearchIcon} alt="" width="30px" height="30px" />
+                                <input className="search-button" type="search" placeholder="Search Item" aria-label="Search" onChange={(e) => { setSearchTerm(e.target.value); }} />
+                                <input className="search-button mx-2" type="number" placeholder="Filter Stock" aria-label="Search" onChange={(e) => { setSortStock(e.target.value); }} />
+                            
+                            </div>
+
+                            <div>
+
+                                <CSVLink data={dataToDownload} headers={headers} filename="Stationery_data.csv" target="_blank" ref={csvDownloadRef} />
+                                <button className='btn mx-2' onClick={getdataToDownload}>Export To CSV</button>
+
+                                <NavLink to="/ItemList/registerItem" className="btn" style={{ backgroundColor: "rgb(6, 0, 97)", color: "white" }}><i className="fa-solid fa-plus"></i> Add Item</NavLink>
+                            
+                            </div>
+
+                    </div>
+                    <table className="table table-bordered text-center">
+                        <thead>
+                            <tr className="attribute-row">
+                                <th scope="col">Item Name</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Initial Stock</th>
+                                <th scope="col">Current Stock</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {getItemData.total == 0 ?
+                                <tr className="record-row">
+                                    <td colspan={8}> No Data Found </td>
+                                </tr>
+                                : getItemData.itemList.map((element, id) => {
+                                    return (
+                                        <tr className="record-row" key={id}>
+                                            <td>{element.itemName}</td>
+                                            <td>{element.price}</td>
+                                            <td>{element.initialStock}</td>
+                                            <td>{element.stock}</td>
+                                            <td className="d-flex justify-content-around">
+                                                <>
+                                                    <NavLink to={`view/${element._id}`}><button className="btn" style={{ backgroundColor: "#D8D2E1", color: "black" }}>Vendor List</button></NavLink>
+                                                    <NavLink to={`edit/${element._id}`}><button className="btn" style={{ backgroundColor: "#EAE8FF", color: "black" }}>Edit</button></NavLink>
+                                                    <NavLink to={`addOn/${element._id}`}><button className="btn text-black">Add</button></NavLink>
+                                                    <NavLink to={`ItemIssueRequestForm/${element._id}`}><button className="btn" style={{ backgroundColor: "lightblue", color: "black" }}>Issue</button></NavLink>
+                                                </>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                        </tbody>
+                    </table>
+                    <div className="d-flex justify-content-center align-items-center mb-4">
+                        <button disabled={page <= 1 ? true : false} className="btn" style={{ backgroundColor: "rgb(6, 0, 97)", color: "white" }} onClick={() => { setPage(page - 1); }}>Prev Page</button>
+                        <p className='mx-4 my-1' style={{ color: "grey", fontWeight: "bold" }}>  {page > Math.ceil(getItemData.total / 6) && Math.ceil(getItemData.total) != 0 ? setPage(1) : page} of {Math.ceil(getItemData.total / 6)}</p>
+                        <button disabled={page >= Math.ceil(getItemData.total / 6) ? true : false} className="btn" style={{ backgroundColor: "rgb(6, 0, 97)", color: "white" }} onClick={() => setPage(page + 1)}>Next Page</button>
+                    </div>
                 </div>
-                <table className="table">
-                    <thead>
-                        <tr className="attribute-row">
-                            <th scope="col">S.No</th>
-                            <th scope="col">Item</th>
-                            <th scope="col">Quantity Received</th>
-                            <th className="stock-attribute" scope="col">Stock</th>
-                            <th className="action-attribute" scope="col">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            getItemData && getItemData.filter((element) => {
-                                if (searchTerm === "") {
-                                    return element;
-                                }
-                                else if (element.itemName.toLowerCase().includes(searchTerm.toLowerCase()) || element.dateOfPurchase.toLowerCase().includes(searchTerm.toLowerCase()) || element.quantityReceived.toString().includes(searchTerm.toString())) {
-                                    return element;
-                                }
-                            }).map((element, id) => {
-                                return (
-                                    <tr className="record-row" key={id}>
-                                        <th scope="row">{id + 1}</th>
-                                        <td>{element.itemName} </td>
-                                        <td>{element.quantityReceived}</td>
-                                        <td>{element.stock}</td>
-                                        <td className="d-flex justify-content-between">
-                                            <NavLink to={`view/${element._id}`}> <button className="btn btn-outline-success">Details</button></NavLink>
-                                            <NavLink to={`edit/${element._id}`}>  <button className="btn btn-outline-primary">Edit</button></NavLink>
-                                            <button className="btn btn-outline-danger" onClick={() => checkDelete(element._id)}>Delete</button>
-                                        </td>
-                                    </tr>
-                                )
-                            })
-                        }
-                    </tbody>
-                </table>
-            </div>
+                :
+                <div className="m-auto" >
+                    <div className="spinner-border" style={{ height: "4rem", width: "4rem", color: "rgb(6, 0, 97)" }} role="status">
+                    </div>
+                </div>
+            }
+        </>
     )
 }
 

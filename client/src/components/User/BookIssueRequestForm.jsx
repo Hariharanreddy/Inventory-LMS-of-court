@@ -23,7 +23,7 @@ const BookIssueRequest = () => {
     });
 
     const showPopUp = (status) => {
-        if (status === 422) {
+        if (status == 422) {
             Swal.fire({
                 title: '',
                 text: "Data Submission Failed.",
@@ -88,8 +88,6 @@ const BookIssueRequest = () => {
             })
         }
     }
-
-
 
     const formSubmit = async (formData, typeOfSubmit) => {
 

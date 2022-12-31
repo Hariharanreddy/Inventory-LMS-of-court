@@ -8,8 +8,11 @@ import { CSVLink } from "react-csv"
 const headers = [
     { label: "Title", key: "bookName" },
     { label: "Author", key: "authorName" },
+    { label: "Category", key: "category" },
     { label: "Initial Stock", key: "initialStock" },
-    { label: "Current Stock", key: "stock" }
+    { label: "Publisher Name", key: "publisherName" },
+    { label: "Year Of Publication", key: "yearOfPublication" },
+    { label: "Price", key: "price" }
 ]
 
 const BookList = () => {
@@ -19,7 +22,7 @@ const BookList = () => {
     const { logindata, setLoginData } = useContext(LoginContext);
     const [data, setData] = React.useState(false);
 
-    //for sorting and filtering
+    //for sorting and pagination
     const [sort, setSort] = React.useState({ order: "desc" });
     const [page, setPage] = React.useState(1);
 
@@ -100,23 +103,41 @@ const BookList = () => {
 
     React.useEffect(() => {
         Valid()
+
+        // const prevSearchState = window.localStorage.getItem('searchTerm');
+        // if (prevSearchState) {
+        //     setSearchTerm(JSON.parse(prevSearchState));
+        // }
     }, []);
+
+    // React.useEffect(() => {
+    //     window.localStorage.setItem('searchTerm', JSON.stringify(searchTerm));
+    // }, [searchTerm]);
 
     React.useEffect(() => {
         getdata();
-    }, [searchTerm, sort, page])
+    }, [searchTerm, sort, page]);
 
     return (
         <>
             {data ?
                 <div className="container list-section mt-4">
-                    <div className="add_btn mt-2 mb-4">
-                        <div>
-                            <img src={SearchIcon} alt="" width="30px" height="30px" />
-                            <input className="search-button" type="search" placeholder="Title or Author" aria-label="Search" onChange={(e) => { setSearchTerm(e.target.value); }} />
-                        </div>
 
-                        <h4 className='mx-4' style={{ color: "rgb(6, 0, 97)", fontWeight: "bold" }}> Results : {getBookData.total}</h4>
+                    <div className="add_btn mt-2">
+
+                        <h4>Book List</h4>
+                        <h4 style={{ color: "grey", fontWeight: "500" }}> Results : {getBookData.total}</h4>
+
+                    </div>
+
+                    <div className='add_btn mb-2'>
+
+                        <div>
+
+                            <img src={SearchIcon} alt="" width="30px" height="30px" />
+                            <input className="search-button" type="search" placeholder="Title or Author" aria-label="Search" value={searchTerm} onChange={(e) => { setSearchTerm(e.target.value); }} />
+
+                        </div>
 
                         <div>
 
@@ -132,8 +153,9 @@ const BookList = () => {
                             }}><BsArrowDownUp /> Sort Stock</button>
 
                             <NavLink to="/BookList/registerBook" className="btn" style={{ backgroundColor: "rgb(6, 0, 97)", color: "white" }}><i className="fa-solid fa-plus"></i> Add Book</NavLink>
-                            
+
                         </div>
+
                     </div>
                     <table className="table table-bordered text-center">
                         <thead>
@@ -170,10 +192,10 @@ const BookList = () => {
                                 })}
                         </tbody>
                     </table>
-                    <div className="d-flex justify-content-center align-items-center mt-4 mb-4">
+                    <div className="d-flex justify-content-center align-items-center mb-4">
                         <button disabled={page <= 1 ? true : false} className="btn" style={{ backgroundColor: "rgb(6, 0, 97)", color: "white" }} onClick={() => { setPage(page - 1); }}>Prev Page</button>
-                        <p className='mx-4 my-1' style={{ color: "grey", fontWeight: "bold" }}>  {page > Math.ceil(getBookData.total / 7) && Math.ceil(getBookData.total) != 0 ? setPage(1) : page} of {Math.ceil(getBookData.total / 7)}</p>
-                        <button disabled={page >= Math.ceil(getBookData.total / 7) ? true : false} className="btn" style={{ backgroundColor: "rgb(6, 0, 97)", color: "white" }} onClick={() => setPage(page + 1)}>Next Page</button>
+                        <p className='mx-4 my-1' style={{ color: "grey", fontWeight: "bold" }}>  {page > Math.ceil(getBookData.total / 6) && Math.ceil(getBookData.total) != 0 ? setPage(1) : page} of {Math.ceil(getBookData.total / 6)}</p>
+                        <button disabled={page >= Math.ceil(getBookData.total / 6) ? true : false} className="btn" style={{ backgroundColor: "rgb(6, 0, 97)", color: "white" }} onClick={() => setPage(page + 1)}>Next Page</button>
                     </div>
                 </div>
                 :

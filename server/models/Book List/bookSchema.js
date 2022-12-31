@@ -32,22 +32,6 @@ const bookSchema = new mongoose.Schema({
     price: {
         type: Number,
     }
-    // purchase: [
-    //     {
-    //         vendorName: {
-    //             type: String,
-    //             required: true
-    //         },
-    //         dateOfPurchase: {
-    //             type: String,
-    //             default: ""
-    //         },
-    //         quantityPurchased:{
-    //             type: Number,
-    //             required: true
-    //         }
-    //     }
-    // ]
 }, { timestamps: true });
 
 const books = new mongoose.model("books", bookSchema);

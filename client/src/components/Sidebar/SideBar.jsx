@@ -10,7 +10,10 @@ import { MdProductionQuantityLimits } from "react-icons/md"
 import { HiPrinter } from "react-icons/hi"
 import { FaStamp } from "react-icons/fa"
 import { IoIosColorFill } from "react-icons/io"
-import { TiDownload, TiGroup} from "react-icons/ti"
+import { FaEnvelopeOpenText} from "react-icons/fa"
+import {BsFillCartFill} from "react-icons/bs"
+import {IoBookSharp} from "react-icons/io5"
+import { TiGroup} from "react-icons/ti"
 import { AnimatePresence, motion } from "framer-motion";
 import SidebarMenu from "./SidebarMenu";
 
@@ -24,13 +27,13 @@ const SideBar = ({ children }) => {
     },
     {
       path: "/IssueRequests",
-      name: "Book Issue Requests",
+      name: "All Book Issue Requests",
       icon: <MdMessage />,
     },
     {
       path: "/myIssuedBooks",
-      name: "My Issued Books",
-      icon: <TiDownload />,
+      name: "Books Purchased",
+      icon: <IoBookSharp />,
     },
     {
       path: "/BookList",
@@ -38,27 +41,37 @@ const SideBar = ({ children }) => {
       icon: <ImBooks />,
     },
     {
+      path: "/ItemIssueRequests",
+      name: "All Stationery Requests",
+      icon: <FaEnvelopeOpenText />,
+    },
+    {
+      path: "/myStationeryItems",
+      name: "Stationery Purchased",
+      icon: <BsFillCartFill />,
+    },
+    {
       path: "/file-manager",
       name: "Stationery Items",
       icon: <IoFileTrayStackedSharp />,
       subRoutes: [
         {
-          path: "/ItemList",
+          path: "/ItemListGi",
           name: "General Item",
           icon: <MdProductionQuantityLimits />,
         },
         {
-          path: "/settings/2fa",
+          path: "/ItemListPf",
           name: "Printed Format",
           icon: <HiPrinter />,
         },
         {
-          path: "/settings/billing",
+          path: "/ItemListPc",
           name: "Printer Catridges",
           icon: <IoIosColorFill />,
         },
         {
-          path: "/settings/billing",
+          path: "/ItemListSs",
           name: "Seals/Stamps",
           icon: <FaStamp />,
         }
