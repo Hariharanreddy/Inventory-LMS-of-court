@@ -62,13 +62,15 @@ const App = () => {
 
     const data = await res.json();
 
+    console.log(data);
+
     if (data.status == 401 || !data) {
       console.log("User not valid");
 
       if(window.location.href.slice(0, 36) == "http://localhost:5173/forgotPassword")
       { }
       else{
-        navigateTo("/");
+        navigateTo("/login");
       }
     } else {
       console.log("User verified");
@@ -82,7 +84,7 @@ const App = () => {
       Valid().then(() => {
         setData(true)
       })
-    }, 2000)
+    }, 1000)
   }, [])
 
   return (
@@ -119,29 +121,28 @@ const App = () => {
               
               {/* Item Section Routes */}
               {/* GENERAL ITEM */}
-              <Route path="/ItemListGi" element={<ItemList type="gi" />} />
-              <Route path="/ItemListGi/registerItem" element={<RegisterItem type="gi"/>} />
-              <Route path="/ItemListGi/view/:newId" element={<PurchaseList />} />
-              <Route path="/ItemListGi/edit/:id" element={<ItemEdit />} />
+              <Route path="/ItemListgi" element={<ItemList type="gi" />} />
+              <Route path="/ItemListgi/registerItem" element={<RegisterItem type="gi"/>} />
+              <Route path="/ItemListgi/view/:newId" element={<PurchaseList />} />
+              <Route path="/ItemListgi/edit/:id" element={<ItemEdit />} />
 
               {/* PRINTED FORMAT */}
-              <Route path="/ItemListPf" element={<ItemList type="pf" />} />
-              <Route path="/ItemListPf/registerItem" element={<RegisterItem type="pf"/>} />
-              <Route path="/ItemListPf/view/:newId" element={<PurchaseList />} />
-              <Route path="/ItemListPf/edit/:id" element={<ItemEdit />} />
+              <Route path="/ItemListpf" element={<ItemList type="pf" />} />
+              <Route path="/ItemListpf/registerItem" element={<RegisterItem type="pf"/>} />
+              <Route path="/ItemListpf/view/:newId" element={<PurchaseList />} />
+              <Route path="/ItemListpf/edit/:id" element={<ItemEdit />} />
 
               {/* PRINTER CATRIDGES */}
-              <Route path="/ItemListPc" element={<ItemList type="pc" />} />
-              <Route path="/ItemListPc/registerItem" element={<RegisterItem type="pc"/>} />
-              <Route path="/ItemListPc/view/:newId" element={<PurchaseList />} />
-              <Route path="/ItemListPc/edit/:id" element={<ItemEdit />} />
+              <Route path="/ItemListpc" element={<ItemList type="pc" />} />
+              <Route path="/ItemListpc/registerItem" element={<RegisterItem type="pc"/>} />
+              <Route path="/ItemListpc/view/:newId" element={<PurchaseList />} />
+              <Route path="/ItemListpc/edit/:id" element={<ItemEdit />} />
 
               {/* SEALS / STAMPS */}
-              <Route path="/ItemListSs" element={<ItemList type="ss" />} />
-              <Route path="/ItemListSs/registerItem" element={<RegisterItem type="ss"/>} />
-              <Route path="/ItemListSs/view/:newId" element={<PurchaseList />} />
-              <Route path="/ItemListSs/edit/:id" element={<ItemEdit />} />
-              
+              <Route path="/ItemListss" element={<ItemList type="ss" />} />
+              <Route path="/ItemListss/registerItem" element={<RegisterItem type="ss"/>} />
+              <Route path="/ItemListss/view/:newId" element={<PurchaseList />} />
+              <Route path="/ItemListss/edit/:id" element={<ItemEdit />} />
               
               <Route path="*" element={<Error />} />
             </Route>

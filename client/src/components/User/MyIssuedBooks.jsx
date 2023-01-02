@@ -22,6 +22,7 @@ const myIssuedBooks = (props) => {
 
     const [getRequestData, setRequestData] = useState([]);
     const [data, setData] = useState(false);
+    const [runUseEffect, setRunUseEffect] = useState(false);
 
     //for pagination and searching
     const [searchTerm, setSearchTerm] = useState("");
@@ -33,29 +34,6 @@ const myIssuedBooks = (props) => {
     //for exporting to csv
     const [dataToDownload, setDataToDownload] = useState([]);
     const csvDownloadRef = useRef(0);
-
-    //For printing all the users from the database
-    const getdata = async () => {
-
-        const res = await fetch(`http://localhost:8000/showIssuedBooksRequest?page=${page}&startDate=${startDate}&endDate=${endDate}&search=${searchTerm}&id=${props.userId ? props.userId : ""}&searchName=${searchUserName}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-
-        const fetchedData = await res.json();
-
-        if (res.status === 422 || !fetchedData) {
-            console.log("Requests could not be fetched.");
-        }
-        else {
-            console.log(fetchedData);
-            setRequestData(fetchedData);
-            setData(true);
-            console.log("All Requests have been fetched properly.");
-        }
-    }
 
     const getdataToDownload = async () => {
 
@@ -99,7 +77,10 @@ const myIssuedBooks = (props) => {
         }
         else {
             console.log("Data has been updated.");
-            getdata();
+
+            setRunUseEffect(() => {
+                return runUseEffect ? false : true;
+            })
 
             const Toast = Swal.mixin({
                 toast: true,
@@ -169,7 +150,9 @@ const myIssuedBooks = (props) => {
         }
         else {
             console.log("Request Accepted Successfully.");
-            getdata();
+            setRunUseEffect(() => {
+                return runUseEffect ? false : true;
+            })
 
             const Toast = Swal.mixin({
                 toast: true,
@@ -191,10 +174,53 @@ const myIssuedBooks = (props) => {
     }
 
     useEffect(() => {
-        getdata();
-    }, [page, searchTerm, startDate, endDate, props.userId, searchUserName]);
+        setSearchUserName("");
+        setSearchTerm("");
+        setStartDate("");
+        setEndDate("");
+        setPage(1);
+    }, [props.userId]);
 
-    console.log(props.userId);
+    useEffect(() => {
+        let active = true;
+        console.log("what !")
+
+        //For printing all the users from the database
+        const getdata = async () => {
+
+            const res = await fetch(`http://localhost:8000/showIssuedBooksRequest?page=${page}&startDate=${startDate}&endDate=${endDate}&search=${searchTerm}&id=${props.userId ? props.userId : ""}&searchName=${searchUserName}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            const fetchedData = await res.json();
+
+            if (res.status === 422 || !fetchedData) {
+                console.log("Requests could not be fetched.");
+            }
+            else {
+                console.log(fetchedData);
+
+                if (active) {
+                    setRequestData(fetchedData);
+                    setData(true);
+                }
+                
+                console.log("All Requests have been fetched properly.");
+            }
+        }
+
+        getdata();
+
+        return () => {
+            active = false;
+        };
+
+    }, [page, searchTerm, startDate, endDate, props.userId, searchUserName, runUseEffect]);
+
+    // console.log(props.userId);
 
     return (
         <>{data ?
@@ -205,8 +231,8 @@ const myIssuedBooks = (props) => {
                     {props.name
                         ? <>
                             <h4>Issued Books By - <span style={{ color: "grey", fontWeight: "500" }}>{props.name}</span></h4>
-                          </>
-                        :   <h4>All Book Issue Requests</h4>}
+                        </>
+                        : <h4>All Book Issue Requests</h4>}
                     <h4 style={{ color: "grey", fontWeight: "500" }}> Results : {getRequestData.total}</h4>
 
                 </div>
@@ -214,11 +240,12 @@ const myIssuedBooks = (props) => {
                 <div className='add_btn mb-2'>
 
                     <div className='align-self-end'>
+
                         <img src={SearchIcon} alt="" width="30px" height="30px" />
-                        {props.userId 
-                            ? <input className="search-button" type="search" placeholder="Seach By Title" aria-label="Search" onChange={(e) => { setSearchTerm(e.target.value); }} />
-                            : <input className="search-button" type="search" placeholder="Seach By UserName" aria-label="Search" onChange={(e) => { setSearchUserName(e.target.value); }} />}
-                        
+                        {props.userId
+                            ? <input className="search-button" type="search" value={searchTerm} placeholder="Seach By Title" aria-label="Search" onChange={(e) => { setSearchTerm(e.target.value); }} />
+                            : <input className="search-button" type="search" value={searchUserName} placeholder="Seach By UserName" aria-label="Search" onChange={(e) => { setSearchUserName(e.target.value); }} />}
+
                     </div>
 
                     <form>
@@ -226,12 +253,12 @@ const myIssuedBooks = (props) => {
 
                             <div className="col-lg-6 col-md-6 col-12">
                                 <label htmlFor="startDate">D.O.R From :</label>
-                                <input className="form-control" id="startDate" type="date" onChange={(e) => { setStartDate(e.target.value); }} />
+                                <input className="form-control" id="startDate" type="date" value={startDate} onChange={(e) => { setStartDate(e.target.value); }} />
                             </div>
 
                             <div className="col-lg-6 col-md-6 col-12">
                                 <label htmlFor="endDate">To :</label>
-                                <input className="form-control" id="endDate" type="date" onChange={(e) => { setEndDate(e.target.value); }} />
+                                <input className="form-control" id="endDate" type="date" value={endDate} onChange={(e) => { setEndDate(e.target.value); }} />
                             </div>
 
                         </div>
@@ -267,7 +294,7 @@ const myIssuedBooks = (props) => {
                     <tbody>
                         {getRequestData.total == 0
                             ? <tr className="record-row">
-                                <td colspan={8}> No Data Found </td>
+                                <td colSpan={8}> No Data Found </td>
                             </tr>
                             : getRequestData.issueList.map((element, serialNum) => {
                                 return (

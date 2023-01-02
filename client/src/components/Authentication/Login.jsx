@@ -136,7 +136,7 @@ const Login = () => {
                                 <button className="btn btn-primary submit-button" type="submit" disabled={disable}>Login</button>
                             </div>
                             <p style={{ textAlign: "right", color: "rgb(6, 0, 97)", fontWeight: "500", marginTop: "2rem" }}>Don't have an account? <NavLink to="/registerUser">Sign Up</NavLink> </p>
-                            <p style={{ textAlign: "right", color: "rgb(6, 0, 97)", fontWeight: "500" }}>Forgot password? <NavLink to="/passwordReset">Click Here</NavLink> </p>
+                            {/* <p style={{ textAlign: "right", color: "rgb(6, 0, 97)", fontWeight: "500" }}>Forgot password? <NavLink to="/passwordReset">Click Here</NavLink> </p> */}
                         </div>
                     </form>
                 </div>

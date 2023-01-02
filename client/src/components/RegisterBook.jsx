@@ -111,7 +111,6 @@ const Register = () => {
 
     return (
         <div className='card-div'>
-            <div className='container'>
                 <div className='card-header'>
                     <h2>Add New Book</h2>
                     <NavLink to="/BookList">
@@ -240,42 +239,12 @@ const Register = () => {
                             )}
                         </div>
 
-                        {/* <div className="mb-3 col-lg-6 col-md-6 col-12">
-                            <label htmlFor="vendorName" className="form-label">
-                                Vendor Name
-                            </label>
-                            <input
-                                type="text"
-                                className={`form-control ${errors.vendorName ? "is-invalid" : ""}`}
-                                id="vendorName"
-                                {...register("vendorName", { validate: checkNumbers })}
-                            />
-                            {errors.vendorName?.type === "validate" && (
-                                <div className="invalid-feedback">Numbers And Special Characters Are Not Allowed.</div>
-                            )}
-                        </div>
-                        <div className="mb-3 col-lg-6 col-md-6 col-12">
-                            <label htmlFor="dateOfPurchase" className="form-label">
-                                Date Of Purchase
-                            </label>
-                            <input
-                                type="date"
-                                className={`form-control ${errors.dateOfPurchase ? "is-invalid" : ""}`}
-                                id="dateOfPurchase"
-                                {...register("dateOfPurchase", { required: true })}
-                            />
-                            {errors.dateOfPurchase && (
-                                <div className="invalid-feedback">This Field Is Required.</div>
-                            )}
-                        </div>*/}
-
                         <div className="d-grid">
                             <button className="btn btn-primary submit-button" type="submit">Submit</button>
                         </div> 
                     </div>
                 </form>
             </div>
-        </div>
     )
 }
 

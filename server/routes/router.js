@@ -285,10 +285,24 @@ router.get("/getBooks", async (req, res) => {
     try {
 
         const page = parseInt(req.query.page) - 1 || 0;     //array starts from 0 in mongodb so minus 1
-        const limit = parseInt(req.query.limit) || 6;
-        let sort = req.query.sort || ""
+        const limit = parseInt(req.query.limit) || 7;
         const search = req.query.search || "";
+        const sortStock = parseInt(req.query.sortStock) || 0;
 
+        let filter = {};
+
+        if(search){
+            filter.$or = [
+                { "bookName": { $regex: search, $options: "i" } },
+                { "authorName": { $regex: search, $options: "i" } }
+            ]
+        }
+
+        if (sortStock) {
+            filter.stock = { $lte: sortStock };
+        }
+        
+        // let sort = req.query.sort || ""
         // const {bookName} = req.query;
         // const match = {};
 
@@ -307,33 +321,22 @@ router.get("/getBooks", async (req, res) => {
         //     ?(category = [...categoryOptions])
         //     :(genre = req.query.genre.split(","));
 
-        req.query.sort ? (sort = req.query.sort.split(",")) : (sort = [sort]);
+        // req.query.sort ? (sort = req.query.sort.split(",")) : (sort = [sort]);
 
-        let sortBy = {};
-        if (sort[1]) {
-            sortBy[sort[0]] = sort[1];
-        } else {
-            sortBy[sort[0]] = "asc";
-        }
+        // let sortBy = {};
+        // if (sort[1]) {
+        //     sortBy[sort[0]] = sort[1];
+        // } else {
+        //     sortBy[sort[0]] = "asc";
+        // }
 
-        const booksData = await books.find({
-            "$or": [
-                { "bookName": { $regex: search, $options: "i" } },
-                { "authorName": { $regex: search, $options: "i" } }
-            ]
-        })
-            .sort(sortBy)
+        const booksData = await books.find(filter)
             .skip(page * limit)     //skips no of documents
             .limit(limit);
         // .where("genre")
         // .in([...genre])
 
-        const total = await books.countDocuments({
-            $or: [
-                { "bookName": { $regex: search, $options: "i" } },
-                { "authorName": { $regex: search, $options: "i" } }
-            ]
-        });
+        const total = await books.countDocuments(filter);
 
         const response = {
             total,
@@ -354,25 +357,23 @@ router.get("/getBooks", async (req, res) => {
 router.get("/getBooksToDownload", async (req, res) => {
     try {
 
-        let sort = req.query.sort || ""
         const search = req.query.search || "";
+        const sortStock = parseInt(req.query.sortStock) || 0;
 
-        req.query.sort ? (sort = req.query.sort.split(",")) : (sort = [sort]);
+        let filter = {};
 
-        let sortBy = {};
-        if (sort[1]) {
-            sortBy[sort[0]] = sort[1];
-        } else {
-            sortBy[sort[0]] = "asc";
-        }
-
-        const booksData = await books.find({
-            $or: [
+        if(search){
+            filter.$or = [
                 { "bookName": { $regex: search, $options: "i" } },
                 { "authorName": { $regex: search, $options: "i" } }
             ]
-        })
-            .sort(sortBy)
+        }
+
+        if (sortStock) {
+            filter.stock = { $lte: sortStock };
+        }
+
+        const booksData = await books.find(filter)
 
         return res.status(201).json(booksData);
     }
@@ -1002,7 +1003,6 @@ router.post("/registerItem", async (req, res) => {
     try {
         const {
             itemName,
-            stock,
             initialStock,
             price,
             itemType } = req.body;
@@ -1012,12 +1012,11 @@ router.post("/registerItem", async (req, res) => {
 
         if (item) {
             console.log("Server side : Item is already present.")
-            return res.status(422).json("This item is already present!");
+            return res.status(406).json("This item is already present!");
         }
         else {
             const insertedItem = await items.create({
                 itemName,
-                stock,
                 initialStock,
                 price,
                 itemType

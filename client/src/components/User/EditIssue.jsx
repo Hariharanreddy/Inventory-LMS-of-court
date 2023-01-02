@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams, useNavigate, NavLink } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import Swal from "sweetalert2"
 
@@ -35,7 +35,6 @@ const EditIssue = () => {
     }, []);
 
     useEffect(() => {
-        // console.log(typeof data.dateOfRequisition.toString().slice(0,10));
 
         if (data) {
 
@@ -103,6 +102,7 @@ const EditIssue = () => {
                 cancelButtonText: 'No ',
             }).then((result) => {
                 if (result.isConfirmed) {
+                    navigateTo(-1);
                 }
             })
         }
@@ -118,7 +118,7 @@ const EditIssue = () => {
                 cancelButtonText: 'No ',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    navigateTo("/MyIssuedBooks");
+                    navigateTo(-1);
                 }
             })
         }
@@ -140,7 +140,7 @@ const EditIssue = () => {
         }
         else {
             console.log("Data has been deleted.");
-            navigateTo("/MyIssuedBooks");
+            navigateTo(-1);
         }
     }
 
@@ -166,11 +166,28 @@ const EditIssue = () => {
 
         <>
             <div className='card-div'>
-                <div className='container edit-form'>
+                <div className='edit-form'>
+
                     <div className='card-header'>
+
                         <h2>Edit Issue</h2>
-                        <button className="btn" style={{ backgroundColor: "#ff6666", color: "white" }} onClick={() => checkDelete(id)}>Delete</button>
+
+                        <div>
+                            <button className="btn mx-2" style={{ backgroundColor: "#ff6666", color: "white" }} onClick={() => checkDelete(id)}>Delete</button>
+                            <button className="btn" style={{ backgroundColor: "rgb(6, 0, 97)", color: "white" }} onClick={() => navigateTo(-1)}> &lt; Back</button>
+                        </div>
+
                     </div>
+
+                    <div className='item-details'>
+
+                        <h6>Buyer ({data.userName})</h6>
+                        <h6>Title -{'>'} {data.bookName} ({data.yearOfPublication})</h6>
+                        <h6>Author -{'>'} {data.authorName}</h6>
+                        <h6>Quantity -{'>'} {data.quantity}</h6>
+
+                    </div>
+
                     <form className="mt-4" onSubmit={handleSubmit(onFormSubmit)}>
                         <div className="row">
 

@@ -1,7 +1,6 @@
 import React, { useRef } from 'react'
 import SearchIcon from "../../images/search-icon.png"
-import { NavLink, useNavigate } from 'react-router-dom';
-import { BsArrowDownUp } from "react-icons/bs"
+import { NavLink } from 'react-router-dom';
 // import { LoginContext } from "./ContextProvider/Context"
 import { CSVLink } from "react-csv"
 
@@ -18,7 +17,6 @@ const ItemList = (props) => {
     const [getItemData, setItemData] = React.useState([]);
     const [data, setData] = React.useState(false);
     // const { logindata, setLoginData } = useContext(LoginContext);
-     // const [type, setType] = React.useState("");
 
     //for filtering and pagination
     const [page, setPage] = React.useState(1);
@@ -28,31 +26,6 @@ const ItemList = (props) => {
     //for exporting to csv
     const [dataToDownload, setDataToDownload] = React.useState([]);
     const csvDownloadRef = useRef(0);
-
-    const navigateTo = useNavigate();
-
-    //for printing all the Items from the database
-    const getdata = async () => {
-
-        const res = await fetch(`http://localhost:8000/getItems?page=${page}&sortStock=${sortStock}&search=${searchTerm}&type=${props.type}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-
-        const data = await res.json();
-
-        if (res.status === 422 || !data) {
-            console.log("Items could not be fetched.");
-        }
-        else {
-            console.log(data);
-            setItemData(data);
-            setData(true);
-            console.log("All Items have been fetched properly.");
-        }
-    }
 
     const getdataToDownload = async () => {
 
@@ -100,13 +73,49 @@ const ItemList = (props) => {
     //     }
     // }
 
-    // React.useEffect(() => {
-    //     Valid()
-    // }, []);
+    React.useEffect(() => {
+
+        setPage(1);
+        setSearchTerm("");
+        setSortStock(""); 
+
+    }, [props.type]);
 
     React.useEffect(() => {
+        let active = true;
+
+        //for printing all the Items from the database
+        const getdata = async () => {
+
+            const res = await fetch(`http://localhost:8000/getItems?page=${page}&sortStock=${sortStock}&search=${searchTerm}&type=${props.type}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            const data = await res.json();
+
+            if (res.status === 422 || !data) {
+                console.log("Items could not be fetched.");
+            }
+            else {
+
+                if (active) {
+                    setItemData(data);
+                    setData(true);
+                }
+
+                console.log("All Items have been fetched properly.");
+            }
+        }
+
         getdata();
-    }, [searchTerm, page, sortStock ]);
+
+        return () => {
+            active = false;
+        };
+    }, [searchTerm, page, sortStock, props.type]);
 
     return (
         <>
@@ -126,22 +135,22 @@ const ItemList = (props) => {
 
                     <div className='add_btn mb-2'>
 
-                            <div>
+                        <div>
 
-                                <img src={SearchIcon} alt="" width="30px" height="30px" />
-                                <input className="search-button" type="search" placeholder="Search Item" aria-label="Search" onChange={(e) => { setSearchTerm(e.target.value); }} />
-                                <input className="search-button mx-2" type="number" placeholder="Filter Stock" aria-label="Search" onChange={(e) => { setSortStock(e.target.value); }} />
-                            
-                            </div>
+                            <img src={SearchIcon} alt="" width="30px" height="30px" />
+                            <input className="search-button" type="search" value={searchTerm} placeholder="Search Item" aria-label="Search" onChange={(e) => { setSearchTerm(e.target.value); }} />
+                            <input className="search-button mx-2" type="number" placeholder="Filter Stock" value={sortStock} aria-label="Search" onChange={(e) => { setSortStock(e.target.value); }} />
 
-                            <div>
+                        </div>
 
-                                <CSVLink data={dataToDownload} headers={headers} filename="Stationery_data.csv" target="_blank" ref={csvDownloadRef} />
-                                <button className='btn mx-2' onClick={getdataToDownload}>Export To CSV</button>
+                        <div>
 
-                                <NavLink to="/ItemList/registerItem" className="btn" style={{ backgroundColor: "rgb(6, 0, 97)", color: "white" }}><i className="fa-solid fa-plus"></i> Add Item</NavLink>
-                            
-                            </div>
+                            <CSVLink data={dataToDownload} headers={headers} filename="Stationery_data.csv" target="_blank" ref={csvDownloadRef} />
+                            <button className='btn mx-2' onClick={getdataToDownload}>Export To CSV</button>
+
+                            <NavLink to="registerItem" className="btn" style={{ backgroundColor: "rgb(6, 0, 97)", color: "white" }}><i className="fa-solid fa-plus"></i> Add Item</NavLink>
+
+                        </div>
 
                     </div>
                     <table className="table table-bordered text-center">
@@ -157,13 +166,13 @@ const ItemList = (props) => {
                         <tbody>
                             {getItemData.total == 0 ?
                                 <tr className="record-row">
-                                    <td colspan={8}> No Data Found </td>
+                                    <td colSpan={8}> No Data Found </td>
                                 </tr>
                                 : getItemData.itemList.map((element, id) => {
                                     return (
                                         <tr className="record-row" key={id}>
                                             <td>{element.itemName}</td>
-                                            <td>{element.price}</td>
+                                            <td>Rs. {element.price}</td>
                                             <td>{element.initialStock}</td>
                                             <td>{element.stock}</td>
                                             <td className="d-flex justify-content-around">

@@ -80,7 +80,7 @@ const Edit = () => {
         if (res2.status == 422 || !data2) {
             Swal.fire({
                 title: '',
-                text: "Data could not updated for some reason!",
+                text: "Data could not be updated for some reason!",
                 icon: 'error',
                 showCancelButton: false,
                 confirmButtonColor: '#0d6efd',
@@ -175,7 +175,7 @@ const Edit = () => {
 
         <>
             <div className='card-div'>
-                <div className='container edit-form'>
+                <div className='edit-form'>
                     <div className='card-header'>
                         <h2>Edit Details</h2>
                         <div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { NavLink } from "react-router-dom";
 
 import { FaBars } from "react-icons/fa";
@@ -17,7 +17,22 @@ import { TiGroup} from "react-icons/ti"
 import { AnimatePresence, motion } from "framer-motion";
 import SidebarMenu from "./SidebarMenu";
 
+import { LoginContext } from "../ContextProvider/Context"
+import { useEffect } from "react";
+
 const SideBar = ({ children }) => {
+
+   const { logindata, setLoginData } = useContext(LoginContext);
+   const [userName, setUserName] = useState([]);
+
+
+   useEffect(() =>{
+    if(logindata.ValidUserOne){
+      if(logindata.ValidUserOne.name){
+        setUserName(logindata.ValidUserOne.name)
+      }
+    }
+   }, [logindata.ValidUserOne])
 
   const navBar_Tabs = [
     {
@@ -56,22 +71,22 @@ const SideBar = ({ children }) => {
       icon: <IoFileTrayStackedSharp />,
       subRoutes: [
         {
-          path: "/ItemListGi",
+          path: "/ItemListgi",
           name: "General Item",
           icon: <MdProductionQuantityLimits />,
         },
         {
-          path: "/ItemListPf",
+          path: "/ItemListpf",
           name: "Printed Format",
           icon: <HiPrinter />,
         },
         {
-          path: "/ItemListPc",
+          path: "/ItemListpc",
           name: "Printer Catridges",
           icon: <IoIosColorFill />,
         },
         {
-          path: "/ItemListSs",
+          path: "/ItemListss",
           name: "Seals/Stamps",
           icon: <FaStamp />,
         }
@@ -84,14 +99,14 @@ const SideBar = ({ children }) => {
     },
   ];
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   const toggle = () => setIsOpen(!isOpen);
 
   const showAnimation = {
     hidden: {
       width: 0,
-      opacity: 0,
+      opacity: 1,
       transition: {
         duration: 0.5,
       },
@@ -100,42 +115,47 @@ const SideBar = ({ children }) => {
       opacity: 1,
       width: "auto",
       transition: {
-        duration: 0.5,
+        duration: 2,
       },
     },
   };
 
   return (
     <>
+
       <motion.div
         className={`sidebar`}
         animate={{
           width: isOpen ? "250px" : "45px",
 
-          transition: {
-            duration: 0.5,
-            type: "spring",
-            damping: 12,
-          },
+          // transition: {
+          //   duration: 0.5,
+          //   type: "spring",
+          //   damping: 12,
+          // },
         }}
       >
-        <div className="top_section" >
+        <div className="top_section">
 
           <AnimatePresence>
             {isOpen && (
               <motion.h1
                 variants={showAnimation}
-                initial="hidden"
+                initial="show"
                 animate="show"
-                exit="hidden"
+                exit="show"
                 className="logo"
               >
-                CManager
+                {userName 
+                ?
+                  <h6 style={{color:"rgb(6, 0, 97)"}}>{userName}</h6>
+                : 
+                    ""}
               </motion.h1>
             )}
           </AnimatePresence>
 
-          <div className="bars" onClick={toggle}>
+          <div className="bars">
             <FaBars size={20} />
           </div>
         </div>
@@ -167,9 +187,9 @@ const SideBar = ({ children }) => {
                   {isOpen && (
                     <motion.div
                       variants={showAnimation}
-                      initial="hidden"
+                      initial="show"
                       animate="show"
-                      exit="hidden"
+                      exit="show"
                       className="link_text"
                     >
                       {route.name}
@@ -183,6 +203,7 @@ const SideBar = ({ children }) => {
         </section>
 
       </motion.div>
+      {/* <main>{children}</main> */}
     </>
   );
 };
