@@ -1,12 +1,12 @@
 import React, { useContext, useEffect } from 'react'
-import { NavLink, useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { LoginContext } from "../ContextProvider/Context"
 import Swal from "sweetalert2"
 
-const BookIssueRequest = () => {
+const ItemIssueRequest = (props) => {
 
-    const [getBookData, setBookData] = React.useState([]);
+    const [getItemData, setItemData] = React.useState([]);
     const [data, setData] = React.useState(false);
     const { logindata, setLoginData } = useContext(LoginContext);
     const navigateTo = useNavigate();
@@ -58,7 +58,7 @@ const BookIssueRequest = () => {
         else if (status == 401) {
             Swal.fire({
                 title: '',
-                text: "Book or user does not exist!",
+                text: "Item or user does not exist!",
                 icon: 'warning',
                 showCancelButton: false,
                 confirmButtonColor: '#0d6efd',
@@ -72,8 +72,7 @@ const BookIssueRequest = () => {
             })
         }
         else {
-            // console.log("Data Has Been Added Successfully!");
-
+    
             Swal.fire({
                 title: '',
                 text: "Data logged in Successfully!",
@@ -85,7 +84,7 @@ const BookIssueRequest = () => {
                 cancelButtonText: 'No ',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    navigateTo("/BookList");
+                    navigateTo(-1);
                 }
             })
         }
@@ -98,11 +97,9 @@ const BookIssueRequest = () => {
             quantity
         } = formData;
 
-        console.log(formData, id, logindata.ValidUserOne._id);
-
         if (typeOfSubmit == "credit") {
 
-            const res = await fetch("http://localhost:8000/directAcceptIssueRequest", {
+            const res = await fetch("http://localhost:8000/directAcceptItemIssueRequest", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -110,9 +107,10 @@ const BookIssueRequest = () => {
                 //whenever we send data to database, we convert it into JSON type string first
                 body: JSON.stringify({
                     userId: logindata.ValidUserOne._id,
-                    bookId: id,
+                    itemId: id,
                     dateOfRequisition,
-                    quantity
+                    quantity,
+                    type: props.type
                 })
             });
 
@@ -122,7 +120,7 @@ const BookIssueRequest = () => {
             showPopUp(res.status);
         }
         else {
-            const res = await fetch("http://localhost:8000/bookIssueRequest", {
+            const res = await fetch("http://localhost:8000/itemIssueRequest", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -130,9 +128,10 @@ const BookIssueRequest = () => {
                 //whenever we send data to database, we convert it into JSON type string first
                 body: JSON.stringify({
                     userId: logindata.ValidUserOne._id,
-                    bookId: id,
+                    itemId: id,
                     dateOfRequisition,
-                    quantity
+                    quantity,
+                    type: props.type
                 })
             });
 
@@ -145,7 +144,7 @@ const BookIssueRequest = () => {
 
     const getdata = async () => {
 
-        const res = await fetch(`http://localhost:8000/getBook/${id}`, {
+        const res = await fetch(`http://localhost:8000/getItem/${id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -158,7 +157,7 @@ const BookIssueRequest = () => {
             console.log("Client side :Form Data could not be fetched.");
         }
         else {
-            setBookData(data2);
+            setItemData(data2);
             setData(true);
             console.log("Client side :Form Data has been fetched successfully.");
         }
@@ -174,18 +173,17 @@ const BookIssueRequest = () => {
             data ?
                 <div className='card-div'>
                     <div className='card-header'>
+
                         <h2>Issue Request</h2>
-                        <NavLink to="/BookList">
-                            <button className="btn" style={{ backgroundColor: "rgb(6, 0, 97)", color: "white" }}> &lt; Back</button>
-                        </NavLink>
+                        <button className="btn" style={{ backgroundColor: "rgb(6, 0, 97)", color: "white" }} onClick={() => navigateTo(-1)}> &lt; Back</button>
+
                     </div>
 
                     <div className='item-details'>
 
-                        <h6>Title -{'>'} {getBookData.bookName} ({getBookData.yearOfPublication})</h6>
-                        <h6>Author -{'>'} {getBookData.authorName}</h6>
-                        <h6>Price -{'>'} Rs.{getBookData.price}</h6>
-                        <h6>Current Stock -{'>'} {getBookData.stock}</h6>
+                        <h6>Item -{'>'} {getItemData.itemName}</h6>
+                        <h6>Current Stock -{'>'} {getItemData.stock}</h6>
+                        <h6>Price -{'>'} Rs.{getItemData.price}</h6>
 
                     </div>
 
@@ -199,11 +197,8 @@ const BookIssueRequest = () => {
                                     id="quantity"
                                     className={`form-control ${errors.quantity ? "is-invalid" : ""}`}
                                     name="quantity"
-                                    {...register("quantity", { min: 1, required: true })}
+                                    {...register("quantity", { required: true })}
                                 />
-                                {errors.quantity?.type === "min" && (
-                                    <div className="invalid-feedback">Quantity cannot be 0.</div>
-                                )}
                                 {errors.quantity?.type === "required" && (
                                     <div className="invalid-feedback">This Field Is Required.</div>
                                 )}
@@ -240,4 +235,4 @@ const BookIssueRequest = () => {
     )
 }
 
-export default BookIssueRequest
+export default ItemIssueRequest

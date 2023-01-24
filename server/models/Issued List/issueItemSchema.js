@@ -21,6 +21,10 @@ const issueItemSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    itemType:{
+        type: String,
+        required: true
+    },
     dateOfIssue:{
         type: Date,
         default: ""
@@ -37,6 +41,6 @@ const issueItemSchema = new mongoose.Schema({
         required: true,
         default: 0
     }
-});
+}, {timestamps: true });
 
 module.exports = mongoose.model("ItemIssue", issueItemSchema);

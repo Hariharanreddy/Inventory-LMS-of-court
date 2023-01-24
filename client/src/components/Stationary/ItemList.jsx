@@ -153,7 +153,7 @@ const ItemList = (props) => {
                         </div>
 
                     </div>
-                    <table className="table table-bordered text-center">
+                    <table className="table table-bordered text-center" >
                         <thead>
                             <tr className="attribute-row">
                                 <th scope="col">Item Name</th>
@@ -171,7 +171,7 @@ const ItemList = (props) => {
                                 : getItemData.itemList.map((element, id) => {
                                     return (
                                         <tr className="record-row" key={id}>
-                                            <td>{element.itemName}</td>
+                                            <td style={{wordBreak: "break-all"}}>{element.itemName}</td>
                                             <td>Rs. {element.price}</td>
                                             <td>{element.initialStock}</td>
                                             <td>{element.stock}</td>

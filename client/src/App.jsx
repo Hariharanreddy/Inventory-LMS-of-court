@@ -23,21 +23,21 @@ import SideBarLayout from './components/Sidebar/SideBarLayout'
 //import all itemlist the components individually
 import ItemList from "./components/Stationary/ItemList"
 import RegisterItem from "./components/Stationary/RegisterItem"
-// import ItemDetails from './components/Stationary/ItemDetails'
+import AddOnItem from './components/Stationary/AddOnItem'
 import ItemEdit from "./components/Stationary/ItemEdit"
-import HomePage from "./components/HomePage"
+import ItemIssueRequestForm from "./components/Stationary/ItemIssueRequestForm"
+import MyIssuedItems from "./components/Stationary/MyIssuedItems"
+import EditItemIssue from "./components/Stationary/EditItemIssue"
 
 //import authentication components
 import Login from "./components/Authentication/Login"
 import RegisterUser from './components/Authentication/RegisterUser'
 import Error from "./components/Authentication/Error"
 import LogOut from "./components/Authentication/LogOut"
-import ForgotPassword from './components/Authentication/ForgotPassword'
-import PasswordReset from './components/Authentication/PasswordReset'
 
 //import admin and user specific components
 import UserList from "./components/Admin/UserList"
-import UserDetails from "./components/Admin/UserDetails"
+import UserEdit from "./components/Admin/UserEdit"
 import MyIssuedBooks from "./components/User/MyIssuedBooks"
 import EditIssue from './components/User/EditIssue'
 
@@ -84,7 +84,7 @@ const App = () => {
       Valid().then(() => {
         setData(true)
       })
-    }, 1000)
+    }, 2000)
   }, [])
 
   return (
@@ -92,12 +92,9 @@ const App = () => {
       {
         data ? (
           <Routes>
-            <Route path="/" element={<HomePage/>}></Route>
             <Route path="/login" element={<Login />} />
             <Route path="/registerUser" element={<RegisterUser />} />
             <Route path="/logout" element={<LogOut />} />
-            <Route path="/passwordReset" element={<PasswordReset />} />
-            <Route path="/forgotPassword/:id/:token/:non" element={<ForgotPassword />} />
 
             <Route element={<SideBarLayout />}>
               {/* Book Section Routes */}
@@ -111,38 +108,75 @@ const App = () => {
 
               {/* Only Admin Routes */}
               <Route path="/UserList" element={<UserList />} />
-              <Route path="/UserList/view/:id" element={<UserDetails />} />
+              <Route path="/UserList/edit/:id" element={<UserEdit />} />
+
+              {/* All Users Requests -->>*/}
+
+              {/* books */}
               <Route path="/IssueRequests" element={<MyIssuedBooks />} />
               <Route path="/IssueRequests/editIssue/:id" element={<EditIssue />} />   
 
-              {/* User Personal Routes */}
+              {/* items */}
+              <Route path="/allIssuedItemsgi" element={<MyIssuedItems  type="gi"/>} />   
+              <Route path="/allIssuedItemspf" element={<MyIssuedItems  type="pf"/>} />   
+              <Route path="/allIssuedItemspc" element={<MyIssuedItems  type="pc"/>} />   
+              <Route path="/allIssuedItemsss" element={<MyIssuedItems  type="ss"/>} />   
+              
+              <Route path="/allIssuedItemsgi/editIssue/:id" element={<EditItemIssue />} />  
+              <Route path="/allIssuedItemspf/editIssue/:id" element={<EditItemIssue />} />  
+              <Route path="/allIssuedItemspc/editIssue/:id" element={<EditItemIssue />} />  
+              <Route path="/allIssuedItemsss/editIssue/:id" element={<EditItemIssue />} /> 
+
+
+              {/* User Issue Routes  -->>*/}
+              
+              {/* books */}
               <Route path="/MyIssuedBooks" element={<MyIssuedBooks userId={logindata.ValidUserOne ? logindata.ValidUserOne._id : ""} name={logindata.ValidUserOne ? logindata.ValidUserOne.name : ""}/>} />   
-              <Route path="/MyIssuedBooks/editIssue/:id" element={<EditIssue />} />   
+              <Route path="/MyIssuedBooks/editIssue/:id" element={<EditIssue />} />  
+
+              {/* items  */}
+              <Route path="/myIssuedItemsgi" element={<MyIssuedItems userId={logindata.ValidUserOne ? logindata.ValidUserOne._id : ""} name={logindata.ValidUserOne ? logindata.ValidUserOne.name : ""} type="gi"/>} />   
+              <Route path="/myIssuedItemspf" element={<MyIssuedItems userId={logindata.ValidUserOne ? logindata.ValidUserOne._id : ""} name={logindata.ValidUserOne ? logindata.ValidUserOne.name : ""} type="pf"/>} />   
+              <Route path="/myIssuedItemspc" element={<MyIssuedItems userId={logindata.ValidUserOne ? logindata.ValidUserOne._id : ""} name={logindata.ValidUserOne ? logindata.ValidUserOne.name : ""} type="pc"/>} />   
+              <Route path="/myIssuedItemsss" element={<MyIssuedItems userId={logindata.ValidUserOne ? logindata.ValidUserOne._id : ""} name={logindata.ValidUserOne ? logindata.ValidUserOne.name : ""} type="ss"/>} />   
+              
+              <Route path="/myIssuedItemsgi/editIssue/:id" element={<EditItemIssue />} />  
+              <Route path="/myIssuedItemspf/editIssue/:id" element={<EditItemIssue />} />  
+              <Route path="/myIssuedItemspc/editIssue/:id" element={<EditItemIssue />} />  
+              <Route path="/myIssuedItemsss/editIssue/:id" element={<EditItemIssue />} />  
               
               {/* Item Section Routes */}
               {/* GENERAL ITEM */}
               <Route path="/ItemListgi" element={<ItemList type="gi" />} />
               <Route path="/ItemListgi/registerItem" element={<RegisterItem type="gi"/>} />
-              <Route path="/ItemListgi/view/:newId" element={<PurchaseList />} />
+              <Route path="/ItemListgi/view/:id" element={<PurchaseList />} />
               <Route path="/ItemListgi/edit/:id" element={<ItemEdit />} />
+              <Route path="/ItemListgi/addOn/:id" element={<AddOnItem />} />
+              <Route path="/ItemListgi/ItemIssueRequestForm/:id" element={<ItemIssueRequestForm type="gi"/>} />
 
               {/* PRINTED FORMAT */}
               <Route path="/ItemListpf" element={<ItemList type="pf" />} />
               <Route path="/ItemListpf/registerItem" element={<RegisterItem type="pf"/>} />
-              <Route path="/ItemListpf/view/:newId" element={<PurchaseList />} />
+              <Route path="/ItemListpf/view/:id" element={<PurchaseList />} />
               <Route path="/ItemListpf/edit/:id" element={<ItemEdit />} />
+              <Route path="/ItemListpf/addOn/:id" element={<AddOnItem />} />
+              <Route path="/ItemListpf/ItemIssueRequestForm/:id" element={<ItemIssueRequestForm type="pf"/>} />
 
               {/* PRINTER CATRIDGES */}
               <Route path="/ItemListpc" element={<ItemList type="pc" />} />
               <Route path="/ItemListpc/registerItem" element={<RegisterItem type="pc"/>} />
-              <Route path="/ItemListpc/view/:newId" element={<PurchaseList />} />
+              <Route path="/ItemListpc/view/:id" element={<PurchaseList />} />
               <Route path="/ItemListpc/edit/:id" element={<ItemEdit />} />
+              <Route path="/ItemListpc/addOn/:id" element={<AddOnItem />} />
+              <Route path="/ItemListpc/ItemIssueRequestForm/:id" element={<ItemIssueRequestForm type="pc"/>} />
 
               {/* SEALS / STAMPS */}
               <Route path="/ItemListss" element={<ItemList type="ss" />} />
               <Route path="/ItemListss/registerItem" element={<RegisterItem type="ss"/>} />
-              <Route path="/ItemListss/view/:newId" element={<PurchaseList />} />
+              <Route path="/ItemListss/view/:id" element={<PurchaseList />} />
               <Route path="/ItemListss/edit/:id" element={<ItemEdit />} />
+              <Route path="/ItemListss/addOn/:id" element={<AddOnItem />} />
+              <Route path="/ItemListss/ItemIssueRequestForm/:id" element={<ItemIssueRequestForm type="ss"/>} />
               
               <Route path="*" element={<Error />} />
             </Route>

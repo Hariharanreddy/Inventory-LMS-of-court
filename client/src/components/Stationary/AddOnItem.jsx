@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
-import { NavLink, useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useForm } from "react-hook-form"
 
 import Swal from "sweetalert2"
 
-const AddOnBook = () => {
-    const [getBookData, setBookData] = React.useState([]);
+const AddOnItem = () => {
+    const [getItemData, setItemData] = React.useState([]);
     const [data, setData] = React.useState(false);
 
     const navigateTo = useNavigate();
@@ -78,7 +78,7 @@ const AddOnBook = () => {
                 cancelButtonText: 'No ',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    navigateTo("/BookList");
+                    navigateTo(-1);
                 }
             })
         }
@@ -86,7 +86,7 @@ const AddOnBook = () => {
 
     const getdata = async () => {
 
-        const res = await fetch(`http://localhost:8000/getBook/${id}`, {
+        const res = await fetch(`http://localhost:8000/getItem/${id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -99,11 +99,10 @@ const AddOnBook = () => {
             console.log("Client side :Form Data could not be fetched.");
         }
         else {
-            setBookData(data2);
+            setItemData(data2);
             setData(true);
             console.log("Client side :Form Data has been fetched successfully.");
         }
-
     }
 
     useEffect(() => {
@@ -128,18 +127,15 @@ const AddOnBook = () => {
                     <div className='card-header'>
 
                         <h2>Add On</h2>
-                        <NavLink to="/BookList">
-                            <button className="btn" style={{ backgroundColor: "rgb(6, 0, 97)", color: "white" }}> &lt; Back</button>
-                        </NavLink>
-
+                        <button className="btn" style={{ backgroundColor: "rgb(6, 0, 97)", color: "white" }} onClick={() => navigateTo(-1)}> &lt; Back</button>
+                    
                     </div>
 
                     <div className='item-details'>
 
-                        <h6>Title -{'>'} {getBookData.bookName} ({getBookData.yearOfPublication})</h6>
-                        <h6>Author -{'>'} {getBookData.authorName}</h6>
-                        <h6>Price -{'>'} Rs.{getBookData.price}</h6>
-                        <h6>Current Stock -{'>'} {getBookData.stock}</h6>
+                        <h6>Item -{'>'} {getItemData.itemName}</h6>
+                        <h6>Current Stock -{'>'} {getItemData.stock}</h6>
+                        <h6>Price -{'>'} Rs.{getItemData.price}</h6>
 
                     </div>
 
@@ -208,4 +204,4 @@ const AddOnBook = () => {
     )
 }
 
-export default AddOnBook
+export default AddOnItem

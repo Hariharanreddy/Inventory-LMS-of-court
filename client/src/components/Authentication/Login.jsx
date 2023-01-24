@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { NavLink, useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
+import label from "../../images/label.png"
 import Swal from "sweetalert2"
 
 const Login = () => {
 
     const navigateTo = useNavigate();
     const [disable, setDisable] = useState(false);
-    const [passShow, setPassShow] = useState(false);
 
     const {
         register,
@@ -19,7 +19,7 @@ const Login = () => {
     const onFormSubmit = async (formData) => {
 
         setDisable(true);
-        const { email, password } = formData;
+        const { email } = formData;
 
         const data = await fetch("http://localhost:8000/login", {
             method: "POST",
@@ -29,7 +29,7 @@ const Login = () => {
             //whenever we send data to database, we convert it into string first
             body: JSON.stringify({
                 email,
-                password
+                password: "123456"
             })
         });
 
@@ -82,10 +82,31 @@ const Login = () => {
     return (
         <>
             <div className='flexArea'>
-                <div className='card-div authenticatePages' style={{ padding: "1em 3em 1em", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                    <h1 style={{ fontWeight: "600", color: "rgb(6, 0, 97)", lineHeight: "1.5" }}>Log In</h1>
-                    <p style={{  color: "rgb(6, 0, 97)" }}>Enter Your Email And Password.</p>
-                    <form className="mt-2" onSubmit={handleSubmit(onFormSubmit)}>
+
+                <div className='landingPageSection'>
+                    <img src={label} style={{ width: "60px", marginTop: "20px", marginLeft: "20px" }} />
+                    <div className="landingPageTitle">
+
+                        <h1 style={{ color: "white", fontWeight: "800", fontSize: "60px", letterSpacing: "2px" }}>Library</h1>
+
+                        {/* <div class="words">
+                            <h1 className='rotating-text'>Library</h1>
+                            <h1 className='rotating-text'>Stationery</h1>         
+                        </div> */}
+
+                        <h1 style={{ color: "rgb(6, 0, 97)", fontWeight: "800", fontSize: "60px", letterSpacing: "2px" }}>Management</h1>
+                        <h1 style={{ color: "white", fontWeight: "800", fontSize: "60px", letterSpacing: "2px", marginBottom: "0.8em" }}>System</h1>
+                        <marquee width="100%" direction="left" height="50px">
+                            <h3 style={{ fontWeight: "700", fontSize: "40px", letterSpacing: "1px" }}>Durg District Court</h3>
+                        </marquee>
+                        {/* <button className="btn-effect" style={{alignSelf:"right"}}><NavLink to="/login"><span style={{color:"#060061"}}>Click Here</span></NavLink></button> */}
+                    </div>
+                </div>
+
+                <div className='card-div-authenticate-page' style={{ padding: "1em 3em 1em", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                    <h1 style={{ fontWeight: "600", fontSize: "40px", color: "rgb(6, 0, 97)", lineHeight: "2.0" }}>Please, Log In</h1>
+                    <p style={{ color: "rgb(6, 0, 97)" }}>Enter user's Email.</p>
+                    <form onSubmit={handleSubmit(onFormSubmit)}>
                         <div className="row">
 
                             <div className="mb-3 col-12">
@@ -106,7 +127,7 @@ const Login = () => {
                                 )}
                             </div>
 
-                            <div className="mb-3 col-12">
+                            {/* <div className="mb-3 col-12">
                                 <label htmlFor="password" className="form-label">
                                     Password<span style={{ color: "red" }}>*</span>
                                 </label>
@@ -130,17 +151,16 @@ const Login = () => {
                                         <div className="invalid-feedback">This Field Is Required</div>
                                     )}
                                 </div>
-                            </div>
+                            </div> */}
 
                             <div className="d-grid">
-                                <button className="btn btn-primary submit-button" type="submit" disabled={disable}>Login</button>
+                                <button className="btn submit-button" type="submit" disabled={disable}>Login</button>
                             </div>
-                            <p style={{ textAlign: "right", color: "rgb(6, 0, 97)", fontWeight: "500", marginTop: "2rem" }}>Don't have an account? <NavLink to="/registerUser">Sign Up</NavLink> </p>
-                            {/* <p style={{ textAlign: "right", color: "rgb(6, 0, 97)", fontWeight: "500" }}>Forgot password? <NavLink to="/passwordReset">Click Here</NavLink> </p> */}
+                            <p style={{ color: "rgb(6, 0, 97)", fontWeight: "500", marginTop: "2rem" }}>Don't have an account? <NavLink to="/registerUser">Sign Up</NavLink> </p>
                         </div>
                     </form>
                 </div>
-                <div className='imageArea'></div>
+                {/* <div className='imageArea'></div> */}
             </div>
         </>
     )

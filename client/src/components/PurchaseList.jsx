@@ -5,7 +5,7 @@ import { CSVLink } from "react-csv"
 
 const headers = [
     { label: "Vendor", key: "vendorName" },
-    { label: "Date Of Purchase", key: "dateOfPurchase" },
+    { label: "Date Of Purchase(MM-DD-YYYY)", key: "dateOfPurchase" },
     { label: "Quantity Purchased", key: "quantityPurchased" }
 ]
 const PurchaseList = () => {
@@ -104,17 +104,18 @@ const PurchaseList = () => {
                     </div>
 
                     <div>
-                        <CSVLink data={dataToDownload} headers={headers} filename="BookPurchaseList_data.csv" target="_blank" ref={csvDownloadRef} />
+                        <CSVLink data={dataToDownload} headers={headers} filename="PurchaseList_data.csv" target="_blank" ref={csvDownloadRef} />
                         <button className='btn mx-2' onClick={getdataToDownload}>Export To CSV</button>
                         <button className="btn" style={{ backgroundColor: "rgb(6, 0, 97)", color: "white" }} onClick={() => navigateTo(-1)}> &lt; Back</button>
                     </div>
                 </div>
+
                 <table className="table table-bordered text-center">
                     <thead>
                         <tr className="attribute-row">
                             <th scope="col">Vendor</th>
                             <th scope="col">Quantity Purchased</th>
-                            <th scope="col">Date Of Purchase</th>
+                            <th scope="col">Date Of Purchase (YYYY-MM-DD)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -133,6 +134,7 @@ const PurchaseList = () => {
                             })}
                     </tbody>
                 </table>
+                
                 <div className="d-flex justify-content-center align-items-center mt-4 mb-4">
                     <button disabled={page <= 1 ? true : false} className="btn" style={{ backgroundColor: "rgb(6, 0, 97)", color: "white" }} onClick={() => { setPage(page - 1); }}>Prev Page</button>
                     <p className='mx-4 my-1' style={{ color: "grey", fontWeight: "bold" }}>  {page > Math.ceil(getPurchaseData.total / 10) && Math.ceil(getPurchaseData.total) != 0 ? setPage(1) : page} of {Math.ceil(getPurchaseData.total / 10)}</p>

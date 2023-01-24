@@ -11,7 +11,7 @@ const EditIssue = () => {
 
     const getdata = async () => {
 
-        const res = await fetch(`http://localhost:8000/getSpecificIssuedBookRequest/${id}`, {
+        const res = await fetch(`http://localhost:8000/getSpecificIssuedItemRequest/${id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -46,10 +46,6 @@ const EditIssue = () => {
                 data.dateOfIssue = data.dateOfIssue.toString().slice(0, 10);
             }
 
-            if (data.dateOfReturn != null) {
-                data.dateOfReturn = data.dateOfReturn.toString().slice(0, 10);
-            }
-
         }
 
         reset(data);
@@ -69,12 +65,11 @@ const EditIssue = () => {
         const {
             dateOfRequisition,
             dateOfIssue,
-            dateOfReturn,
             quantity,
             price
         } = formData;
 
-        const res2 = await fetch(`http://localhost:8000/updateSpecificIssuedBookRequest/${id}`, {
+        const res2 = await fetch(`http://localhost:8000/updateSpecificIssuedItemRequest/${id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json"
@@ -82,7 +77,6 @@ const EditIssue = () => {
             body: JSON.stringify({
                 dateOfRequisition,
                 dateOfIssue,
-                dateOfReturn,
                 quantity,
                 price
             })
@@ -126,7 +120,7 @@ const EditIssue = () => {
     }
 
     const deleteRequest = async (id) => {
-        const res2 = await fetch(`http://localhost:8000/deleteBookIssueRequest/${id}`, {
+        const res2 = await fetch(`http://localhost:8000/deleteItemIssueRequest/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json"
@@ -183,8 +177,7 @@ const EditIssue = () => {
                     <div className='item-details'>
 
                         <h6>Buyer ({data.userName})</h6>
-                        <h6>Title -{'>'} {data.bookName} ({data.yearOfPublication})</h6>
-                        <h6>Author -{'>'} {data.authorName}</h6>
+                        <h6>Item -{'>'} {data.itemName}</h6>
                         <h6>Quantity -{'>'} {data.quantity}</h6>
 
                     </div>
@@ -209,7 +202,7 @@ const EditIssue = () => {
 
                             <div className="mb-3 col-lg-6 col-md-6 col-12">
                                 <label htmlFor="dateOfIssue" className="form-label">
-                                    Date Of Issue
+                                    Date Of Issue<span style={{ color: "red" }}>*</span>
                                 </label>
                                 <input
                                     type="date"
@@ -221,27 +214,6 @@ const EditIssue = () => {
                                     <div className="invalid-feedback">This Field Is Required</div>
                                 )}
                             </div>
-
-                            {
-                                data.dateOfReturn
-                                    ?
-                                    <div className="mb-3 col-lg-6 col-md-6 col-12">
-                                        <label htmlFor="dateOfReturn" className="form-label">
-                                            Date Of Return
-                                        </label>
-                                        <input
-                                            type="date"
-                                            className={`form-control ${errors.dateOfReturn ? "is-invalid" : ""}`}
-                                            id="dateOfReturn"
-                                            {...register("dateOfReturn", { required: true })}
-                                        />
-                                        {errors.dateOfReturn && (
-                                            <div className="invalid-feedback">This Field Is Required</div>
-                                        )}
-                                    </div>
-                                    :
-                                    <></>
-                            }
 
                             <div className="mb-3 col-lg-6 col-md-6 col-12">
                                 <label htmlFor="price" className="form-label">Price</label>

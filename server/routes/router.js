@@ -12,7 +12,7 @@ const jwt = require("jsonwebtoken");
 const authenticate = require("../middleware/authenticate");
 
 
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~User Related API~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Authentication Related API~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 //User login
 router.post("/login", async (req, res) => {
@@ -78,7 +78,7 @@ router.post("/registerUser", async (req, res) => {
             return res.status(422).json({ error: "Fields Missing" });
         }
 
-        const preuser = await users.findOne({ email: email });
+        const preuser = await users.findOne({ email: email.toLowerCase() });
 
         if (preuser) {
             return res.status(400).json({ error: "Email Already Exists." })
@@ -89,7 +89,7 @@ router.post("/registerUser", async (req, res) => {
         else {
             const finalUser = new users({
                 name,
-                email,
+                email: email.toLowerCase(),
                 department,
                 departmentId,
                 dob,
@@ -136,119 +136,181 @@ router.get("/logout", authenticate, async (req, res) => {
         return res.status(401).json({ status: 401, error })
     }
 })
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~EMAIL RELATED API~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~USERS RELATED API~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 //Email Configuration
-const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-        user: process.env.SENDER_EMAIL,
-        pass: process.env.SENDER_PASSWORD
-    }
-})
+// const transporter = nodemailer.createTransport({
+//     service: "gmail",
+//     auth: {
+//         user: process.env.SENDER_EMAIL,
+//         pass: process.env.SENDER_PASSWORD
+//     }
+// })
 
-//Send Email Link for reset password
-router.post("/sendPasswordLink", async (req, res) => {
+// //Send Email Link for reset password
+// router.post("/sendPasswordLink", async (req, res) => {
 
-    try {
-        const { email } = req.body;
+//     try {
+//         const { email } = req.body;
 
-        if (!email) {
-            res.status(401).json({ status: 401, message: "Enter Your Email" })
-        }
+//         if (!email) {
+//             res.status(401).json({ status: 401, message: "Enter Your Email" })
+//         }
 
-        const userfind = await users.findOne({ email: email });
+//         const userfind = await users.findOne({ email: email });
 
-        // token generate for reset password
-        const token = jwt.sign({ _id: userfind._id }, process.env.SECRET_KEY, {
-            expiresIn: "1d"
-        });
+//         // token generate for reset password
+//         const token = jwt.sign({ _id: userfind._id }, process.env.SECRET_KEY, {
+//             expiresIn: "1d"
+//         });
 
-        const setusertoken = await users.findByIdAndUpdate({ _id: userfind._id }, { verifytoken: token }, { new: true });
+//         const setusertoken = await users.findByIdAndUpdate({ _id: userfind._id }, { verifytoken: token }, { new: true });
 
-        if (setusertoken) {
-            const mailOptions = {
-                from: process.env.SENDER_EMAIL,
-                to: email,
-                subject: "Email For Password Reset",
-                text: `This Link Will Be Valid For 2 Minutes http://localhost:5173/forgotPassword/${userfind.id}/${setusertoken.verifytoken}/hfus`
-            }
+//         if (setusertoken) {
+//             const mailOptions = {
+//                 from: process.env.SENDER_EMAIL,
+//                 to: email,
+//                 subject: "Email For Password Reset",
+//                 text: `This Link Will Be Valid For 2 Minutes http://localhost:5173/forgotPassword/${userfind.id}/${setusertoken.verifytoken}/hfus`
+//             }
 
-            transporter.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                    console.log("error", error);
-                    res.status(401).json({ status: 401, message: "email not send" })
-                } else {
-                    console.log("Email sent", info.response);
-                    res.status(201).json({ status: 201, message: "Email sent Succsfully" })
-                }
-            })
-        }
-    } catch (error) {
-        res.status(401).json({ status: 401, message: "invalid user" })
-    }
-})
+//             transporter.sendMail(mailOptions, (error, info) => {
+//                 if (error) {
+//                     console.log("error", error);
+//                     res.status(401).json({ status: 401, message: "email not send" })
+//                 } else {
+//                     console.log("Email sent", info.response);
+//                     res.status(201).json({ status: 201, message: "Email sent Succsfully" })
+//                 }
+//             })
+//         }
+//     } catch (error) {
+//         res.status(401).json({ status: 401, message: "invalid user" })
+//     }
+// })
 
-//verify user for forgot password time
-router.get("/forgotPassword/:id/:token", async (req, res) => {
-    const { id, token } = req.params;
+// //verify user for forgot password time
+// router.get("/forgotPassword/:id/:token", async (req, res) => {
+//     const { id, token } = req.params;
 
-    try {
-        const validuser = await users.findOne({ _id: id, verifytoken: token });
+//     try {
+//         const validuser = await users.findOne({ _id: id, verifytoken: token });
 
-        const verifyToken = jwt.verify(token, process.env.SECRET_KEY);
+//         const verifyToken = jwt.verify(token, process.env.SECRET_KEY);
 
-        if (validuser && verifyToken._id) {
-            res.status(201).json({ status: 201, validuser })
-        } else {
-            res.status(401).json({ status: 401, message: "user not exist" })
-        }
+//         if (validuser && verifyToken._id) {
+//             res.status(201).json({ status: 201, validuser })
+//         } else {
+//             res.status(401).json({ status: 401, message: "user not exist" })
+//         }
 
-    } catch (error) {
-        res.status(401).json({ status: 401, error })
-    }
-})
+//     } catch (error) {
+//         res.status(401).json({ status: 401, error })
+//     }
+// })
 
 // change password
 
-router.post("/:id/:token", async (req, res) => {
+// router.post("/:id/:token", async (req, res) => {
 
-    const { id, token } = req.params;
-    const { password } = req.body;
+//     const { id, token } = req.params;
+//     const { password } = req.body;
 
-    try {
-        const validuser = await users.findOne({ _id: id, verifytoken: token });
+//     try {
+//         const validuser = await users.findOne({ _id: id, verifytoken: token });
 
-        const verifyToken = jwt.verify(token, process.env.SECRET_KEY);
+//         const verifyToken = jwt.verify(token, process.env.SECRET_KEY);
 
-        if (validuser && verifyToken._id) {
-            const newpassword = await bcrypt.hash(password, 12);
+//         if (validuser && verifyToken._id) {
+//             const newpassword = await bcrypt.hash(password, 12);
 
-            const setnewuserpass = await users.findByIdAndUpdate({ _id: id }, { password: newpassword });
+//             const setnewuserpass = await users.findByIdAndUpdate({ _id: id }, { password: newpassword });
 
-            setnewuserpass.save();
-            res.status(201).json({ status: 201, setnewuserpass })
+//             setnewuserpass.save();
+//             res.status(201).json({ status: 201, setnewuserpass })
 
-        } else {
-            res.status(401).json({ status: 401, message: "user not exist" })
-        }
-    } catch (error) {
-        res.status(401).json({ status: 401, error })
-    }
-})
+//         } else {
+//             res.status(401).json({ status: 401, message: "user not exist" })
+//         }
+//     } catch (error) {
+//         res.status(401).json({ status: 401, error })
+//     }
+// })
 
 
-//Get all users 
+//Get all users data in pagination with search of username and department
+//and isActiveOrNot functionality
 router.get("/getUsers", async (req, res) => {
     try {
-        const allUsers = await users.find();
-        console.log(allUsers);
-        return res.status(201).json(allUsers)
+
+        const page = parseInt(req.query.page) - 1 || 0;     //array starts from 0 in mongodb so minus 1
+        const limit = parseInt(req.query.limit) || 7;
+        const search = req.query.search || "";
+        const isActiveOrNot = req.query.isActiveOrNot || "";
+
+        let filter = {};
+
+        if (search) {
+            filter.$or = [
+                { "name": { $regex: search, $options: "i" } },
+                { "department": { $regex: search, $options: "i" } }
+            ]
+        }
+        if (isActiveOrNot) {
+            filter.isActive = isActiveOrNot;
+        }
+
+        const usersData = await users.find(filter)
+            .sort({ updatedAt: -1 })
+            .skip(page * limit)     //skips no of documents
+            .limit(limit);
+
+        const total = await users.countDocuments(filter)
+
+
+        const response = {
+            total,
+            page: page + 1,
+            limit,
+            usersData
+        }
+
+        return res.status(201).json(response);
     }
     catch (error) {
         return res.status(422).json(error);
     }
 })
+
+//Get all users data to download
+router.get("/getUsersToDownload", async (req, res) => {
+    try {
+
+        const search = req.query.search || "";
+        const isActiveOrNot = req.query.isActiveOrNot || "";
+
+        let filter = {};
+
+        if (search) {
+            filter.$or = [
+                { "name": { $regex: search, $options: "i" } },
+                { "department": { $regex: search, $options: "i" } }
+            ]
+        }
+        if (isActiveOrNot) {
+            filter.isActive = isActiveOrNot;
+        }
+
+        const usersData = await users.find(filter)
+            .sort({ updatedAt: -1 })
+
+        return res.status(201).json(usersData);
+    }
+    catch (error) {
+        return res.status(422).json(error);
+    }
+})
+
 
 //To Return the individual User details
 router.get("/getUser/:id", async (req, res) => {
@@ -259,6 +321,30 @@ router.get("/getUser/:id", async (req, res) => {
         const individualUser = await users.findById(id);    //also can be written {_id : id}
         console.log(individualUser);
         return res.status(201).json(individualUser)
+    }
+    catch (err) {
+        return res.status(422).json(err);
+    }
+})
+
+//Update User data
+router.patch("/updateUser/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+        const data = req.body;
+
+        if(data.isActive == "true" || data.isActive == true){
+            data.isActive = true;
+        }   
+        else{
+            data.isActive = false;
+        }
+
+        data.dob = new Date(data.dob);
+
+        const updatedUserData = await users.findByIdAndUpdate(id, data, { new: true });
+        console.log(updatedUserData);
+        return res.status(201).json(updatedUserData);
     }
     catch (err) {
         return res.status(422).json(err);
@@ -291,7 +377,7 @@ router.get("/getBooks", async (req, res) => {
 
         let filter = {};
 
-        if(search){
+        if (search) {
             filter.$or = [
                 { "bookName": { $regex: search, $options: "i" } },
                 { "authorName": { $regex: search, $options: "i" } }
@@ -301,7 +387,7 @@ router.get("/getBooks", async (req, res) => {
         if (sortStock) {
             filter.stock = { $lte: sortStock };
         }
-        
+
         // let sort = req.query.sort || ""
         // const {bookName} = req.query;
         // const match = {};
@@ -362,7 +448,7 @@ router.get("/getBooksToDownload", async (req, res) => {
 
         let filter = {};
 
-        if(search){
+        if (search) {
             filter.$or = [
                 { "bookName": { $regex: search, $options: "i" } },
                 { "authorName": { $regex: search, $options: "i" } }
@@ -508,9 +594,9 @@ router.post("/addOn", async (req, res) => {
                 await item.save()
                 return res.status(201).json(newPurchase);
             }
-            else {
-                return res.status(401).json({ status: 401, message: "Book or Item does not exist" });
-            }
+
+            return res.status(401).json({ status: 401, message: "Book or Item does not exist" });
+
         }
     }
     catch (err) {
@@ -527,6 +613,8 @@ router.get("/getPurchaseList", async (req, res) => {
         const page = parseInt(req.query.page) - 1 || 0;     //array starts from 0 in mongodb so minus 1
         const limit = parseInt(req.query.limit) || 10;
         const search = req.query.search || "";
+
+        console.log("coming", req.query);
 
         const listData = await purchaseList.find({
             "$and": [{
@@ -732,6 +820,7 @@ router.get("/showIssuedBooksRequest", async (req, res) => {
         }
 
         const issueList = await issuedBooks.find(filter)
+            .sort({ updatedAt: -1 })
             .skip(page * limit)     //skips no of documents
             .limit(limit);
 
@@ -763,9 +852,10 @@ router.get("/getSpecificIssuedBookRequest/:id", async (req, res) => {
     }
 })
 
-//Update Book data
+//Update Book Issue data
 router.patch("/updateSpecificIssuedBookRequest/:id", async (req, res) => {
     try {
+
         const id = req.params.id;
         const data = req.body;
 
@@ -779,9 +869,8 @@ router.patch("/updateSpecificIssuedBookRequest/:id", async (req, res) => {
         data.dateOfIssue = new Date(data.dateOfIssue);
         data.dateOfRequisition = new Date(data.dateOfRequisition);
 
-        console.log(data);
-
         const updatedIssue = await issuedBooks.findByIdAndUpdate(id, data, { new: true });
+
         return res.status(201).json(updatedIssue);
     }
     catch (err) {
@@ -848,7 +937,7 @@ router.patch("/acceptBookIssueRequest/:id", async (req, res) => {
             const book = await books.findOne({ _id: issue.bookId })
 
             if (book) {
-                if (book.stock != 0 && issue.quantity != 0 && book.stock >= issue.quantity) {
+                if (book.stock != 0 && book.stock >= issue.quantity) {
 
                     book.stock -= issue.quantity;
                     await book.save();
@@ -881,16 +970,27 @@ router.patch("/bookReturn/:id", async (req, res) => {
         const id = req.params.id;
         const issue = await issuedBooks.findOne({ _id: id })
 
+
         if (issue && issue.dateOfIssue) {
 
-            issue.dateOfReturn = Date.now();
-            await issue.save();
+            const book = await books.findOne({ _id: issue.bookId })
 
-            return res.status(201).json(issue);
+            if (book) {
+                book.stock += issue.quantity;
+                await book.save();
+
+                issue.dateOfReturn = Date.now();
+                await issue.save();
+
+                return res.status(201).json(issue);
+            }
+
+            return res.status(409).json({ status: 401, message: "Book Not Found!" });
+
         }
-        else {
-            return res.status(401).json({ status: 401, message: "Issue Request has not be accepted yet." });
-        }
+
+        return res.status(401).json({ status: 401, message: "Issue Request has not be accepted yet." });
+
     }
     catch (err) {
         return res.status(422).json(err);
@@ -915,7 +1015,7 @@ router.delete("/deleteBookIssueRequest/:id", async (req, res) => {
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Stationary - General Item~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-//To Return the Entire Items Database
+//To Return the Entire Items Database with pagination
 router.get("/getItems", async (req, res) => {
     try {
         const page = parseInt(req.query.page) - 1 || 0;     //array starts from 0 in mongodb so minus 1
@@ -1035,7 +1135,7 @@ router.patch("/updateItem/:id", async (req, res) => {
     try {
         const id = req.params.id;
 
-        const updatedItem = await items.findByIdAndUpdate(id, req.body, {new: true});
+        const updatedItem = await items.findByIdAndUpdate(id, req.body, { new: true });
         return res.status(201).json(updatedItem);
     }
     catch (err) {
@@ -1059,9 +1159,10 @@ router.delete("/deleteItem/:id", async (req, res) => {
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Item ISSUE Related API~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 //Register New Issue of Item
+//working perfectly
 router.post("/itemIssueRequest", async (req, res) => {
     try {
-        let { userId, itemId, dateOfRequisition, quantity } = req.body;
+        let { userId, itemId, dateOfRequisition, quantity, type } = req.body;
 
         const item = await items.findOne({ _id: itemId });
         const user = await users.findOne({ _id: userId });
@@ -1083,7 +1184,8 @@ router.post("/itemIssueRequest", async (req, res) => {
                 itemName: item.itemName,
                 dateOfRequisition: dateOfRequisition,
                 price: item.price,
-                quantity
+                quantity,
+                itemType: type
             });
 
             return res.status(201).json(new_issue);
@@ -1098,9 +1200,10 @@ router.post("/itemIssueRequest", async (req, res) => {
 })
 
 //For Directly Crediting the item to user
+//works
 router.post("/directAcceptItemIssueRequest", async (req, res) => {
     try {
-        let { userId, itemId, dateOfRequisition, quantity } = req.body;
+        let { userId, itemId, dateOfRequisition, quantity, type } = req.body;
 
         const item = await items.findOne({ _id: itemId });
         const user = await users.findOne({ _id: userId });
@@ -1126,6 +1229,7 @@ router.post("/directAcceptItemIssueRequest", async (req, res) => {
                     dateOfRequisition: dateOfRequisition,
                     price: item.price,
                     quantity,
+                    itemType: type
                 });
 
                 item.stock -= JSON.parse(quantity);
@@ -1145,16 +1249,20 @@ router.post("/directAcceptItemIssueRequest", async (req, res) => {
     }
 })
 
-//Show all or if id provided then the users Issued Books Request 
+//Show all or if id provided then the users Issued Items Request 
+//it doesn't need any type
+//as that thing is handled by login into the person's account and
+//looking at my stationery items
 router.get("/showIssuedItemsRequest", async (req, res) => {
     try {
         const id = req.query.id;
         const page = parseInt(req.query.page) - 1 || 0;     //array starts from 0 in mongodb so minus 1
         const limit = parseInt(req.query.limit) || 6;
-        const search = req.query.search || "";
+        const search = req.query.search || "";              //current stock filter
         const searchName = req.query.searchName || "";
         const startDate = req.query.startDate;
         const endDate = req.query.endDate;
+        const type = req.query.type || "";
 
         const filter = {};
 
@@ -1183,8 +1291,12 @@ router.get("/showIssuedItemsRequest", async (req, res) => {
                 $lte: new Date(new Date(endDate).setHours(23, 59, 59))
             }
         }
+        if (type) {
+            filter.itemType = type;
+        }
 
         const issueList = await issuedItems.find(filter)
+            .sort({ updatedAt: -1 })
             .skip(page * limit)     //skips no of documents
             .limit(limit);
 
@@ -1225,8 +1337,6 @@ router.patch("/updateSpecificIssuedItemRequest/:id", async (req, res) => {
         data.dateOfIssue = new Date(data.dateOfIssue);
         data.dateOfRequisition = new Date(data.dateOfRequisition);
 
-        console.log(data);
-
         const updatedIssue = await issuedItems.findByIdAndUpdate(id, data, { new: true });
         return res.status(201).json(updatedIssue);
     }
@@ -1236,6 +1346,7 @@ router.patch("/updateSpecificIssuedItemRequest/:id", async (req, res) => {
 })
 
 //Show all or if id provided then the users Issued Items Request 
+//working properly
 router.get("/getIssuedItemListToDownload", async (req, res) => {
     try {
 
@@ -1244,6 +1355,7 @@ router.get("/getIssuedItemListToDownload", async (req, res) => {
         const searchName = req.query.searchName || "";
         const startDate = req.query.startDate;
         const endDate = req.query.endDate;
+        const type = req.query.type || "";
 
         const filter = {};
 
@@ -1256,6 +1368,7 @@ router.get("/getIssuedItemListToDownload", async (req, res) => {
         if (searchName) {
             filter.userName = { $regex: searchName, $options: "i" }
         }
+
         if (startDate && endDate) {
             filter.dateOfRequisition = {
                 $gte: new Date(new Date(startDate).setHours(00, 00, 00)),
@@ -1273,6 +1386,10 @@ router.get("/getIssuedItemListToDownload", async (req, res) => {
             }
         }
 
+        if (type) {
+            filter.itemType = type;
+        }
+
         const issueList = await issuedItems.find(filter)
 
         return res.status(201).json(issueList);
@@ -1286,6 +1403,7 @@ router.get("/getIssuedItemListToDownload", async (req, res) => {
 //issue list page - credit button
 router.patch("/acceptItemIssueRequest/:id", async (req, res) => {
     try {
+
         const id = req.params.id;
         const issue = await issuedItems.findOne({ _id: id })
 
@@ -1293,7 +1411,7 @@ router.patch("/acceptItemIssueRequest/:id", async (req, res) => {
             const item = await items.findOne({ _id: issue.itemId })
 
             if (item) {
-                if (item.stock != 0 && issue.quantity != 0 && item.stock >= issue.quantity) {
+                if (item.stock != 0 && item.stock >= issue.quantity) {
 
                     item.stock -= issue.quantity;
                     await item.save();

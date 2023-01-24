@@ -30,11 +30,12 @@ const userSchema = new mongoose.Schema({
         trim: true
     },
     dob: {
-        type: String
+        type: Date,
+        required: true
     },
-    phoneNo:{
+    phoneNo: {
         type: Number,
-        required:true,
+        required: true,
     },
     password: {
         type: String,
@@ -48,9 +49,9 @@ const userSchema = new mongoose.Schema({
         minlength: 6,
         trim: true
     },
-    isAdmin: {
+    isActive: {
         type: Boolean,
-        default: false
+        default: true
     },
     tokens: [
         {

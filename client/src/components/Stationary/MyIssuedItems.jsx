@@ -7,25 +7,21 @@ import Swal from "sweetalert2"
 const headers = [
     { label: "Purchased By", key: "userName" },
     { label: "Department", key: "userDepartment" },
-    { label: "Title", key: "bookName" },
-    { label: "Author", key: "authorName" },
+    { label: "Title", key: "itemName" },
     { label: "Quantity", key: "quantity" },
     { label: "Price", key: "price" },
-    { label: "Publisher Name", key: "publisherName" },
-    { label: "Publication Year", key: "yearOfPublication" },
     { label: "Date Of Requisition", key: "dateOfRequisition" },
-    { label: "Date Of Issue", key: "dateOfIssue" },
-    { label: "Date Of Return", key: "dateOfReturn" }
+    { label: "Date Of Issue", key: "dateOfIssue" }
 ]
 
-const myIssuedBooks = (props) => {
+const MyIssuedItems = (props) => {
 
     const [getRequestData, setRequestData] = useState([]);
     const [data, setData] = useState(false);
     const [runUseEffect, setRunUseEffect] = useState(false);
 
     //for pagination and searching
-    const [searchTerm, setSearchTerm] = useState("");
+    const [searchTerm, setSearchTerm] = useState("");           //itemName
     const [searchUserName, setSearchUserName] = useState("");
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
@@ -37,7 +33,7 @@ const myIssuedBooks = (props) => {
 
     const getdataToDownload = async () => {
 
-        const res = await fetch(`http://localhost:8000/getIssuedBookListToDownload?startDate=${startDate}&endDate=${endDate}&search=${searchTerm}&id=${props.userId ? props.userId : ""}&searchName=${searchUserName}`, {
+        const res = await fetch(`http://localhost:8000/getIssuedItemListToDownload?startDate=${startDate}&endDate=${endDate}&search=${searchTerm}&id=${props.userId ? props.userId : ""}&searchName=${searchUserName}&type=${props.type}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -47,7 +43,7 @@ const myIssuedBooks = (props) => {
         const data = await res.json();
 
         if (res.status === 422 || !data) {
-            console.log("Books could not be fetched.");
+            console.log("Issued Items could not be fetched.");
         }
         else {
             console.log(data);
@@ -55,54 +51,12 @@ const myIssuedBooks = (props) => {
             setTimeout(() => {
                 csvDownloadRef.current.link.click();
             }, 2000);
-            console.log("All Books have been fetched properly.");
-        }
-    }
-
-    const bookReturn = async (id) => {
-
-        const res2 = await fetch(`http://localhost:8000/bookReturn/${id}`, {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-
-        const updateData = await res2.json();
-        console.log(updateData);
-
-
-        if (res2.status === 422) {
-            console.log("Data could not be updated.");
-        }
-        else {
-            console.log("Data has been updated.");
-
-            setRunUseEffect(() => {
-                return runUseEffect ? false : true;
-            })
-
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-            })
-
-            Toast.fire({
-                icon: 'success',
-                title: 'Data updated successfully.'
-            })
+            console.log("Issued Items have been fetched properly.");
         }
     }
 
     const acceptRequest = async (id) => {
-        const res2 = await fetch(`http://localhost:8000/acceptBookIssueRequest/${id}`, {
+        const res2 = await fetch(`http://localhost:8000/acceptItemIssueRequest/${id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json"
@@ -150,6 +104,7 @@ const myIssuedBooks = (props) => {
         }
         else {
             console.log("Request Accepted Successfully.");
+
             setRunUseEffect(() => {
                 return runUseEffect ? false : true;
             })
@@ -179,16 +134,16 @@ const myIssuedBooks = (props) => {
         setStartDate("");
         setEndDate("");
         setPage(1);
-    }, [props.userId]);
+    }, [props.userId, props.type]);
 
     useEffect(() => {
+
         let active = true;
-        console.log("what !")
 
         //For printing all the users from the database
         const getdata = async () => {
 
-            const res = await fetch(`http://localhost:8000/showIssuedBooksRequest?page=${page}&startDate=${startDate}&endDate=${endDate}&search=${searchTerm}&id=${props.userId ? props.userId : ""}&searchName=${searchUserName}`, {
+            const res = await fetch(`http://localhost:8000/showIssuedItemsRequest?page=${page}&startDate=${startDate}&endDate=${endDate}&search=${searchTerm}&id=${props.userId ? props.userId : ""}&searchName=${searchUserName}&type=${props.type}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
@@ -207,7 +162,7 @@ const myIssuedBooks = (props) => {
                     setRequestData(fetchedData);
                     setData(true);
                 }
-                
+
                 console.log("All Requests have been fetched properly.");
             }
         }
@@ -218,9 +173,7 @@ const myIssuedBooks = (props) => {
             active = false;
         };
 
-    }, [page, searchTerm, startDate, endDate, props.userId, searchUserName, runUseEffect]);
-
-    // console.log(props.userId);
+    }, [page, searchTerm, startDate, endDate, props.userId, searchUserName, runUseEffect, props.type]);
 
     return (
         <>{data ?
@@ -230,9 +183,18 @@ const myIssuedBooks = (props) => {
 
                     {props.name
                         ? <>
-                            <h4>Issued Books By - <span style={{ color: "grey", fontWeight: "500" }}>{props.name}</span></h4>
+                            {props.type == "gi" && <h4>Issued General Items By - <span style={{ color: "grey", fontWeight: "500" }}>{props.name}</span></h4>}
+                            {props.type == "pf" && <h4>Issued Printed Format By - <span style={{ color: "grey", fontWeight: "500" }}>{props.name}</span></h4>}
+                            {props.type == "pc" && <h4>Issued Printer Catridges By - <span style={{ color: "grey", fontWeight: "500" }}>{props.name}</span></h4>}
+                            {props.type == "ss" && <h4>Issued Seals/Stamps By - <span style={{ color: "grey", fontWeight: "500" }}>{props.name}</span></h4>}
                         </>
-                        : <h4>All Book Issue Requests</h4>}
+                        : <>
+                            {props.type == "gi" && <h4>All Issued General Items</h4>}
+                            {props.type == "pf" && <h4>All Issued Printed Formats</h4>}
+                            {props.type == "pc" && <h4>All Issued Printer Catridges</h4>}
+                            {props.type == "ss" && <h4>All Issued Seals/Stamps</h4>}
+                        </>
+                    }
                     <h4 style={{ color: "grey", fontWeight: "500" }}> Results : {getRequestData.total}</h4>
 
                 </div>
@@ -243,7 +205,7 @@ const myIssuedBooks = (props) => {
 
                         <img src={SearchIcon} alt="" width="30px" height="30px" />
                         {props.userId
-                            ? <input className="search-button" type="search" value={searchTerm} placeholder="Seach By Title" aria-label="Search" onChange={(e) => { setSearchTerm(e.target.value); }} />
+                            ? <input className="search-button" type="search" value={searchTerm} placeholder="Seach By Item" aria-label="Search" onChange={(e) => { setSearchTerm(e.target.value); }} />
                             : <input className="search-button" type="search" value={searchUserName} placeholder="Seach By UserName" aria-label="Search" onChange={(e) => { setSearchUserName(e.target.value); }} />}
 
                     </div>
@@ -265,7 +227,7 @@ const myIssuedBooks = (props) => {
                     </form>
 
                     <div className='align-self-end'>
-                        <CSVLink data={dataToDownload} headers={headers} filename="issued_book_data.csv" target="_blank" ref={csvDownloadRef} />
+                        <CSVLink data={dataToDownload} headers={headers} filename="issued_item_data.csv" target="_blank" ref={csvDownloadRef} />
                         <button className='btn' onClick={getdataToDownload}>Export To CSV</button>
                     </div>
 
@@ -275,10 +237,10 @@ const myIssuedBooks = (props) => {
                         <tr className="attribute-row">
 
                             {props.userId
-                                ? <th scope="col">Title / Author</th>
+                                ? <th scope="col">Item</th>
                                 : <>
                                     <th scope="col">User Name</th>
-                                    <th scope="col">Title / Author</th>
+                                    <th scope="col">Item</th>
                                 </>
                             }
 
@@ -286,7 +248,6 @@ const myIssuedBooks = (props) => {
                             <th scope="col">Quantity</th>
                             <th scope="col">D.O.R</th>
                             <th scope="col">Issue Status</th>
-                            <th scope="col">Return Status</th>
                             <th scope="col">Actions</th>
 
                         </tr>
@@ -302,11 +263,11 @@ const myIssuedBooks = (props) => {
 
                                         {props.userId
                                             ?
-                                            <td>{element.bookName} {element.yearOfPublication ? `(${element.yearOfPublication})` : ""} ({element.authorName})</td>
+                                                <td>{element.itemName}</td>
                                             :
                                             <>
                                                 <td>{element.userName}</td>
-                                                <td>{element.bookName} {element.yearOfPublication ? `(${element.yearOfPublication})` : ""} ({element.authorName})</td>
+                                                <td>{element.itemName}</td>
                                             </>}
 
                                         <td>Rs.{element.price}</td>
@@ -318,20 +279,13 @@ const myIssuedBooks = (props) => {
                                                 :
                                                 <td style={{ color: "red" }}>Not Issued</td>
                                         }
-                                        {
-                                            element.dateOfReturn ?
-                                                <td style={{ color: "green" }}>{`${element.dateOfReturn.slice(0, 10)}`}</td> :
-                                                <td style={{ color: "red" }}>Not Returned</td>
-                                        }
                                         <td className="d-flex justify-content-around">
                                             <>
-
                                                 {
                                                     element.dateOfIssue
                                                         ? <>
                                                             <NavLink to={`editIssue/${element._id}`}><button className="btn mx-2" style={{ backgroundColor: "#EAE8FF", color: "black" }}>Edit</button></NavLink>
-                                                            <button className="btn" style={{ backgroundColor: "#C7DFC5", color: "black" }} disabled={element.dateOfReturn ? true : false} onClick={() => bookReturn(element._id)}>Return</button>
-                                                        </>
+                                                          </>
                                                         : <button className="btn mx-2" style={{ backgroundColor: "lightblue", color: "black" }} onClick={() => acceptRequest(element._id)}>Credit</button>
                                                 }
                                             </>
@@ -357,4 +311,4 @@ const myIssuedBooks = (props) => {
     )
 }
 
-export default myIssuedBooks
+export default MyIssuedItems

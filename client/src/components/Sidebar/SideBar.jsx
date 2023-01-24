@@ -59,11 +59,55 @@ const SideBar = ({ children }) => {
       path: "/ItemIssueRequests",
       name: "All Stationery Requests",
       icon: <FaEnvelopeOpenText />,
+      subRoutes: [
+        {
+          path: "/allIssuedItemsgi",
+          name: "General Item Requests",
+          icon: <MdProductionQuantityLimits />,
+        },
+        {
+          path: "/allIssuedItemspf",
+          name: "Printed Format Requests",
+          icon: <HiPrinter />,
+        },
+        {
+          path: "/allIssuedItemspc",
+          name: "Printer Catridges Requests",
+          icon: <IoIosColorFill />,
+        },
+        {
+          path: "/allIssuedItemsss",
+          name: "Seals/Stamps Requests",
+          icon: <FaStamp />,
+        }
+      ],
     },
     {
       path: "/myStationeryItems",
       name: "Stationery Purchased",
       icon: <BsFillCartFill />,
+      subRoutes: [
+        {
+          path: "/myIssuedItemsgi",
+          name: "My General Item",
+          icon: <MdProductionQuantityLimits />,
+        },
+        {
+          path: "/myIssuedItemspf",
+          name: "My Printed Format",
+          icon: <HiPrinter />,
+        },
+        {
+          path: "/myIssuedItemspc",
+          name: "My Printer Catridges",
+          icon: <IoIosColorFill />,
+        },
+        {
+          path: "/myIssuedItemsss",
+          name: "My Seals/Stamps",
+          icon: <FaStamp />,
+        }
+      ],
     },
     {
       path: "/file-manager",
@@ -108,14 +152,14 @@ const SideBar = ({ children }) => {
       width: 0,
       opacity: 1,
       transition: {
-        duration: 0.5,
+        duration: 1,
       },
     },
     show: {
       opacity: 1,
       width: "auto",
       transition: {
-        duration: 2,
+        duration: 1,
       },
     },
   };
@@ -139,7 +183,7 @@ const SideBar = ({ children }) => {
 
           <AnimatePresence>
             {isOpen && (
-              <motion.h1
+              <motion.h6
                 variants={showAnimation}
                 initial="show"
                 animate="show"
@@ -148,10 +192,10 @@ const SideBar = ({ children }) => {
               >
                 {userName 
                 ?
-                  <h6 style={{color:"rgb(6, 0, 97)"}}>{userName}</h6>
+                  <span style={{color:"black"}}>{userName}</span>
                 : 
-                    ""}
-              </motion.h1>
+                  <></>}
+              </motion.h6>
             )}
           </AnimatePresence>
 
@@ -179,7 +223,6 @@ const SideBar = ({ children }) => {
                 to={route.path}
                 key={index}
                 className="link"
-
               >
                 <div className="icon">{route.icon}</div>
 

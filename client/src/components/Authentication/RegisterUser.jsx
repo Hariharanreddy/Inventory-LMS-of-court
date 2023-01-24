@@ -7,8 +7,6 @@ import Swal from "sweetalert2"
 const RegisterUser = () => {
 
     const navigateTo = useNavigate();
-    const [passShow, setPassShow] = useState(false);
-    const [cpassShow, setCPassShow] = useState(false);
 
     const {
         register,
@@ -26,9 +24,7 @@ const RegisterUser = () => {
             department,
             departmentId,
             dob,
-            phoneNo,
-            password,
-            cpassword } = formData;
+            phoneNo } = formData;
 
 
         const res = await fetch("http://localhost:8000/registerUser", {
@@ -44,8 +40,8 @@ const RegisterUser = () => {
                 departmentId,
                 dob,
                 phoneNo,
-                password,
-                cpassword
+                password: "123456",
+                cpassword: "123456"
             })
         });
 
@@ -115,16 +111,9 @@ const RegisterUser = () => {
         }
     }
 
-    const checkSame = (value) => {
-        if (!value || !getValues('password')) {
-            return true
-        }
-        return value === getValues('password');
-    }
-
     return (
-        <div className='card-div authenticatePages' style={{ padding: "1em 3em 1em" }}>
-            <h1 style={{fontWeight: "600", color: "rgb(6, 0, 97)", lineHeight: "1.5", opacity: "0.9" }}>Sign Up</h1>
+        <div className='card-div-authenticate-page' style={{ padding: "1em 3em 1em" }}>
+            <h1 style={{fontWeight: "600", fontSize:"40px", color: "rgb(6, 0, 97)", lineHeight: "2.5"}}>Sign Up</h1>
             <p style={{  color: "rgb(6, 0, 97)" }}>Please, Enter Your Details.</p>
             <form className="mt-2" onSubmit={handleSubmit(onFormSubmit)}>
                 <div className="row">
@@ -200,61 +189,6 @@ const RegisterUser = () => {
                     </div>
 
                     <div className="mb-3 col-lg-6 col-md-6 col-12">
-                        <label htmlFor="password" className="form-label">
-                            Password<span style={{ color: "red" }}>*</span>
-                        </label>
-                        <div className="input-group mb-3">
-                            <button className="password-btn btn" type="button" id="button-addon2" onClick={() => setPassShow(!passShow)}>
-                                {!passShow ? "Show" : "Hide"}</button>
-                            <input
-                                type={!passShow ? "password" : "text"}
-                                className={`form-control ${errors.password ? "is-invalid" : ""}`}
-                                id="password"
-                                name="password"
-                                {...register("password", { maxLength: 15, minLength: 6, required: true })}
-                                aria-describedby="button-addon2" />
-                            {errors.password?.type === "minLength" && (
-                                <div className="invalid-feedback">Password Should Be Of Minimum 6 Letters</div>
-                            )}
-                            {errors.password?.type === "maxLength" && (
-                                <div className="invalid-feedback">Password Cannot Exceed 15 Letters</div>
-                            )}
-                            {errors.password?.type === "required" && (
-                                <div className="invalid-feedback">This Field Is Required</div>
-                            )}
-                        </div>
-                    </div>
-
-                    <div className="mb-3 col-lg-6 col-md-6 col-12">
-                        <label htmlFor="cpassword" className="form-label">
-                            Confirm Password<span style={{ color: "red" }}>*</span>
-                        </label>
-                        <div className="input-group mb-3">
-                            <button className="password-btn btn" type="button" id="button-addon1" onClick={() => setCPassShow(!cpassShow)}>
-                                {!cpassShow ? "Show" : "Hide"}</button>
-                            <input
-                                type={!cpassShow ? "password" : "text"}
-                                className={`form-control ${errors.cpassword ? "is-invalid" : ""}`}
-                                id="cpassword"
-                                name="cpassword"
-                                {...register("cpassword", { validate: checkSame, maxLength: 15, minLength: 6, required: true })}
-                                aria-describedby="button-addon1" />
-                            {errors.cpassword?.type === "validate" && (
-                                <div className="invalid-feedback">Passwords Are Not Same</div>
-                            )}
-                            {errors.cpassword?.type === "minLength" && (
-                                <div className="invalid-feedback">Password Should Be Of Minimum 6 Letters</div>
-                            )}
-                            {errors.cpassword?.type === "maxLength" && (
-                                <div className="invalid-feedback">Password Cannot Exceed 15 Letters</div>
-                            )}
-                            {errors.cpassword?.type === "required" && (
-                                <div className="invalid-feedback">This Field Is Required</div>
-                            )}
-                        </div>
-                    </div>
-
-                    <div className="mb-3 col-lg-6 col-md-6 col-12">
                         <label htmlFor="phoneNo" className="form-label">
                             Phone No<span style={{ color: "red" }}>*</span>
                         </label>
@@ -294,8 +228,8 @@ const RegisterUser = () => {
                     </div>
 
                     <div className="d-grid">
-                        <button className="btn btn-primary submit-button" type="submit">Create Account</button>
-                        <p style={{ textAlign: "center", fontWeight:"500", color: "rgb(6, 0, 97)", marginTop: "1.2em" }}>Already, have an Account? <NavLink to="/login">Sign In</NavLink> </p>
+                        <button className="btn submit-button" type="submit">Create Account</button>
+                        <p style={{ fontWeight:"500", color: "rgb(6, 0, 97)", marginTop: "1.2em" }}>Already, have an Account? <NavLink to="/login">Sign In</NavLink> </p>
                     </div>
                 </div>
             </form>

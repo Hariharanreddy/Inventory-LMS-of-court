@@ -53,6 +53,6 @@ const issueBookSchema = new mongoose.Schema({
     yearOfPublication: {
         type: Number,
     }
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model("Issue", issueBookSchema);
