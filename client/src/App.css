@@ -92,10 +92,13 @@ h2 {
 
 .landingPageSection{
   min-height:"100vh";
-  width: 50%;
+  width: 56%;
   display: flex;
   flex-direction: column;
-  background-color: #91b3fa;
+  background-image: url("./images/bg-img.jpg");
+  background-size: cover;
+  
+  background-repeat: no-repeat;
   border-top-right-radius: 5em;
   border-bottom-right-radius: 5em;
 } 

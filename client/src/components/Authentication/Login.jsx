@@ -87,29 +87,27 @@ const Login = () => {
                     <img src={label} style={{ width: "60px", marginTop: "20px", marginLeft: "20px" }} />
                     <div className="landingPageTitle">
 
-                        <h1 style={{ color: "white", fontWeight: "800", fontSize: "60px", letterSpacing: "2px" }}>Library</h1>
-
-                        {/* <div class="words">
-                            <h1 className='rotating-text'>Library</h1>
-                            <h1 className='rotating-text'>Stationery</h1>         
-                        </div> */}
-
-                        <h1 style={{ color: "rgb(6, 0, 97)", fontWeight: "800", fontSize: "60px", letterSpacing: "2px" }}>Management</h1>
-                        <h1 style={{ color: "white", fontWeight: "800", fontSize: "60px", letterSpacing: "2px", marginBottom: "0.8em" }}>System</h1>
+                        {/* <h1 style={{ color: "white", fontWeight: "800", fontSize: "65px", letterSpacing: "2px" }}>Library</h1>
+                        <h1 style={{ color: "rgb(6, 0, 97)", fontWeight: "800", fontSize: "65px", letterSpacing: "2px" }}>Management</h1>
+                        <h1 style={{ color: "white", fontWeight: "800", fontSize: "65px", letterSpacing: "2px", marginBottom: "0.8em" }}>System</h1>
                         <marquee width="100%" direction="left" height="50px">
-                            <h3 style={{ fontWeight: "700", fontSize: "40px", letterSpacing: "1px" }}>Durg District Court</h3>
-                        </marquee>
-                        {/* <button className="btn-effect" style={{alignSelf:"right"}}><NavLink to="/login"><span style={{color:"#060061"}}>Click Here</span></NavLink></button> */}
+                            <h1 style={{ fontWeight: "700", fontSize: "40px", letterSpacing: "1px" }}>LMS, Durg District Court</h1>
+                        </marquee> */}
+
                     </div>
                 </div>
 
                 <div className='card-div-authenticate-page' style={{ padding: "1em 3em 1em", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                    <h1 style={{ fontWeight: "600", fontSize: "40px", color: "rgb(6, 0, 97)", lineHeight: "2.0" }}>Please, Log In</h1>
-                    <p style={{ color: "rgb(6, 0, 97)" }}>Enter user's Email.</p>
+                    <marquee width="100%" direction="left" height="70px">
+                        <h1 style={{ fontWeight: "700", fontSize: "45px", letterSpacing: "1px", color:"rgb(6, 0, 97)"}}>LMS, Durg District Court</h1>
+                    </marquee>
+                    <h1 style={{ fontWeight: "600", fontSize: "40px", color: "rgb(6, 0, 97)", lineHeight: "2.0" }}>Sign In</h1>
+                    <p style={{ color: "rgb(6, 0, 97)" }}>Enter user's Email to open his account.</p>
                     <form onSubmit={handleSubmit(onFormSubmit)}>
                         <div className="row">
 
                             <div className="mb-3 col-12">
+
                                 <label htmlFor="email" className="form-label">
                                     Email<span style={{ color: "red" }}>*</span>
                                 </label>

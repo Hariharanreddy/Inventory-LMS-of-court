@@ -7,7 +7,6 @@ const purchaseList = require("../models/Purchase List/purchaseListSchema")
 const issuedBooks = require("../models/Issued List/issueBookSchema")
 const issuedItems = require("../models/Issued List/issueItemSchema")
 const bcrypt = require("bcryptjs");
-const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
 const authenticate = require("../middleware/authenticate");
 
