@@ -4,6 +4,7 @@ import { NavLink, useParams } from 'react-router-dom';
 const Details = () => {
 
   const [getBookData, setBookData] = React.useState({});
+  
   const { id } = useParams("");
 
   //For fetching the book details

@@ -14,6 +14,7 @@ const PurchaseList = () => {
     const [searchTerm, setSearchTerm] = React.useState("");
     const [data, setData] = React.useState(false);
     const [page, setPage] = React.useState(1);
+    const [disable, setDisable] = React.useState(false);
 
     //for exporting to csv
     const [dataToDownload, setDataToDownload] = React.useState([]);
@@ -23,6 +24,8 @@ const PurchaseList = () => {
     const navigateTo = useNavigate("");
 
     const getdataToDownload = async () => {
+
+        setDisable(true);
 
         const res = await fetch(`http://localhost:8000/getPurchaseListToDownload?id=${id}&search=${searchTerm}`, {
             method: "GET",
@@ -34,10 +37,13 @@ const PurchaseList = () => {
         const data = await res.json();
 
         if (res.status === 422 || !data) {
+            setDisable(false);
             console.log("Books could not be fetched.");
         }
         else {
             console.log(data);
+
+            setDisable(false);
             setDataToDownload(data);
             setTimeout(() => {
                 csvDownloadRef.current.link.click();
@@ -105,7 +111,7 @@ const PurchaseList = () => {
 
                     <div>
                         <CSVLink data={dataToDownload} headers={headers} filename="PurchaseList_data.csv" target="_blank" ref={csvDownloadRef} />
-                        <button className='btn mx-2' onClick={getdataToDownload}>Export To CSV</button>
+                        <button className='btn mx-2' onClick={getdataToDownload} disabled={disable}>Export To CSV</button>
                         <button className="btn" style={{ backgroundColor: "rgb(6, 0, 97)", color: "white" }} onClick={() => navigateTo(-1)}> &lt; Back</button>
                     </div>
                 </div>

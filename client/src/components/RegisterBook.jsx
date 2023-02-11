@@ -7,6 +7,7 @@ import Swal from "sweetalert2"
 const Register = () => {
 
     const navigateTo = useNavigate();
+    const [disable, setDisable] = React.useState(false);
 
     const preLoadedValues = {
         initialStock: 0,
@@ -22,6 +23,8 @@ const Register = () => {
     });
 
     const onFormSubmit = async (formData) => {
+
+        setDisable(true);
 
         const { bookName,
             category,
@@ -54,6 +57,7 @@ const Register = () => {
         console.log(data);
 
         if (res.status === 422) {
+            setDisable(false);
             Swal.fire({
                 title: '',
                 text: "Book name is already present!",
@@ -70,7 +74,7 @@ const Register = () => {
         }
         else {
             console.log("Book Has Been Added Successfully!");
-
+            setDisable(false);
             Swal.fire({
                 title: '',
                 text: "Book has been added successfully!",
@@ -240,7 +244,7 @@ const Register = () => {
                         </div>
 
                         <div className="d-grid">
-                            <button className="btn btn-primary submit-button" type="submit">Submit</button>
+                            <button className="btn btn-primary submit-button" type="submit" disabled={disable}>Submit</button>
                         </div> 
                     </div>
                 </form>

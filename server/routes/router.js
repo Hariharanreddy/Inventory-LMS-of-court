@@ -1108,7 +1108,6 @@ router.post("/registerItem", async (req, res) => {
             itemType } = req.body;
 
         const item = await items.findOne({ itemName: itemName });     // it can also be written just bookName  //object destructuring
-        console.log(item);
 
         if (item) {
             console.log("Server side : Item is already present.")

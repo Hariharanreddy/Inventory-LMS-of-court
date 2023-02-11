@@ -8,6 +8,7 @@ const ItemIssueRequest = (props) => {
 
     const [getItemData, setItemData] = React.useState([]);
     const [data, setData] = React.useState(false);
+    const [disable, setDisable] = React.useState(false);
     const { logindata, setLoginData } = useContext(LoginContext);
     const navigateTo = useNavigate();
     const { id } = useParams("");
@@ -26,6 +27,7 @@ const ItemIssueRequest = (props) => {
 
     const showPopUp = (status) => {
         if (status == 422) {
+            setDisable(false);
             Swal.fire({
                 title: '',
                 text: "Data Submission Failed.",
@@ -41,6 +43,7 @@ const ItemIssueRequest = (props) => {
             })
         }
         else if (status == 400) {
+            setDisable(false);
             Swal.fire({
                 title: '',
                 text: "Either stock is 0 or the quantity asked for is greater than stock!",
@@ -56,6 +59,7 @@ const ItemIssueRequest = (props) => {
             })
         }
         else if (status == 401) {
+            setDisable(false);
             Swal.fire({
                 title: '',
                 text: "Item or user does not exist!",
@@ -72,7 +76,7 @@ const ItemIssueRequest = (props) => {
             })
         }
         else {
-    
+            setDisable(false);
             Swal.fire({
                 title: '',
                 text: "Data logged in Successfully!",
@@ -91,6 +95,8 @@ const ItemIssueRequest = (props) => {
     }
 
     const formSubmit = async (formData, typeOfSubmit) => {
+
+        setDisable(true);
 
         const {
             dateOfRequisition,
@@ -218,10 +224,10 @@ const ItemIssueRequest = (props) => {
                         </div>
                     </form>
                     <div className="d-flex justify-content-end mt-2 mb-2">
-                        <button className="btn mx-4" style={{ backgroundColor: "#EAE8FF", color: "black" }} type="submit" onClick={handleSubmit((data) => {
+                        <button className="btn mx-4" style={{ backgroundColor: "#EAE8FF", color: "black" }} type="submit" disabled={disable} onClick={handleSubmit((data) => {
                             formSubmit(data, "generate");
                         })}>Generate Issue</button>
-                        <button className="btn" style={{ backgroundColor: "lightblue", color: "black" }} type="submit" onClick={handleSubmit((data) => {
+                        <button className="btn" style={{ backgroundColor: "lightblue", color: "black" }} type="submit" disabled={disable} onClick={handleSubmit((data) => {
                             formSubmit(data, "credit");
                         })}>Credit</button>
                     </div>

@@ -1,3 +1,4 @@
+const fs = require("fs")
 const { spawn } = require('child_process');
 const path = require('path');
 const cron = require('node-cron');
@@ -21,44 +22,71 @@ app.use(router);
 
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~BACKUP RELATED COMMANDS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// var d = new Date();
-// var curr_date = d.getDate();
-// var curr_month = d.getMonth();
-// var curr_year = d.getFullYear();
-// var today_date = curr_date + "-" + curr_month + "-" + curr_year;
+// 1. Cron expression for every 5 seconds - */5 * * * * *
+// 2. Cron expression for every night at 00:00 hours (0 0 * * * )
+// Note: 2nd expression only contains 5 fields, since seconds is not necessary
 
-// const DB_NAME = 'Item-Manager-1';
-// const ARCHIVE_PATH = path.join(__dirname, './public', `${DB_NAME}_backup_${today_date}.gzip`);
-
-// // 1. Cron expression for every 5 seconds - */5 * * * * *
-// // 2. Cron expression for every night at 00:00 hours (0 0 * * * )
-// // Note: 2nd expression only contains 5 fields, since seconds is not necessary
-
-// //for 7:30pm, enter '30 19 * * *'
+//for 7:30pm, enter '30 19 * * *'
 // cron.schedule('*/5 * * * * *', () => backupMongoDB());
 
 // function backupMongoDB() {
-//   const child = spawn('mongodump', [
-//     `--db=${DB_NAME}`,
-//     `--archive=${ARCHIVE_PATH}`,
-//     '--gzip',
-//   ]);
 
-//   child.stdout.on('data', (data) => {
-//     console.log('stdout:\n', data);
-//   });
-//   child.stderr.on('data', (data) => {
-//     console.log('stderr:\n', Buffer.from(data).toString());
-//   });
-//   child.on('error', (error) => {
-//     console.log('error:\n', error);
-//   });
-//   child.on('exit', (code, signal) => {
-//     if (code) console.log('Process exit with code:', code);
-//     else if (signal) console.log('Process killed with signal:', signal);
-//     else console.log('Backup is successfull ✅');
-//   });
+//     var d = new Date();
+//     var datestring = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear() + "-" +
+//         d.getHours() + "-" + d.getMinutes() + "-" + d.getSeconds();
+
+//     const DB_NAME = 'Item-Manager-1';
+//     const ARCHIVE_PATH = path.join(__dirname, './public', `${DB_NAME}_backup_${datestring}.gzip`);
+
+
+//     const child = spawn('mongodump', [
+//         `--db=${DB_NAME}`,
+//         `--archive=${ARCHIVE_PATH}`,
+//         '--gzip',
+//     ]);
+
+//     child.stdout.on('data', (data) => {
+//         console.log('stdout:\n', data);
+//     });
+//     child.stderr.on('data', (data) => {
+//         console.log('stderr:\n', Buffer.from(data).toString());
+//     });
+//     child.on('error', (error) => {
+//         console.log('error:\n', error);
+//     });
+//     child.on('exit', (code, signal) => {
+//         if (code) console.log('Backup not successful, Process exit with code:', code);
+//         else if (signal) console.log('Backup not successful, Process killed with signal:', signal);
+//         else console.log('Backup is successfull ✅');
+//     });
 // }
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~CODE FOR DELETING FILES IF MORE THAN 3~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+// const folder = '../server/public';
+
+// cron.schedule('* * * * * *', () => {
+//     fs.readdir(folder, (err, files) => {
+//       if (err) throw err;
+  
+//       // check if there are more than 3 files in the folder
+//       if (files.length > 3) {
+//         // sort the files by their creation time
+//         files.sort((a, b) => {
+//           let fileA = path.join(folder, a);
+//           let fileB = path.join(folder, b);
+//           return fs.statSync(fileA).ctime.getTime() - fs.statSync(fileB).ctime.getTime();
+//         });
+  
+//         // delete the oldest file
+//         let oldestFile = path.join(folder, files[0]);
+//         fs.unlink(oldestFile, (err) => {
+//           if (err) throw err;
+//           console.log(`${files[0]} has been deleted`);
+//         });
+//       }
+//     });
+//   });
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

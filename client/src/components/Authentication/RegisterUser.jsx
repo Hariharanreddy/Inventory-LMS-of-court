@@ -7,6 +7,7 @@ import Swal from "sweetalert2"
 const RegisterUser = () => {
 
     const navigateTo = useNavigate();
+    const [disable, setDisable] = useState(false);
 
     const {
         register,
@@ -18,6 +19,7 @@ const RegisterUser = () => {
 
     const onFormSubmit = async (formData) => {
 
+        setDisable(true);
         const {
             name,
             email,
@@ -49,6 +51,9 @@ const RegisterUser = () => {
         console.log(data);
 
         if (res.status == 422) {
+
+            setDisable(false);
+
             Swal.fire({
                 title: 'Sign Up Unsuccessful!',
                 text: `${"Try Using Another Email."}`,
@@ -65,6 +70,9 @@ const RegisterUser = () => {
             })
         }
         else if (res.status == 400) {
+
+            setDisable(false);
+
             Swal.fire({
                 title: 'Email Already Exist!',
                 text: `${"Try Using Another Email."}`,
@@ -82,6 +90,8 @@ const RegisterUser = () => {
         }
         else {
             console.log("User Has Been Added Successfully!")
+
+            setDisable(false);
 
             Swal.fire({
                 title: 'User has been added successfully!',
@@ -228,7 +238,7 @@ const RegisterUser = () => {
                     </div>
 
                     <div className="d-grid">
-                        <button className="btn submit-button" type="submit">Create Account</button>
+                        <button className="btn submit-button" type="submit" disabled={disable}>Create Account</button>
                         <p style={{ fontWeight:"500", color: "rgb(6, 0, 97)", marginTop: "1.2em" }}>Already, have an Account? <NavLink to="/login">Sign In</NavLink> </p>
                     </div>
                 </div>

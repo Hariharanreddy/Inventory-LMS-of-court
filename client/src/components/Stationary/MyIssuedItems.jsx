@@ -19,6 +19,7 @@ const MyIssuedItems = (props) => {
     const [getRequestData, setRequestData] = useState([]);
     const [data, setData] = useState(false);
     const [runUseEffect, setRunUseEffect] = useState(false);
+    const [disable, setDisable] = useState(false);
 
     //for pagination and searching
     const [searchTerm, setSearchTerm] = useState("");           //itemName
@@ -33,6 +34,8 @@ const MyIssuedItems = (props) => {
 
     const getdataToDownload = async () => {
 
+        setDisable(true);
+
         const res = await fetch(`http://localhost:8000/getIssuedItemListToDownload?startDate=${startDate}&endDate=${endDate}&search=${searchTerm}&id=${props.userId ? props.userId : ""}&searchName=${searchUserName}&type=${props.type}`, {
             method: "GET",
             headers: {
@@ -43,10 +46,12 @@ const MyIssuedItems = (props) => {
         const data = await res.json();
 
         if (res.status === 422 || !data) {
+            setDisable(false);
             console.log("Issued Items could not be fetched.");
         }
         else {
             console.log(data);
+            setDisable(false);
             setDataToDownload(data);
             setTimeout(() => {
                 csvDownloadRef.current.link.click();
@@ -56,6 +61,8 @@ const MyIssuedItems = (props) => {
     }
 
     const acceptRequest = async (id) => {
+
+        setDisable(true);
         const res2 = await fetch(`http://localhost:8000/acceptItemIssueRequest/${id}`, {
             method: "PATCH",
             headers: {
@@ -67,7 +74,7 @@ const MyIssuedItems = (props) => {
 
         if (res2.status == 422 || res2.status == 401 || res2.status == 404) {
             console.log("Request Could Not Be Accepted.");
-
+            setDisable(false);
             const Toast = Swal.mixin({
                 toast: true,
                 position: 'top',
@@ -88,6 +95,7 @@ const MyIssuedItems = (props) => {
 
         }
         else if (res2.status == 409) {
+            setDisable(false);
             Swal.fire({
                 title: '',
                 text: "Either stock is 0 or the quantity asked for is greater than stock!",
@@ -104,7 +112,7 @@ const MyIssuedItems = (props) => {
         }
         else {
             console.log("Request Accepted Successfully.");
-
+            setDisable(false);
             setRunUseEffect(() => {
                 return runUseEffect ? false : true;
             })
@@ -228,7 +236,7 @@ const MyIssuedItems = (props) => {
 
                     <div className='align-self-end'>
                         <CSVLink data={dataToDownload} headers={headers} filename="issued_item_data.csv" target="_blank" ref={csvDownloadRef} />
-                        <button className='btn' onClick={getdataToDownload}>Export To CSV</button>
+                        <button className='btn' onClick={getdataToDownload} disabled={disable}>Export To CSV</button>
                     </div>
 
                 </div>
@@ -286,7 +294,7 @@ const MyIssuedItems = (props) => {
                                                         ? <>
                                                             <NavLink to={`editIssue/${element._id}`}><button className="btn mx-2" style={{ backgroundColor: "#EAE8FF", color: "black" }}>Edit</button></NavLink>
                                                           </>
-                                                        : <button className="btn mx-2" style={{ backgroundColor: "lightblue", color: "black" }} onClick={() => acceptRequest(element._id)}>Credit</button>
+                                                        : <button className="btn mx-2" style={{ backgroundColor: "lightblue", color: "black" }} disabled={disable} onClick={() => acceptRequest(element._id)}>Credit</button>
                                                 }
                                             </>
                                         </td>

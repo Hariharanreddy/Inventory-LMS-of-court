@@ -7,6 +7,7 @@ const ItemEdit = () => {
 
     const { id } = useParams("");
     const [data, setData] = useState(null);
+    const [disable, setDisable] = useState(false);
     const navigateTo = useNavigate("");
 
     const getdata = async () => {
@@ -48,6 +49,8 @@ const ItemEdit = () => {
 
     const onFormSubmit = async (formData) => {
 
+        setDisable(true);
+
         const { 
             itemName,
             initialStock,
@@ -71,6 +74,7 @@ const ItemEdit = () => {
         console.log(data2);
 
         if (res2.status == 422 || !data2) {
+            setDisable(false);
             Swal.fire({
                 title: '',
                 text: "Data could not updated for some reason!",
@@ -87,6 +91,7 @@ const ItemEdit = () => {
             })
         }
         else {
+            setDisable(false);
             Swal.fire({
                 title: '',
                 text: "Data updated successfully!",
@@ -106,6 +111,8 @@ const ItemEdit = () => {
 
     const deleteItem = async (id) => {
 
+        setDisable(true);
+
         const res2 = await fetch(`http://localhost:8000/deleteItem/${id}`, {
             method: "DELETE",
             headers: {
@@ -118,10 +125,12 @@ const ItemEdit = () => {
 
 
         if (res2.status != 201) {
+            setDisable(false);
             console.log("Data could not be deleted.");
         }
         else {
             console.log("Data has been deleted.");
+            setDisable(false);
             navigateTo(-1);
         }
     }
@@ -228,7 +237,7 @@ const ItemEdit = () => {
                             </div>
 
                             <div className="d-grid">
-                                <button className="btn btn-primary submit-button" type="submit">Submit</button>
+                                <button className="btn btn-primary submit-button" type="submit" disabled={disable}>Submit</button>
                             </div>
                         </div>
                     </form>

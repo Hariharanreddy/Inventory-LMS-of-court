@@ -7,6 +7,7 @@ const EditIssue = () => {
 
     const { id } = useParams("");
     const [data, setData] = useState(null);
+    const [disable, setDisable] = useState(false);
     const navigateTo = useNavigate("");
 
     const getdata = async () => {
@@ -65,7 +66,7 @@ const EditIssue = () => {
 
     const onFormSubmit = async (formData) => {
 
-
+        setDisable(true);
         const {
             dateOfRequisition,
             dateOfIssue,
@@ -92,6 +93,8 @@ const EditIssue = () => {
         console.log(data2);
 
         if (res2.status != 201 || !data2) {
+
+            setDisable(false);
             Swal.fire({
                 title: '',
                 text: "Data could not be updated for some reason!",
@@ -108,6 +111,8 @@ const EditIssue = () => {
             })
         }
         else {
+
+            setDisable(false);
             Swal.fire({
                 title: '',
                 text: "Data updated successfully!",
@@ -126,6 +131,8 @@ const EditIssue = () => {
     }
 
     const deleteRequest = async (id) => {
+
+        setDisable(true);
         const res2 = await fetch(`http://localhost:8000/deleteBookIssueRequest/${id}`, {
             method: "DELETE",
             headers: {
@@ -137,9 +144,11 @@ const EditIssue = () => {
         console.log(deleteData);
 
         if (res2.status === 422) {
+            setDisable(false);
             console.log("Data could not be deleted.");
         }
         else {
+            setDisable(false);
             console.log("Data has been deleted.");
             navigateTo(-1);
         }
@@ -261,7 +270,7 @@ const EditIssue = () => {
                             </div>
 
                             <div className="d-grid">
-                                <button className="btn btn-primary submit-button" type="submit">Submit</button>
+                                <button className="btn btn-primary submit-button" type="submit" disabled={disable}>Submit</button>
                             </div>
                         </div>
                     </form>

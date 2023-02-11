@@ -7,6 +7,7 @@ import Swal from "sweetalert2"
 const AddOnItem = () => {
     const [getItemData, setItemData] = React.useState([]);
     const [data, setData] = React.useState(false);
+    const [disable, setDisable] = React.useState(false);
 
     const navigateTo = useNavigate();
     const { id } = useParams("");
@@ -25,6 +26,7 @@ const AddOnItem = () => {
 
     const onFormSubmit = async (formData) => {
 
+        setDisable(true);
         const {
             vendorName,
             dateOfPurchase,
@@ -50,6 +52,7 @@ const AddOnItem = () => {
         console.log(data);
 
         if (res.status === 422) {
+            setDisable(false);
             Swal.fire({
                 title: '',
                 text: "Data Submission Failed.",
@@ -66,7 +69,8 @@ const AddOnItem = () => {
         }
         else {
             console.log("Data Has Been Added Successfully!");
-
+            
+            setDisable(false);
             Swal.fire({
                 title: '',
                 text: "Data has been added successfully!",
@@ -191,7 +195,7 @@ const AddOnItem = () => {
                             </div>
 
                             <div className="d-grid">
-                                <button className="btn btn-primary submit-button" type="submit">Submit</button>
+                                <button className="btn btn-primary submit-button" type="submit" disabled={disable}>Submit</button>
                             </div>
                         </div>
                     </form>

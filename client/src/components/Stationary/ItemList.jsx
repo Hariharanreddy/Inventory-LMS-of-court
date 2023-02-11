@@ -16,6 +16,7 @@ const ItemList = (props) => {
 
     const [getItemData, setItemData] = React.useState([]);
     const [data, setData] = React.useState(false);
+    const [disable, setDisable] = React.useState(false);
     // const { logindata, setLoginData } = useContext(LoginContext);
 
     //for filtering and pagination
@@ -29,6 +30,8 @@ const ItemList = (props) => {
 
     const getdataToDownload = async () => {
 
+        setDisable(true);
+
         const res = await fetch(`http://localhost:8000/getItemsToDownload?sortStock=${sortStock}&search=${searchTerm}&type=${props.type}`, {
             method: "GET",
             headers: {
@@ -39,10 +42,12 @@ const ItemList = (props) => {
         const data = await res.json();
 
         if (res.status === 422 || !data) {
+            setDisable(false);
             console.log("Items could not be fetched.");
         }
         else {
             console.log(data);
+            setDisable(false);
             setDataToDownload(data);
             setTimeout(() => {
                 csvDownloadRef.current.link.click();
@@ -146,7 +151,7 @@ const ItemList = (props) => {
                         <div>
 
                             <CSVLink data={dataToDownload} headers={headers} filename="Stationery_data.csv" target="_blank" ref={csvDownloadRef} />
-                            <button className='btn mx-2' onClick={getdataToDownload}>Export To CSV</button>
+                            <button className='btn mx-2' onClick={getdataToDownload} disabled={disable}>Export To CSV</button>
 
                             <NavLink to="registerItem" className="btn" style={{ backgroundColor: "rgb(6, 0, 97)", color: "white" }}><i className="fa-solid fa-plus"></i> Add Item</NavLink>
 

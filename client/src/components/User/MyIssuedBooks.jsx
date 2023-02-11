@@ -23,6 +23,7 @@ const myIssuedBooks = (props) => {
     const [getRequestData, setRequestData] = useState([]);
     const [data, setData] = useState(false);
     const [runUseEffect, setRunUseEffect] = useState(false);
+    const [disable, setDisable] = useState(false);
 
     //for pagination and searching
     const [searchTerm, setSearchTerm] = useState("");
@@ -37,6 +38,8 @@ const myIssuedBooks = (props) => {
 
     const getdataToDownload = async () => {
 
+        setDisable(true);
+
         const res = await fetch(`http://localhost:8000/getIssuedBookListToDownload?startDate=${startDate}&endDate=${endDate}&search=${searchTerm}&id=${props.userId ? props.userId : ""}&searchName=${searchUserName}`, {
             method: "GET",
             headers: {
@@ -47,10 +50,13 @@ const myIssuedBooks = (props) => {
         const data = await res.json();
 
         if (res.status === 422 || !data) {
+            setDisable(false);
             console.log("Books could not be fetched.");
         }
         else {
             console.log(data);
+
+            setDisable(false);
             setDataToDownload(data);
             setTimeout(() => {
                 csvDownloadRef.current.link.click();
@@ -60,6 +66,8 @@ const myIssuedBooks = (props) => {
     }
 
     const bookReturn = async (id) => {
+
+        setDisable(true);
 
         const res2 = await fetch(`http://localhost:8000/bookReturn/${id}`, {
             method: "PATCH",
@@ -73,10 +81,13 @@ const myIssuedBooks = (props) => {
 
 
         if (res2.status === 422) {
+            setDisable(false);
             console.log("Data could not be updated.");
         }
         else {
             console.log("Data has been updated.");
+
+            setDisable(false);
 
             setRunUseEffect(() => {
                 return runUseEffect ? false : true;
@@ -102,6 +113,9 @@ const myIssuedBooks = (props) => {
     }
 
     const acceptRequest = async (id) => {
+
+        setDisable(true);
+
         const res2 = await fetch(`http://localhost:8000/acceptBookIssueRequest/${id}`, {
             method: "PATCH",
             headers: {
@@ -112,7 +126,10 @@ const myIssuedBooks = (props) => {
         const updatedRequestData = await res2.json();
 
         if (res2.status == 422 || res2.status == 401 || res2.status == 404) {
+
             console.log("Request Could Not Be Accepted.");
+
+            setDisable(false);
 
             const Toast = Swal.mixin({
                 toast: true,
@@ -134,6 +151,9 @@ const myIssuedBooks = (props) => {
 
         }
         else if (res2.status == 409) {
+
+            setDisable(false);
+
             Swal.fire({
                 title: '',
                 text: "Either stock is 0 or the quantity asked for is greater than stock!",
@@ -150,6 +170,9 @@ const myIssuedBooks = (props) => {
         }
         else {
             console.log("Request Accepted Successfully.");
+
+            setDisable(false);
+
             setRunUseEffect(() => {
                 return runUseEffect ? false : true;
             })
@@ -266,7 +289,7 @@ const myIssuedBooks = (props) => {
 
                     <div className='align-self-end'>
                         <CSVLink data={dataToDownload} headers={headers} filename="issued_book_data.csv" target="_blank" ref={csvDownloadRef} />
-                        <button className='btn' onClick={getdataToDownload}>Export To CSV</button>
+                        <button className='btn' onClick={getdataToDownload} disabled={disable}>Export To CSV</button>
                     </div>
 
                 </div>
@@ -330,9 +353,9 @@ const myIssuedBooks = (props) => {
                                                     element.dateOfIssue
                                                         ? <>
                                                             <NavLink to={`editIssue/${element._id}`}><button className="btn mx-2" style={{ backgroundColor: "#EAE8FF", color: "black" }}>Edit</button></NavLink>
-                                                            <button className="btn" style={{ backgroundColor: "#C7DFC5", color: "black" }} disabled={element.dateOfReturn ? true : false} onClick={() => bookReturn(element._id)}>Return</button>
+                                                            <button className="btn" style={{ backgroundColor: "#C7DFC5", color: "black" }} disabled={element.dateOfReturn || disable ? true : false} onClick={() => bookReturn(element._id)}>Return</button>
                                                         </>
-                                                        : <button className="btn mx-2" style={{ backgroundColor: "lightblue", color: "black" }} onClick={() => acceptRequest(element._id)}>Credit</button>
+                                                        : <button className="btn mx-2" style={{ backgroundColor: "lightblue", color: "black" }} disabled={disable} onClick={() => acceptRequest(element._id)}>Credit</button>
                                                 }
                                             </>
                                         </td>

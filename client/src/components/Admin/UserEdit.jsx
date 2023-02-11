@@ -7,6 +7,7 @@ const UserEdit = () => {
 
     const { id } = useParams("");
     const [data, setData] = useState(null);
+    const [disable, setDisable] = useState(false);
     const navigateTo = useNavigate("");
 
     const getdata = async () => {
@@ -53,6 +54,7 @@ const UserEdit = () => {
 
     const onFormSubmit = async (formData) => {
 
+        setDisable(true);
         console.log(formData, "hariharan");
 
         const {
@@ -84,6 +86,9 @@ const UserEdit = () => {
         console.log(data2);
 
         if (res2.status == 422 || !data2) {
+
+            setDisable(false);
+
             Swal.fire({
                 title: '',
                 text: "Data could not updated for some reason!",
@@ -100,6 +105,9 @@ const UserEdit = () => {
             })
         }
         else {
+
+            setDisable(false);
+
             Swal.fire({
                 title: '',
                 text: "Data updated successfully!",
@@ -119,6 +127,8 @@ const UserEdit = () => {
 
     const deleteUser = async (id) => {
 
+        setDisable(true);
+
         const res2 = await fetch(`http://localhost:8000/deleteUser/${id}`, {
             method: "DELETE",
             headers: {
@@ -131,9 +141,11 @@ const UserEdit = () => {
 
 
         if (res2.status != 201) {
+            setDisable(false);
             console.log("Data could not be deleted.");
         }
         else {
+            setDisable(false);
             console.log("Data has been deleted.");
             navigateTo(-1);
         }
@@ -304,7 +316,7 @@ const UserEdit = () => {
                             </div>
 
                             <div className="d-grid">
-                                <button className="btn btn-primary submit-button" type="submit">Submit</button>
+                                <button className="btn btn-primary submit-button" type="submit" disabled={disable}>Submit</button>
                             </div>
                         </div>
                     </form>

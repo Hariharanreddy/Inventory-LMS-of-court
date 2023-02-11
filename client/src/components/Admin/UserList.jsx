@@ -17,6 +17,7 @@ const UserList = () => {
 
     const [getUserData, setUserData] = React.useState([]);
     const [data, setData] = React.useState(false);
+    const [disable, setDisable] = React.useState(false);
 
 
     //for filtering and pagination
@@ -30,6 +31,8 @@ const UserList = () => {
 
     const getdataToDownload = async () => {
 
+        setDisable(true);
+
         const res = await fetch(`http://localhost:8000/getUsersToDownload?search=${searchTerm}&isActiveOrNot=${status}`, {
             method: "GET",
             headers: {
@@ -40,10 +43,13 @@ const UserList = () => {
         const data = await res.json();
 
         if (res.status === 422 || !data) {
+            setDisable(false);
             console.log("Users could not be fetched.");
         }
         else {
             console.log(data);
+
+            setDisable(false);
             setDataToDownload(data);
             setTimeout(() => {
                 csvDownloadRef.current.link.click();
@@ -128,7 +134,7 @@ const UserList = () => {
                             </span>
 
                             <CSVLink data={dataToDownload} headers={headers} filename="users_data.csv" target="_blank" ref={csvDownloadRef} />
-                            <button className='btn mx-2' onClick={getdataToDownload}>Export To CSV</button>
+                            <button className='btn mx-2' onClick={getdataToDownload} disabled={disable}>Export To CSV</button>
 
                         </div>
 
