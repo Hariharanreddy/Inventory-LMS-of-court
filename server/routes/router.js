@@ -14,7 +14,7 @@ const authenticate = require("../middleware/authenticate");
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Authentication Related API~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 //User login
-router.post("/login", async (req, res) => {
+router.post("/api/login", async (req, res) => {
 
     try {
         const {
@@ -60,7 +60,7 @@ router.post("/login", async (req, res) => {
 
 
 //To Register A New User
-router.post("/registerUser", async (req, res) => {
+router.post("/api/registerUser", async (req, res) => {
 
     try {
         const {
@@ -109,7 +109,7 @@ router.post("/registerUser", async (req, res) => {
 })
 
 //User Valid
-router.get("/validuser", authenticate, async (req, res) => {
+router.get("/api/validuser", authenticate, async (req, res) => {
     try {
         const ValidUserOne = await users.findOne({ _id: req.userId });
         return res.status(201).json({ status: 201, ValidUserOne });
@@ -119,7 +119,7 @@ router.get("/validuser", authenticate, async (req, res) => {
 });
 
 //Logout User
-router.get("/logout", authenticate, async (req, res) => {
+router.get("/api/logout", authenticate, async (req, res) => {
     try {
         //tokens is an array
         //curelem = current element
@@ -239,7 +239,7 @@ router.get("/logout", authenticate, async (req, res) => {
 
 //Get all users data in pagination with search of username and department
 //and isActiveOrNot functionality
-router.get("/getUsers", async (req, res) => {
+router.get("/api/getUsers", async (req, res) => {
     try {
 
         const page = parseInt(req.query.page) - 1 || 0;     //array starts from 0 in mongodb so minus 1
@@ -282,7 +282,7 @@ router.get("/getUsers", async (req, res) => {
 })
 
 //Get all users data to download
-router.get("/getUsersToDownload", async (req, res) => {
+router.get("/api/getUsersToDownload", async (req, res) => {
     try {
 
         const search = req.query.search || "";
@@ -312,7 +312,7 @@ router.get("/getUsersToDownload", async (req, res) => {
 
 
 //To Return the individual User details
-router.get("/getUser/:id", async (req, res) => {
+router.get("/api/getUser/:id", async (req, res) => {
     try {
         //when we want to take out id from the url
         const { id } = req.params;
@@ -327,7 +327,7 @@ router.get("/getUser/:id", async (req, res) => {
 })
 
 //Update User data
-router.patch("/updateUser/:id", async (req, res) => {
+router.patch("/api/updateUser/:id", async (req, res) => {
     try {
         const id = req.params.id;
         const data = req.body;
@@ -351,7 +351,7 @@ router.patch("/updateUser/:id", async (req, res) => {
 })
 
 //Delete User
-router.delete("/deleteUser/:id", async (req, res) => {
+router.delete("/api/deleteUser/:id", async (req, res) => {
     try {
         const { id } = req.params;
         const deletedUser = await users.findByIdAndDelete({ _id: id })
@@ -366,7 +366,7 @@ router.delete("/deleteUser/:id", async (req, res) => {
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Book List~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 //To Return the Book Database
-router.get("/getBooks", async (req, res) => {
+router.get("/api/getBooks", async (req, res) => {
     try {
 
         const page = parseInt(req.query.page) - 1 || 0;     //array starts from 0 in mongodb so minus 1
@@ -439,7 +439,7 @@ router.get("/getBooks", async (req, res) => {
 })
 
 //To download the Book Database
-router.get("/getBooksToDownload", async (req, res) => {
+router.get("/api/getBooksToDownload", async (req, res) => {
     try {
 
         const search = req.query.search || "";
@@ -468,7 +468,7 @@ router.get("/getBooksToDownload", async (req, res) => {
 })
 
 //To Return the individual book details
-router.get("/getBook/:id", async (req, res) => {
+router.get("/api/getBook/:id", async (req, res) => {
     try {
         //when we want to take out id from the url
         const { id } = req.params;
@@ -482,7 +482,7 @@ router.get("/getBook/:id", async (req, res) => {
 
 
 //Register New Book
-router.post("/registerBook", async (req, res) => {
+router.post("/api/registerBook", async (req, res) => {
 
     try {
         const {
@@ -528,7 +528,7 @@ router.post("/registerBook", async (req, res) => {
 })
 
 //Update Book data
-router.patch("/updateBook/:id", async (req, res) => {
+router.patch("/api/updateBook/:id", async (req, res) => {
     try {
         const id = req.params.id;
 
@@ -542,7 +542,7 @@ router.patch("/updateBook/:id", async (req, res) => {
 })
 
 //delete book
-router.delete("/deleteBook/:id", async (req, res) => {
+router.delete("/api/deleteBook/:id", async (req, res) => {
     try {
         const { id } = req.params;
 
@@ -556,7 +556,7 @@ router.delete("/deleteBook/:id", async (req, res) => {
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~PURCHASE LIST RELATED API~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //this works for both book and item 
-router.post("/addOn", async (req, res) => {
+router.post("/api/addOn", async (req, res) => {
     try {
         let { itemId, vendorName, dateOfPurchase, quantityPurchased } = req.body;
 
@@ -605,7 +605,7 @@ router.post("/addOn", async (req, res) => {
 
 //To return the purchase list in pagination
 //this will also work for book as well as item
-router.get("/getPurchaseList", async (req, res) => {
+router.get("/api/getPurchaseList", async (req, res) => {
     try {
 
         const id = req.query.id;
@@ -658,7 +658,7 @@ router.get("/getPurchaseList", async (req, res) => {
 })
 
 //To download the Book or Items Purchase List
-router.get("/getPurchaseListToDownload", async (req, res) => {
+router.get("/api/getPurchaseListToDownload", async (req, res) => {
     try {
 
         const id = req.query.id;
@@ -684,10 +684,25 @@ router.get("/getPurchaseListToDownload", async (req, res) => {
     }
 })
 
+//Delete Issued Book Request
+router.delete("/api/deletePurchase/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        const deletedPurchase = await purchaseList.findByIdAndDelete({ _id: id })
+
+        console.log(deletedPurchase);
+        return res.status(201).json(deletedPurchase);
+    }
+    catch (err) {
+        return res.status(422).json(err);
+    }
+})
+
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Book Issue Related API~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 //Register New Issue of Book
-router.post("/bookIssueRequest", async (req, res) => {
+router.post("/api/bookIssueRequest", async (req, res) => {
     try {
         let { userId, bookId, dateOfRequisition, quantity } = req.body;
 
@@ -729,7 +744,7 @@ router.post("/bookIssueRequest", async (req, res) => {
 })
 
 //For Directly Crediting the book to user
-router.post("/directAcceptIssueRequest", async (req, res) => {
+router.post("/api/directAcceptIssueRequest", async (req, res) => {
     try {
         let { userId, bookId, dateOfRequisition, quantity } = req.body;
 
@@ -780,7 +795,7 @@ router.post("/directAcceptIssueRequest", async (req, res) => {
 })
 
 //Show all or if id provided then the users Issued Books Request 
-router.get("/showIssuedBooksRequest", async (req, res) => {
+router.get("/api/showIssuedBooksRequest", async (req, res) => {
     try {
         const id = req.query.id;
         const page = parseInt(req.query.page) - 1 || 0;     //array starts from 0 in mongodb so minus 1
@@ -840,7 +855,7 @@ router.get("/showIssuedBooksRequest", async (req, res) => {
 })
 
 //To Return the individual issue book details
-router.get("/getSpecificIssuedBookRequest/:id", async (req, res) => {
+router.get("/api/getSpecificIssuedBookRequest/:id", async (req, res) => {
     try {
         const { id } = req.params;
         const individualIssuedBook = await issuedBooks.findById(id);        //also can be written {_id : id}
@@ -852,7 +867,7 @@ router.get("/getSpecificIssuedBookRequest/:id", async (req, res) => {
 })
 
 //Update Book Issue data
-router.patch("/updateSpecificIssuedBookRequest/:id", async (req, res) => {
+router.patch("/api/updateSpecificIssuedBookRequest/:id", async (req, res) => {
     try {
 
         const id = req.params.id;
@@ -878,7 +893,7 @@ router.patch("/updateSpecificIssuedBookRequest/:id", async (req, res) => {
 })
 
 //Show all or if id provided then the users Issued Books Request 
-router.get("/getIssuedBookListToDownload", async (req, res) => {
+router.get("/api/getIssuedBookListToDownload", async (req, res) => {
     try {
 
         const id = req.query.id;
@@ -927,7 +942,7 @@ router.get("/getIssuedBookListToDownload", async (req, res) => {
 
 //Accept Book Issue Request
 //issue list page - credit button
-router.patch("/acceptBookIssueRequest/:id", async (req, res) => {
+router.patch("/api/acceptBookIssueRequest/:id", async (req, res) => {
     try {
         const id = req.params.id;
         const issue = await issuedBooks.findOne({ _id: id })
@@ -964,7 +979,7 @@ router.patch("/acceptBookIssueRequest/:id", async (req, res) => {
 })
 
 //Book Return Date Registration
-router.patch("/bookReturn/:id", async (req, res) => {
+router.patch("/api/bookReturn/:id", async (req, res) => {
     try {
         const id = req.params.id;
         const issue = await issuedBooks.findOne({ _id: id })
@@ -997,7 +1012,7 @@ router.patch("/bookReturn/:id", async (req, res) => {
 })
 
 //Delete Issued Book Request
-router.delete("/deleteBookIssueRequest/:id", async (req, res) => {
+router.delete("/api/deleteBookIssueRequest/:id", async (req, res) => {
     try {
         const id = req.params.id;
 
@@ -1015,7 +1030,7 @@ router.delete("/deleteBookIssueRequest/:id", async (req, res) => {
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Stationary - General Item~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 //To Return the Entire Items Database with pagination
-router.get("/getItems", async (req, res) => {
+router.get("/api/getItems", async (req, res) => {
     try {
         const page = parseInt(req.query.page) - 1 || 0;     //array starts from 0 in mongodb so minus 1
         const limit = parseInt(req.query.limit) || 6;
@@ -1056,7 +1071,7 @@ router.get("/getItems", async (req, res) => {
 })
 
 //To download the item database
-router.get("/getItemsToDownload", async (req, res) => {
+router.get("/api/getItemsToDownload", async (req, res) => {
     try {
         const sortStock = parseInt(req.query.sortStock) || 0;
         const search = req.query.search || "";      // for itemName
@@ -1084,7 +1099,7 @@ router.get("/getItemsToDownload", async (req, res) => {
 })
 
 //To Return the individual item details
-router.get("/getItem/:id", async (req, res) => {
+router.get("/api/getItem/:id", async (req, res) => {
     try {
         const { id } = req.params;
         const individualItem = await items.findById(id);        //also can be written {_id : id}
@@ -1097,7 +1112,7 @@ router.get("/getItem/:id", async (req, res) => {
 })
 
 //Register New Item
-router.post("/registerItem", async (req, res) => {
+router.post("/api/registerItem", async (req, res) => {
 
     try {
         const {
@@ -1129,7 +1144,7 @@ router.post("/registerItem", async (req, res) => {
 })
 
 //Update Item Data
-router.patch("/updateItem/:id", async (req, res) => {
+router.patch("/api/updateItem/:id", async (req, res) => {
     try {
         const id = req.params.id;
 
@@ -1142,7 +1157,7 @@ router.patch("/updateItem/:id", async (req, res) => {
 })
 
 //Delete Item 
-router.delete("/deleteItem/:id", async (req, res) => {
+router.delete("/api/deleteItem/:id", async (req, res) => {
     try {
         const id = req.params.id;
 
@@ -1158,7 +1173,7 @@ router.delete("/deleteItem/:id", async (req, res) => {
 
 //Register New Issue of Item
 //working perfectly
-router.post("/itemIssueRequest", async (req, res) => {
+router.post("/api/itemIssueRequest", async (req, res) => {
     try {
         let { userId, itemId, dateOfRequisition, quantity, type } = req.body;
 
@@ -1199,7 +1214,7 @@ router.post("/itemIssueRequest", async (req, res) => {
 
 //For Directly Crediting the item to user
 //works
-router.post("/directAcceptItemIssueRequest", async (req, res) => {
+router.post("/api/directAcceptItemIssueRequest", async (req, res) => {
     try {
         let { userId, itemId, dateOfRequisition, quantity, type } = req.body;
 
@@ -1251,7 +1266,7 @@ router.post("/directAcceptItemIssueRequest", async (req, res) => {
 //it doesn't need any type
 //as that thing is handled by login into the person's account and
 //looking at my stationery items
-router.get("/showIssuedItemsRequest", async (req, res) => {
+router.get("/api/showIssuedItemsRequest", async (req, res) => {
     try {
         const id = req.query.id;
         const page = parseInt(req.query.page) - 1 || 0;     //array starts from 0 in mongodb so minus 1
@@ -1315,7 +1330,7 @@ router.get("/showIssuedItemsRequest", async (req, res) => {
 })
 
 //To Return the individual issue item details
-router.get("/getSpecificIssuedItemRequest/:id", async (req, res) => {
+router.get("/api/getSpecificIssuedItemRequest/:id", async (req, res) => {
     try {
         const { id } = req.params;
         const individualIssuedItem = await issuedItems.findById(id);        //also can be written {_id : id}
@@ -1327,7 +1342,7 @@ router.get("/getSpecificIssuedItemRequest/:id", async (req, res) => {
 })
 
 //Update Item data
-router.patch("/updateSpecificIssuedItemRequest/:id", async (req, res) => {
+router.patch("/api/updateSpecificIssuedItemRequest/:id", async (req, res) => {
     try {
         const id = req.params.id;
         const data = req.body;
@@ -1345,7 +1360,7 @@ router.patch("/updateSpecificIssuedItemRequest/:id", async (req, res) => {
 
 //Show all or if id provided then the users Issued Items Request 
 //working properly
-router.get("/getIssuedItemListToDownload", async (req, res) => {
+router.get("/api/getIssuedItemListToDownload", async (req, res) => {
     try {
 
         const id = req.query.id;
@@ -1399,7 +1414,7 @@ router.get("/getIssuedItemListToDownload", async (req, res) => {
 
 //Accept Item Issue Request
 //issue list page - credit button
-router.patch("/acceptItemIssueRequest/:id", async (req, res) => {
+router.patch("/api/acceptItemIssueRequest/:id", async (req, res) => {
     try {
 
         const id = req.params.id;
@@ -1437,7 +1452,7 @@ router.patch("/acceptItemIssueRequest/:id", async (req, res) => {
 })
 
 //Delete Issued Item Request
-router.delete("/deleteItemIssueRequest/:id", async (req, res) => {
+router.delete("/api/deleteItemIssueRequest/:id", async (req, res) => {
     try {
         const id = req.params.id;
 

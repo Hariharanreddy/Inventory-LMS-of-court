@@ -7,7 +7,7 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
-require("./db/conn");
+require("./db/conn"); 
 
 const cors = require("cors");
 const router = require("./routes/router");
@@ -15,11 +15,30 @@ const router = require("./routes/router");
 const port = process.env.PORT;
 
 const app = express();
+
+// app.use(cors({
+//     allowedHeaders: "*",
+//     allowedMethods: "*",
+//     origin:"*",
+// }));
+
 app.use(cors());
+
+// app.options("/", (req, res) => {
+//     res.setHeader("Access-Control-Allow-Origin", "*");
+//     res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, PATCH, DELETE");
+//     res.setHeader("Access-Control-Allow-Headers", "*");
+//     res.sendStatus(204);
+// });
+  
+app.use(express.static("static"))
 app.use(express.json());
 app.use(cookieParser());
 app.use(router);
 
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "static/index.html"));
+})
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~BACKUP RELATED COMMANDS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // 1. Cron expression for every 5 seconds - */5 * * * * *
@@ -27,6 +46,7 @@ app.use(router);
 // Note: 2nd expression only contains 5 fields, since seconds is not necessary
 
 //for 7:30pm, enter '30 19 * * *'
+
 // cron.schedule('*/5 * * * * *', () => backupMongoDB());
 
 // function backupMongoDB() {
@@ -68,7 +88,7 @@ app.use(router);
 // cron.schedule('* * * * * *', () => {
 //     fs.readdir(folder, (err, files) => {
 //       if (err) throw err;
-  
+
 //       // check if there are more than 3 files in the folder
 //       if (files.length > 3) {
 //         // sort the files by their creation time
@@ -77,7 +97,7 @@ app.use(router);
 //           let fileB = path.join(folder, b);
 //           return fs.statSync(fileA).ctime.getTime() - fs.statSync(fileB).ctime.getTime();
 //         });
-  
+
 //         // delete the oldest file
 //         let oldestFile = path.join(folder, files[0]);
 //         fs.unlink(oldestFile, (err) => {
