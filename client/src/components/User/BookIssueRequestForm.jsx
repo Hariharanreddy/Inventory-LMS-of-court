@@ -112,7 +112,7 @@ const BookIssueRequest = () => {
 
         if (typeOfSubmit == "credit") {
 
-            const res = await fetch("http://localhost:8000/directAcceptIssueRequest", {
+            const res = await fetch("/api/directAcceptIssueRequest", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -132,7 +132,7 @@ const BookIssueRequest = () => {
             showPopUp(res.status);
         }
         else {
-            const res = await fetch("http://localhost:8000/bookIssueRequest", {
+            const res = await fetch("/api/bookIssueRequest", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -155,7 +155,7 @@ const BookIssueRequest = () => {
 
     const getdata = async () => {
 
-        const res = await fetch(`http://localhost:8000/getBook/${id}`, {
+        const res = await fetch(`/api/getBook/${id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"

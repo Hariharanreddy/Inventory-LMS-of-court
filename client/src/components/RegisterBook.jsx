@@ -35,7 +35,7 @@ const Register = () => {
             price
         } = formData;
 
-        const res = await fetch("http://localhost:8000/registerBook", {
+        const res = await fetch("/api/registerBook", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

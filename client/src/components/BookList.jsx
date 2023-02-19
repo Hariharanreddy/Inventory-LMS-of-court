@@ -38,7 +38,7 @@ const BookList = () => {
 
         setDisable(true);
 
-        const res = await fetch(`http://localhost:8000/getBooksToDownload?search=${searchTerm}&sortStock=${sortStock}`, {
+        const res = await fetch(`/api/getBooksToDownload?search=${searchTerm}&sortStock=${sortStock}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -66,7 +66,7 @@ const BookList = () => {
     const Valid = async () => {
         let token = localStorage.getItem("usersdatatoken");
 
-        const res = await fetch("http://localhost:8000/validuser", {
+        const res = await fetch("/api/validuser", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -110,7 +110,7 @@ const BookList = () => {
         //for printing all the books from the database
         const getdata = async () => {
 
-            const res = await fetch(`http://localhost:8000/getBooks?page=${page}&search=${searchTerm}&sortStock=${sortStock}`, {
+            const res = await fetch(`/api/getBooks?page=${page}&search=${searchTerm}&sortStock=${sortStock}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"

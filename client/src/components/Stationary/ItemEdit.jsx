@@ -12,7 +12,7 @@ const ItemEdit = () => {
 
     const getdata = async () => {
 
-        const res = await fetch(`http://localhost:8000/getItem/${id}`, {
+        const res = await fetch(`/api/getItem/${id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -57,7 +57,7 @@ const ItemEdit = () => {
             stock,
             price } = formData;
 
-        const res2 = await fetch(`http://localhost:8000/updateItem/${id}`, {
+        const res2 = await fetch(`/api/updateItem/${id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json"
@@ -113,7 +113,7 @@ const ItemEdit = () => {
 
         setDisable(true);
 
-        const res2 = await fetch(`http://localhost:8000/deleteItem/${id}`, {
+        const res2 = await fetch(`/api/deleteItem/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json"

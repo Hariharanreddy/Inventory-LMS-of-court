@@ -33,7 +33,7 @@ const RegisterItem = (props) => {
         } = formData;
 
 
-        const res = await fetch("http://localhost:8000/registerItem", {
+        const res = await fetch("/api/registerItem", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

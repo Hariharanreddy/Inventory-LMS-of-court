@@ -105,7 +105,7 @@ const ItemIssueRequest = (props) => {
 
         if (typeOfSubmit == "credit") {
 
-            const res = await fetch("http://localhost:8000/directAcceptItemIssueRequest", {
+            const res = await fetch("/api/directAcceptItemIssueRequest", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -126,7 +126,7 @@ const ItemIssueRequest = (props) => {
             showPopUp(res.status);
         }
         else {
-            const res = await fetch("http://localhost:8000/itemIssueRequest", {
+            const res = await fetch("/api/itemIssueRequest", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -150,7 +150,7 @@ const ItemIssueRequest = (props) => {
 
     const getdata = async () => {
 
-        const res = await fetch(`http://localhost:8000/getItem/${id}`, {
+        const res = await fetch(`/api/getItem/${id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"

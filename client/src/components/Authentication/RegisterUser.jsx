@@ -29,7 +29,7 @@ const RegisterUser = () => {
             phoneNo } = formData;
 
 
-        const res = await fetch("http://localhost:8000/registerUser", {
+        const res = await fetch("/api/registerUser", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

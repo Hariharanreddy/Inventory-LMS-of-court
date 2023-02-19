@@ -36,7 +36,7 @@ const MyIssuedItems = (props) => {
 
         setDisable(true);
 
-        const res = await fetch(`http://localhost:8000/getIssuedItemListToDownload?startDate=${startDate}&endDate=${endDate}&search=${searchTerm}&id=${props.userId ? props.userId : ""}&searchName=${searchUserName}&type=${props.type}`, {
+        const res = await fetch(`/api/getIssuedItemListToDownload?startDate=${startDate}&endDate=${endDate}&search=${searchTerm}&id=${props.userId ? props.userId : ""}&searchName=${searchUserName}&type=${props.type}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -63,7 +63,7 @@ const MyIssuedItems = (props) => {
     const acceptRequest = async (id) => {
 
         setDisable(true);
-        const res2 = await fetch(`http://localhost:8000/acceptItemIssueRequest/${id}`, {
+        const res2 = await fetch(`/api/acceptItemIssueRequest/${id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json"
@@ -151,7 +151,7 @@ const MyIssuedItems = (props) => {
         //For printing all the users from the database
         const getdata = async () => {
 
-            const res = await fetch(`http://localhost:8000/showIssuedItemsRequest?page=${page}&startDate=${startDate}&endDate=${endDate}&search=${searchTerm}&id=${props.userId ? props.userId : ""}&searchName=${searchUserName}&type=${props.type}`, {
+            const res = await fetch(`/api/showIssuedItemsRequest?page=${page}&startDate=${startDate}&endDate=${endDate}&search=${searchTerm}&id=${props.userId ? props.userId : ""}&searchName=${searchUserName}&type=${props.type}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"

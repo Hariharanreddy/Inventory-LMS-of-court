@@ -40,7 +40,7 @@ const myIssuedBooks = (props) => {
 
         setDisable(true);
 
-        const res = await fetch(`http://localhost:8000/getIssuedBookListToDownload?startDate=${startDate}&endDate=${endDate}&search=${searchTerm}&id=${props.userId ? props.userId : ""}&searchName=${searchUserName}`, {
+        const res = await fetch(`/api/getIssuedBookListToDownload?startDate=${startDate}&endDate=${endDate}&search=${searchTerm}&id=${props.userId ? props.userId : ""}&searchName=${searchUserName}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -69,7 +69,7 @@ const myIssuedBooks = (props) => {
 
         setDisable(true);
 
-        const res2 = await fetch(`http://localhost:8000/bookReturn/${id}`, {
+        const res2 = await fetch(`/api/bookReturn/${id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json"
@@ -116,7 +116,7 @@ const myIssuedBooks = (props) => {
 
         setDisable(true);
 
-        const res2 = await fetch(`http://localhost:8000/acceptBookIssueRequest/${id}`, {
+        const res2 = await fetch(`/api/acceptBookIssueRequest/${id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json"
@@ -211,7 +211,7 @@ const myIssuedBooks = (props) => {
         //For printing all the users from the database
         const getdata = async () => {
 
-            const res = await fetch(`http://localhost:8000/showIssuedBooksRequest?page=${page}&startDate=${startDate}&endDate=${endDate}&search=${searchTerm}&id=${props.userId ? props.userId : ""}&searchName=${searchUserName}`, {
+            const res = await fetch(`/api/showIssuedBooksRequest?page=${page}&startDate=${startDate}&endDate=${endDate}&search=${searchTerm}&id=${props.userId ? props.userId : ""}&searchName=${searchUserName}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"

@@ -32,7 +32,7 @@ const ItemList = (props) => {
 
         setDisable(true);
 
-        const res = await fetch(`http://localhost:8000/getItemsToDownload?sortStock=${sortStock}&search=${searchTerm}&type=${props.type}`, {
+        const res = await fetch(`/api/getItemsToDownload?sortStock=${sortStock}&search=${searchTerm}&type=${props.type}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -92,7 +92,7 @@ const ItemList = (props) => {
         //for printing all the Items from the database
         const getdata = async () => {
 
-            const res = await fetch(`http://localhost:8000/getItems?page=${page}&sortStock=${sortStock}&search=${searchTerm}&type=${props.type}`, {
+            const res = await fetch(`/api/getItems?page=${page}&sortStock=${sortStock}&search=${searchTerm}&type=${props.type}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"

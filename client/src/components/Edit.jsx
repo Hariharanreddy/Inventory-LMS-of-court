@@ -12,7 +12,7 @@ const Edit = () => {
 
     const getdata = async () => {
 
-        const res = await fetch(`http://localhost:8000/getBook/${id}`, {
+        const res = await fetch(`/api/getBook/${id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -60,7 +60,7 @@ const Edit = () => {
             yearOfPublication,
             price } = formData;
 
-        const res2 = await fetch(`http://localhost:8000/updateBook/${id}`, {
+        const res2 = await fetch(`/api/updateBook/${id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json"
@@ -122,7 +122,7 @@ const Edit = () => {
 
         setDisable(true);
 
-        const res2 = await fetch(`http://localhost:8000/deleteBook/${id}`, {
+        const res2 = await fetch(`/api/deleteBook/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json"

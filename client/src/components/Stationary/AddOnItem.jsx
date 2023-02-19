@@ -34,7 +34,7 @@ const AddOnItem = () => {
         } = formData;
 
 
-        const res = await fetch("http://localhost:8000/addOn", {
+        const res = await fetch("/api/addOn", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -90,7 +90,7 @@ const AddOnItem = () => {
 
     const getdata = async () => {
 
-        const res = await fetch(`http://localhost:8000/getItem/${id}`, {
+        const res = await fetch(`/api/getItem/${id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"

@@ -33,7 +33,7 @@ const UserList = () => {
 
         setDisable(true);
 
-        const res = await fetch(`http://localhost:8000/getUsersToDownload?search=${searchTerm}&isActiveOrNot=${status}`, {
+        const res = await fetch(`/api/getUsersToDownload?search=${searchTerm}&isActiveOrNot=${status}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -66,7 +66,7 @@ const UserList = () => {
         //for printing all the books from the database
         const getdata = async () => {
 
-            const res = await fetch(`http://localhost:8000/getUsers?page=${page}&search=${searchTerm}&isActiveOrNot=${status}`, {
+            const res = await fetch(`/api/getUsers?page=${page}&search=${searchTerm}&isActiveOrNot=${status}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"

@@ -12,7 +12,7 @@ const EditIssue = () => {
 
     const getdata = async () => {
 
-        const res = await fetch(`http://localhost:8000/getSpecificIssuedItemRequest/${id}`, {
+        const res = await fetch(`/api/getSpecificIssuedItemRequest/${id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -71,7 +71,7 @@ const EditIssue = () => {
             price
         } = formData;
 
-        const res2 = await fetch(`http://localhost:8000/updateSpecificIssuedItemRequest/${id}`, {
+        const res2 = await fetch(`/api/updateSpecificIssuedItemRequest/${id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json"
@@ -128,7 +128,7 @@ const EditIssue = () => {
     const deleteRequest = async (id) => {
 
         setDisable(true);
-        const res2 = await fetch(`http://localhost:8000/deleteItemIssueRequest/${id}`, {
+        const res2 = await fetch(`/api/deleteItemIssueRequest/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json"

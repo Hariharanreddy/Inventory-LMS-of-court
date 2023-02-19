@@ -10,7 +10,7 @@ const Details = () => {
   //For fetching the book details
   const getdata = async () => {
 
-    const res = await fetch(`http://localhost:8000/getBook/${id}`, {
+    const res = await fetch(`/api/getBook/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json"

@@ -2,6 +2,7 @@ import React, { useRef } from 'react'
 import SearchIcon from "../images/search-icon.png"
 import { useParams, useNavigate } from 'react-router-dom';
 import { CSVLink } from "react-csv"
+import Swal from "sweetalert2"
 
 const headers = [
     { label: "Vendor", key: "vendorName" },
@@ -15,6 +16,7 @@ const PurchaseList = () => {
     const [data, setData] = React.useState(false);
     const [page, setPage] = React.useState(1);
     const [disable, setDisable] = React.useState(false);
+    const [runUseEffect, setRunUseEffect] = React.useState(false);
 
     //for exporting to csv
     const [dataToDownload, setDataToDownload] = React.useState([]);
@@ -27,7 +29,7 @@ const PurchaseList = () => {
 
         setDisable(true);
 
-        const res = await fetch(`http://localhost:8000/getPurchaseListToDownload?id=${id}&search=${searchTerm}`, {
+        const res = await fetch(`/api/getPurchaseListToDownload?id=${id}&search=${searchTerm}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -52,13 +54,94 @@ const PurchaseList = () => {
         }
     }
 
+    const deletePurchase = async (id) => {
+
+        setDisable(true);
+
+        const res2 = await fetch(`/api/deletePurchase/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+
+        const deleteData = await res2.json();
+        console.log(deleteData);
+
+
+        if (res2.status === 422) {
+            setDisable(false);
+            console.log("Data could not be deleted.");
+
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+
+            Toast.fire({
+                icon: 'error',
+                title: 'Data could not be deleted.'
+            })
+        }
+        else {
+            console.log("Data has been deleted.");
+
+            setDisable(false);
+
+            setRunUseEffect(() => {
+                return runUseEffect ? false : true;
+            })
+
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+
+            Toast.fire({
+                icon: 'success',
+                title: 'Deleted Data Successfully'
+            })
+        }
+    }
+
+    const checkDelete = (id) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Data will be removed permanently!",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#0d6efd',
+            cancelButtonColor: '#dc3545',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No ',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                deletePurchase(id);
+            }
+        })
+    }
+
     React.useEffect(() => {
         let active = true;
 
         //For Printing all the purchases of the book from the database
         const getdata = async () => {
 
-            const res = await fetch(`http://localhost:8000/getPurchaseList?id=${id}&page=${page}&search=${searchTerm}`, {
+            const res = await fetch(`/api/getPurchaseList?id=${id}&page=${page}&search=${searchTerm}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
@@ -71,7 +154,7 @@ const PurchaseList = () => {
             if (res.status === 422 || !data) {
 
                 console.log("client side, data couldn't be fetched.");
-                
+
             }
             else {
 
@@ -85,11 +168,12 @@ const PurchaseList = () => {
         }
 
         getdata();
+
         return () => {
             active = false;
         };
 
-    }, [searchTerm, page]);
+    }, [searchTerm, page, runUseEffect]);
 
     return (
         <>
@@ -106,7 +190,7 @@ const PurchaseList = () => {
 
                     <div>
                         <img src={SearchIcon} alt="" width="30px" height="30px" />
-                        <input className="search-button" type="search" placeholder="Search..." aria-label="Search" onChange={(e) => { setSearchTerm(e.target.value); }} />
+                        <input className="search-button" type="search" placeholder="Vendor Name or D.O.P" aria-label="Search" onChange={(e) => { setSearchTerm(e.target.value); }} />
                     </div>
 
                     <div>
@@ -122,6 +206,7 @@ const PurchaseList = () => {
                             <th scope="col">Vendor</th>
                             <th scope="col">Quantity Purchased</th>
                             <th scope="col">Date Of Purchase (YYYY-MM-DD)</th>
+                            <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -135,12 +220,13 @@ const PurchaseList = () => {
                                         <td>{element.vendorName}</td>
                                         <td>{element.quantityPurchased}</td>
                                         <td>{element.dateOfPurchase}</td>
+                                        <td><button className="btn" style={{ backgroundColor: "#ff6666", color: "white" }} onClick={() => checkDelete(element._id)}>Delete</button></td>
                                     </tr>
                                 );
                             })}
                     </tbody>
                 </table>
-                
+
                 <div className="d-flex justify-content-center align-items-center mt-4 mb-4">
                     <button disabled={page <= 1 ? true : false} className="btn" style={{ backgroundColor: "rgb(6, 0, 97)", color: "white" }} onClick={() => { setPage(page - 1); }}>Prev Page</button>
                     <p className='mx-4 my-1' style={{ color: "grey", fontWeight: "bold" }}>  {page > Math.ceil(getPurchaseData.total / 10) && Math.ceil(getPurchaseData.total) != 0 ? setPage(1) : page} of {Math.ceil(getPurchaseData.total / 10)}</p>

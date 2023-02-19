@@ -21,7 +21,7 @@ const Login = () => {
         setDisable(true);
         const { email } = formData;
 
-        const data = await fetch("http://localhost:8000/login", {
+        const data = await fetch("/api/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

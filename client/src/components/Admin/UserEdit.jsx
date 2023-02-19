@@ -12,7 +12,7 @@ const UserEdit = () => {
 
     const getdata = async () => {
 
-        const res = await fetch(`http://localhost:8000/getUser/${id}`, {
+        const res = await fetch(`/api/getUser/${id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -66,7 +66,7 @@ const UserEdit = () => {
             phoneNo,
             isActive} = formData;
 
-        const res2 = await fetch(`http://localhost:8000/updateUser/${id}`, {
+        const res2 = await fetch(`/api/updateUser/${id}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json"
@@ -129,7 +129,7 @@ const UserEdit = () => {
 
         setDisable(true);
 
-        const res2 = await fetch(`http://localhost:8000/deleteUser/${id}`, {
+        const res2 = await fetch(`/api/deleteUser/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json"
